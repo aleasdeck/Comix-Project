@@ -15,6 +15,7 @@ import importlib
 import json
 import shutil
 import sys
+import time
 from pathlib import Path
 
 from .config import ROOT
@@ -32,8 +33,10 @@ def _jobs(settings: dict):
     return importlib.import_module("imagegen.jobs")
 
 
-def run_batch(settings: dict, model: str, kind: str, tasks: list[dict], dry: bool) -> dict[str, Path]:
+def run_batch(settings: dict, model: str, kind: str, tasks: list[dict], dry: bool,
+              progress=None) -> dict[str, Path]:
     """tasks: [{key, prompt, negative, seed, size}] -> {key: путь к сырому PNG}.
+    progress(done, total, state) вызывается, пока ImageGen работает.
 
     Все задачи уходят одним вызовом generate(items=...), чтобы ImageGen
     загрузил модель один раз (для Qwen это особенно важно).
@@ -45,7 +48,7 @@ def run_batch(settings: dict, model: str, kind: str, tasks: list[dict], dry: boo
     # ImageGen обрезает имя файла до 6 слов / 48 символов, поэтому длинные ключи
     # (персонаж + наряд + поза) не годятся: даём короткие имена, а сопоставляем по порядку.
     for i, t in enumerate(tasks):
-        item = {"prompt": t["prompt"], "name": f"{kind}_{i:03d}", "count": 1, "seed": t["seed"], "size": t["size"]}
+        item = {"prompt": t["prompt"], "name": f"{kind.replace('/', '_')}_{i:03d}", "count": 1, "seed": t["seed"], "size": t["size"]}
         if t.get("negative"):
             item["negative"] = t["negative"]
         items.append(item)
@@ -65,10 +68,19 @@ def run_batch(settings: dict, model: str, kind: str, tasks: list[dict], dry: boo
         for f in out_dir.glob("*.png"):
             f.unlink()
     timeout = int(settings["imagegen"].get("timeout", 1800))
-    res = jobs.generate(out_dir=str(out_dir), model=model, items=items, wait=True, timeout=timeout)
-    print(f"ImageGen: задание {res['job']}, состояние {res.get('state')}, {res.get('counts')}")
+    res = jobs.generate(out_dir=str(out_dir), model=model, items=items)
+    deadline = time.time() + timeout
+    st = {"files": res["files"], "state": "queued", "counts": {}}
+    while True:
+        st = jobs.status(res["job"])
+        done = st["counts"].get("done", 0)
+        if progress:
+            progress(done, len(items), st["state"])
+        if st["state"] not in ("queued", "running") or time.time() > deadline:
+            break
+        time.sleep(1.0)
+    print(f"ImageGen: задание {res['job']}, состояние {st.get('state')}, {st.get('counts')}")
     out = {}
-    # с wait=True ImageGen подменяет files на статусы: [{file, seed, state, ...}]
     for t, f in zip(tasks, res["files"]):
         f = Path(f["file"] if isinstance(f, dict) else f)
         if f.exists():

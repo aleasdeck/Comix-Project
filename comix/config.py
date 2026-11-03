@@ -33,6 +33,7 @@ class Project:
     skin_tones: dict
     backgrounds: dict
     variations: dict
+    appearance: dict = field(default_factory=dict)
 
     @classmethod
     def load(cls) -> "Project":
@@ -45,6 +46,7 @@ class Project:
             skin_tones=chars.get("skin_tones", {}) or {},
             backgrounds=bgs.get("locations", {}) or {},
             variations=bgs.get("variations", {}) or {},
+            appearance=load_yaml(CONFIG / "appearance.yaml") if (CONFIG / "appearance.yaml").exists() else {},
         )
 
     # --- персонажи и одежда -------------------------------------------------

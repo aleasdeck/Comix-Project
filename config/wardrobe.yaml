@@ -37,3 +37,10 @@ shoes:
   combat_boots:    {prompt: "black combat boots", color: "#212121"}
   heels:           {prompt: "red high heels", color: "#c62828"}
   hero_boots:      {prompt: "orange armored boots", color: "#ef6c00"}
+
+# Готовые сеты для «бумажной куклы» (python -m comix doll build). Вещи разных сетов
+# можно смешивать: каждая генерируется отдельным слоем.
+sets:
+  "Городской": {head: baseball_cap, top: hoodie, bottom: jeans, shoes: sneakers}
+  "Детектив":  {head: fedora, top: trench_coat, bottom: black_trousers, shoes: dress_shoes}
+  "Герой":     {head: hero_mask, top: hero_suit_top, bottom: hero_suit_legs, shoes: hero_boots}

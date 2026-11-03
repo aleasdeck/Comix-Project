@@ -189,6 +189,28 @@ def cmd_recut(args, project):
     print(f"Перевырезано: {len(raws)}")
 
 
+def cmd_doll_build(args, project):
+    from . import doll
+    skins = args.skin or ["light"] + [k for k in project.skin_tones if k != "light"]
+    items = doll.items_from_sets(project, args.set)
+    poses = args.pose or ["idle"]
+    n = len(args.gender) * (1 + (len(poses) - 1) + len(poses) * (len(skins) - 1 + sum(map(len, items.values()))))
+    print(f"Кукла: пол {args.gender}, позы {poses}, кожа {len(skins)}, вещей {sum(map(len, items.values()))}; "
+          f"картинок до ~{n}")
+    doll.build(project, args.gender, poses, skins, items, force=args.force)
+    _maybe_stop(project, False)
+
+
+def cmd_doll_reprocess(args, project):
+    from . import doll
+    doll.reprocess(project)
+
+
+def cmd_doll_export(args, project):
+    from . import doll
+    doll.export(Path(args.out), args.scale)
+
+
 def cmd_page(args, project):
     out = Path(args.out) if args.out else ROOT / "output" / (Path(args.script).stem + ".png")
     missing = compose_file(project, Path(args.script), out)
@@ -242,6 +264,20 @@ def main(argv=None):
     for g in gen.choices.values():
         g.add_argument("--dry-run", action="store_true", help="не генерировать, только собрать воркфлоу")
         g.add_argument("--force", action="store_true", help="перегенерировать существующие")
+
+    dl = sub.add_parser("doll", help="бумажная кукла: слои тела и одежды").add_subparsers(dest="sub", required=True)
+    p = dl.add_parser("build", help="сгенерировать базу, цвета кожи и вещи из сетов")
+    p.add_argument("--gender", nargs="*", default=["male", "female"], choices=["male", "female"])
+    p.add_argument("--pose", nargs="*", choices=list(POSES))
+    p.add_argument("--skin", nargs="*", help="первый — базовый (на нём рисуется одежда)")
+    p.add_argument("--set", nargs="*", help="названия сетов из wardrobe.yaml (по умолчанию все)")
+    p.add_argument("--force", action="store_true")
+    p.set_defaults(fn=cmd_doll_build)
+    dl.add_parser("reprocess", help="пересобрать слои из сырых картинок без генерации").set_defaults(fn=cmd_doll_reprocess)
+    p = dl.add_parser("export", help="уменьшенные слои + manifest для страницы")
+    p.add_argument("out")
+    p.add_argument("--scale", type=float, default=0.5)
+    p.set_defaults(fn=cmd_doll_export)
 
     sub.add_parser("recut", help="заново вырезать персонажей из *_raw.png").set_defaults(fn=cmd_recut)
 

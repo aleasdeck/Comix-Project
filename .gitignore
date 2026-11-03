@@ -6,3 +6,4 @@ assets/previews/
 # сгенерированные нейросетью картинки большие — не храним в git
 assets/characters/
 assets/backgrounds/
+assets/doll/
