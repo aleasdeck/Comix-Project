@@ -40,7 +40,7 @@ KEEP = ("Keep exactly the same person, face, hairstyle, body proportions, pose, 
         "position in the image and the plain light grey background. Change nothing else.")
 
 # В какой полосе фигуры (доля высоты от макушки до пяток) может лежать слой слота
-BANDS = {"head": (-0.08, 0.24), "top": (0.10, 0.66), "bottom": (0.40, 0.95), "shoes": (0.80, 1.06)}
+BANDS = {"head": (-0.08, 0.24), "top": (0.10, 0.85), "bottom": (0.40, 0.95), "shoes": (0.80, 1.06)}
 
 SLOT_VERB = {
     "head": "Put {item} on the person's head",
@@ -231,7 +231,18 @@ def extract_layer(project: Project, base_rgb: Image.Image, base_alpha: np.ndarra
     edited = _align(base_rgb, edited)
     a = np.asarray(base_rgb, dtype=np.int16)
     b = np.asarray(edited, dtype=np.int16)
-    diff = np.abs(a - b).max(axis=-1) > threshold
+    dist = np.abs(a - b).max(axis=-1)
+    if slot in ("top", "bottom"):
+        # бежевый тренч почти не отличается от светлой кожи, поэтому для одежды порог низкий,
+        # но не ниже «дрожания» правки: его меряем на лице, которое такая правка не трогает
+        top_r, bot_r = _figure_rows(base_alpha)
+        face = np.zeros_like(dist, dtype=bool)
+        face[top_r:int(top_r + 0.12 * (bot_r - top_r)), :] = True
+        skin = np.asarray(skin_mask(Image.fromarray(np.dstack([a.astype("uint8"),
+                                                                 base_alpha.astype("uint8")]), "RGBA"))[0]) > 128
+        sample = dist[face & skin]
+        threshold = int(np.clip(np.percentile(sample, 90) + 8 if sample.size > 200 else 18, 14, threshold))
+    diff = dist > threshold
 
     # то, что после правки стало фоном, — не вещь
     cut = project.settings.get("cutout", {})
