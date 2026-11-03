@@ -42,8 +42,10 @@ def run_batch(settings: dict, model: str, kind: str, tasks: list[dict], dry: boo
         return {}
     out_dir = RAW / kind
     items = []
-    for t in tasks:
-        item = {"prompt": t["prompt"], "name": t["key"], "count": 1, "seed": t["seed"], "size": t["size"]}
+    # ImageGen обрезает имя файла до 6 слов / 48 символов, поэтому длинные ключи
+    # (персонаж + наряд + поза) не годятся: даём короткие имена, а сопоставляем по порядку.
+    for i, t in enumerate(tasks):
+        item = {"prompt": t["prompt"], "name": f"{kind}_{i:03d}", "count": 1, "seed": t["seed"], "size": t["size"]}
         if t.get("negative"):
             item["negative"] = t["negative"]
         items.append(item)
@@ -51,16 +53,16 @@ def run_batch(settings: dict, model: str, kind: str, tasks: list[dict], dry: boo
     if dry:
         DRY_DIR.mkdir(parents=True, exist_ok=True)
         p = DRY_DIR / f"imagegen_{kind}.json"
-        p.write_text(json.dumps({"model": model, "out_dir": str(out_dir), "items": items},
+        p.write_text(json.dumps({"model": model, "out_dir": str(out_dir), "items": items,
+                                 "keys": [t["key"] for t in tasks]},
                                 ensure_ascii=False, indent=2), encoding="utf-8")
         print(f"Сухой прогон: {len(items)} шт. для ImageGen ({model}) -> {p.relative_to(ROOT)}")
         return {}
 
     jobs = _jobs(settings)
-    # старые сырые файлы с теми же именами мешают: ImageGen тогда допишет _2
-    for t in tasks:
-        f = out_dir / f"{t['key']}_{t['seed']}.png"
-        if f.exists():
+    # сырые файлы прошлых запусков не нужны (копии уже лежат в assets/), а с ними ImageGen допишет _2
+    if out_dir.exists():
+        for f in out_dir.glob("*.png"):
             f.unlink()
     timeout = int(settings["imagegen"].get("timeout", 1800))
     res = jobs.generate(out_dir=str(out_dir), model=model, items=items, wait=True, timeout=timeout)
