@@ -110,7 +110,10 @@ def render_panel(project: Project, spec: dict, size, missing: list, font) -> tup
         ch = int(h * c.get("height", 0.85))
         img = img.resize((max(1, int(img.width * ch / img.height)), ch), Image.LANCZOS)
         cx = int(w * c.get("x", 0.5))
-        by = int(h * c.get("y", 1.0))
+        if "top" in c:  # крупный план: ставим по макушке, ноги уходят за кадр
+            by = int(h * c["top"]) + img.height
+        else:
+            by = int(h * c.get("y", 1.0))
         panel.paste(img, (cx - img.width // 2, by - img.height), img)
         heads[c["id"]] = (cx, by - img.height + int(img.height * 0.08))
     return panel, heads

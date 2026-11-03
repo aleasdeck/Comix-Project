@@ -174,6 +174,21 @@ def cmd_gen_page(args, project):
     _report(done, args.dry_run)
 
 
+def cmd_recut(args, project):
+    """Заново вырезать персонажей из сохранённых *_raw.png (без генерации)."""
+    from PIL import Image
+
+    from .cutout import cutout, trim
+
+    cfg = project.settings.get("cutout", {})
+    raws = sorted((ASSETS / "characters").rglob("*_raw.png"))
+    for raw in raws:
+        out = raw.with_name(raw.name.replace("_raw.png", ".png"))
+        trim(cutout(Image.open(raw), cfg.get("method", "auto"), cfg.get("tolerance", 28))).save(out)
+        print(f"  {out.relative_to(ROOT)}")
+    print(f"Перевырезано: {len(raws)}")
+
+
 def cmd_page(args, project):
     out = Path(args.out) if args.out else ROOT / "output" / (Path(args.script).stem + ".png")
     missing = compose_file(project, Path(args.script), out)
@@ -211,7 +226,7 @@ def main(argv=None):
     p.add_argument("--outfit", nargs="*", metavar="СЛОТ=ПРЕДМЕТ")
     p.set_defaults(fn=cmd_char_new)
 
-    gen = sub.add_parser("gen", help="генерация через ComfyUI").add_subparsers(dest="sub", required=True)
+    gen = sub.add_parser("gen", help="генерация (ImageGen или ComfyUI)").add_subparsers(dest="sub", required=True)
     p = gen.add_parser("characters", help="персонажи во всех (или выбранных) позах")
     p.add_argument("--char", nargs="*")
     p.add_argument("--pose", nargs="*", choices=list(POSES))
@@ -227,6 +242,8 @@ def main(argv=None):
     for g in gen.choices.values():
         g.add_argument("--dry-run", action="store_true", help="не генерировать, только собрать воркфлоу")
         g.add_argument("--force", action="store_true", help="перегенерировать существующие")
+
+    sub.add_parser("recut", help="заново вырезать персонажей из *_raw.png").set_defaults(fn=cmd_recut)
 
     p = sub.add_parser("page", help=f"собрать страницу из сценария (раскладки: {', '.join(LAYOUTS)})")
     p.add_argument("script")
