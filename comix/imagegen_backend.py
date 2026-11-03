@@ -68,8 +68,9 @@ def run_batch(settings: dict, model: str, kind: str, tasks: list[dict], dry: boo
     res = jobs.generate(out_dir=str(out_dir), model=model, items=items, wait=True, timeout=timeout)
     print(f"ImageGen: задание {res['job']}, состояние {res.get('state')}, {res.get('counts')}")
     out = {}
+    # с wait=True ImageGen подменяет files на статусы: [{file, seed, state, ...}]
     for t, f in zip(tasks, res["files"]):
-        f = Path(f)
+        f = Path(f["file"] if isinstance(f, dict) else f)
         if f.exists():
             out[t["key"]] = f
         else:
