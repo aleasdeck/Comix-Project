@@ -9,7 +9,7 @@ head:
   fedora:        {prompt: "dark brown fedora hat", color: "#4e342e"}
   beanie:        {prompt: "knitted grey beanie", color: "#78909c"}
   cowboy_hat:    {prompt: "tan cowboy hat", color: "#a1887f"}
-  hero_mask:     {prompt: "black domino eye mask", color: "#111111", kind: mask}
+  hero_mask:     {prompt: "a small black domino mask with eye holes covering only the area around the eyes", color: "#111111", kind: mask}
   gas_mask:      {prompt: "military gas mask covering the face", color: "#455a64", kind: mask}
   bandana:       {prompt: "red bandana covering the lower face", color: "#b71c1c", kind: mask}
 

@@ -234,15 +234,20 @@ async function drawStage(e) {
   }
   const genBase = !/^#/.test(state.skin) && e.base[state.skin];
   const baseSrc = genBase || e.base.light || Object.values(e.base)[0];
-  const [base, mask, ...imgs] = await Promise.all([load(baseSrc), e.skin_mask && !genBase ? load(e.skin_mask) : null,
-                                                  ...layers.map(load)]).catch(() => []);
+  // under trousers the base's shorts are painted as skin: narrow trousers don't cover them at the hips
+  const hideShorts = state.outfit.bottom !== "none" && e.shorts_mask;
+  const [base, mask, shorts, ...imgs] = await Promise.all([load(baseSrc),
+      e.skin_mask && !genBase ? load(e.skin_mask) : null, hideShorts ? load(e.shorts_mask) : null,
+      ...layers.map(load)]).catch(() => []);
   if (seq !== drawSeq || !base) return;
   const cv = document.createElement("canvas");
   cv.width = base.naturalWidth; cv.height = base.naturalHeight;
   cv.setAttribute("role", "img"); cv.setAttribute("aria-label", "Персонаж");
-  const ctx = cv.getContext("2d");
+  const ctx = cv.getContext("2d", { willReadFrequently: true });
   ctx.drawImage(base, 0, 0);
-  if (mask) tint(ctx, cv.width, cv.height, mask, e.skin_ref || [234, 195, 162], skinHex());
+  const ref = e.skin_ref || [234, 195, 162];
+  if (mask) tint(ctx, cv.width, cv.height, mask, ref, skinHex());
+  if (shorts) tint(ctx, cv.width, cv.height, shorts, ref, mask ? skinHex() : `#${ref.map(v => v.toString(16).padStart(2, "0")).join("")}`, true);
   for (const im of imgs) ctx.drawImage(im, 0, 0);
   stage.querySelectorAll("img,canvas").forEach(i => i.remove());
   stage.append(cv);
@@ -250,16 +255,17 @@ async function drawStage(e) {
     `${GENDER_NAMES[state.gender] || state.gender} · ${SKIN_NAMES[state.skin] || state.skin}`;
 }
 // skin -> target colour, keeping the light and shade of the original (same as comix/doll.py recolor)
-function tint(ctx, w, h, mask, ref, hex) {
+function tint(ctx, w, h, mask, ref, hex, flat) {
   const t = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
   const refL = 0.299 * ref[0] + 0.587 * ref[1] + 0.114 * ref[2] || 1;
   const mc = document.createElement("canvas"); mc.width = w; mc.height = h;
-  const mx = mc.getContext("2d"); mx.drawImage(mask, 0, 0, w, h);
+  const mx = mc.getContext("2d", { willReadFrequently: true }); mx.drawImage(mask, 0, 0, w, h);
   const m = mx.getImageData(0, 0, w, h).data;
   const img = ctx.getImageData(0, 0, w, h), d = img.data;
   for (let i = 0; i < d.length; i += 4) {
     const a = m[i + 3] / 255; if (!a) continue;
-    const L = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / refL;
+    // flat: the shorts' own brightness says nothing about skin shading, keep it near the skin's
+    const L = flat ? 0.96 : (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / refL;
     for (let c = 0; c < 3; c++) d[i + c] = d[i + c] * (1 - a) + Math.min(255, t[c] * L) * a;
   }
   ctx.putImageData(img, 0, 0);

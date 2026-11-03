@@ -22,7 +22,7 @@ import json
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter
 
 from . import imagegen_backend as ig
 from .config import ASSETS, SLOTS, Project
@@ -177,6 +177,54 @@ def recolor(base: Image.Image, mask: Image.Image, ref: list[int], target: str) -
     return Image.fromarray(out.astype("uint8"), "RGBA")
 
 
+def _skin_like(img: Image.Image) -> np.ndarray:
+    hsv = np.asarray(img.convert("RGB").convert("HSV"), dtype=np.float32) / 255.0
+    hue, sat, val = hsv[..., 0] * 360, hsv[..., 1], hsv[..., 2]
+    return ((hue <= 45) | (hue >= 345)) & (sat >= 0.12) & (sat <= 0.80) & (val >= 0.40)
+
+
+def _morph(mask: np.ndarray, r: int, op) -> np.ndarray:
+    """Быстрая бинарная дилатация (op=logical_or) / эрозия (logical_and) квадратом 2r+1.
+    Сдвиги по осям без заворачивания: за краем картинки считается фон."""
+    out = mask
+    for axis in (0, 1):
+        acc = out.copy()
+        for k in range(1, r + 1):
+            for sh in (k, -k):
+                rolled = np.roll(out, sh, axis=axis)
+                idx = [slice(None), slice(None)]
+                idx[axis] = slice(0, sh) if sh > 0 else slice(sh, None)
+                rolled[tuple(idx)] = False
+                acc = op(acc, rolled)
+        out = acc
+    return out
+
+
+def _close(mask: np.ndarray, r: int) -> np.ndarray:
+    return _morph(_morph(mask, r, np.logical_or), r, np.logical_and)
+
+
+def _fill_holes(m: Image.Image) -> Image.Image:
+    """Залить области, не связанные с краем картинки (дырки внутри маски)."""
+    w, h = m.size
+    big = Image.new("L", (w + 2, h + 2), 0)
+    big.paste(m.point(lambda v: 255 if v > 128 else 0), (1, 1))
+    ImageDraw.floodfill(big, (0, 0), 128)
+    a = np.asarray(big)[1:-1, 1:-1]
+    return Image.fromarray(np.where(a == 128, 0, 255).astype("uint8"))
+
+
+def underwear_mask(base: Image.Image) -> Image.Image:
+    """Голубые шорты базы: страница закрашивает их кожей, когда надет низ (узкие штаны их не перекрывают)."""
+    rgba = base.convert("RGBA")
+    hsv = np.asarray(rgba.convert("RGB").convert("HSV"), dtype=np.float32) / 255.0
+    alpha = np.asarray(rgba.getchannel("A")) > 128
+    hue, sat, val = hsv[..., 0] * 360, hsv[..., 1], hsv[..., 2]
+    m = alpha & (hue >= 180) & (hue <= 240) & (sat >= 0.2) & (val >= 0.45)
+    img = Image.fromarray((m * 255).astype("uint8")).filter(ImageFilter.MaxFilter(3))
+    return img.filter(ImageFilter.GaussianBlur(0.7))
+
+
 def extract_layer(project: Project, base_rgb: Image.Image, base_alpha: np.ndarray, edited: Image.Image,
                   slot: str, threshold: int = 42) -> Image.Image:
     """Слой вещи = пиксели, которые редактирование заметно поменяло, в полосе своего слота."""
@@ -197,8 +245,14 @@ def extract_layer(project: Project, base_rgb: Image.Image, base_alpha: np.ndarra
     band[max(0, int(top + lo * fh)):min(mask.shape[0], int(top + hi * fh)), :] = True
     mask &= band
 
-    m = Image.fromarray((mask * 255).astype("uint8"))
-    m = m.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(7)).filter(ImageFilter.MinFilter(3))
+    # голова/обувь: то, что после правки осталось кожей (тень под полями шляпы), — не вещь
+    if slot in ("head", "shoes"):
+        mask &= ~_skin_like(edited)
+
+    mask = _morph(_morph(mask, 1, np.logical_and), 1, np.logical_or)  # убрать одиночный шум
+    mask = _close(mask, 7)                                              # закрыть щели (бежевое ≈ кожа)
+    m = _fill_holes(Image.fromarray((mask * 255).astype("uint8")))     # дырки внутри силуэта вещи
+    m = Image.fromarray(((np.asarray(m) > 128) & ed_alpha & band).astype("uint8") * 255)
     m = m.filter(ImageFilter.GaussianBlur(1.0))
     layer = edited.convert("RGBA")
     layer.putalpha(m)
@@ -283,6 +337,7 @@ def process(project: Project, gender: str, pose: str, skins: list[str], items: d
     base_img = Image.open(d / f"base_{skins[0]}.png")
     mask, ref = skin_mask(base_img)
     mask.save(d / "skin_mask.png")
+    underwear_mask(base_img).save(d / "shorts_mask.png")
     (d / "skin_ref.json").write_text(json.dumps(ref))
     base_alpha = np.asarray(base_img.getchannel("A"))
     for slot in SLOTS:
@@ -300,7 +355,9 @@ def reprocess(project: Project):
         if not gdir.is_dir():
             continue
         for pdir in sorted(gdir.glob("*")):
-            present = [k for k in skins if (pdir / f"raw_base_{k}.png").exists()]
+            # база — та, на которой рисовалась одежда (light); прочие сгенерированные кожи больше не нужны
+            present = ["light"] if (pdir / "raw_base_light.png").exists() else \
+                [k for k in skins if (pdir / f"raw_base_{k}.png").exists()][:1]
             if present:
                 print(f"{gdir.name}/{pdir.name}")
                 process(project, gdir.name, pdir.name, present, items, cut)
@@ -322,6 +379,8 @@ def write_manifest(project: Project):
             if (pdir / "skin_mask.png").exists():
                 entry["skin_mask"] = f"{gdir.name}/{pdir.name}/skin_mask.png"
                 entry["skin_ref"] = json.loads((pdir / "skin_ref.json").read_text())
+            if (pdir / "shorts_mask.png").exists():
+                entry["shorts_mask"] = f"{gdir.name}/{pdir.name}/shorts_mask.png"
             for f in sorted(pdir.glob("base_*.png")):
                 entry["base"][f.stem[5:]] = f"{gdir.name}/{pdir.name}/{f.name}"
             for f in sorted(pdir.glob("*__*.png")):
@@ -355,15 +414,16 @@ def export(out_dir: Path, scale: float = 0.5, fmt: str = "webp"):
         for entry in g.values():
             entry["base"] = {k: conv(v) for k, v in entry["base"].items()}
             entry["layers"] = {s: {k: conv(v) for k, v in d.items()} for s, d in entry["layers"].items()}
-            if entry.get("skin_mask"):
-                # маска кладётся в альфу белой картинки: webp её хранит, а страница читает альфу
-                src = DOLL / entry["skin_mask"]
-                m = Image.open(src).convert("L")
-                img = Image.new("RGBA", m.size, (255, 255, 255, 0))
-                img.putalpha(m)
-                tmp = src.with_name("skin_mask_rgba.png")
-                img.save(tmp)
-                entry["skin_mask"] = conv(str(tmp.relative_to(DOLL)).replace("\\", "/"))
+            for key in ("skin_mask", "shorts_mask"):
+                if entry.get(key):
+                    # маска кладётся в альфу белой картинки: webp её хранит, а страница читает альфу
+                    src = DOLL / entry[key]
+                    m = Image.open(src).convert("L")
+                    img = Image.new("RGBA", m.size, (255, 255, 255, 0))
+                    img.putalpha(m)
+                    tmp = src.with_name(src.stem + "_rgba.png")
+                    img.save(tmp)
+                    entry[key] = conv(str(tmp.relative_to(DOLL)).replace("\\", "/"))
     (out_dir / "manifest.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"Экспорт: {out_dir}")
 
