@@ -191,7 +191,8 @@ def cmd_recut(args, project):
 
 def cmd_doll_build(args, project):
     from . import doll
-    skins = args.skin or ["light"] + [k for k in project.skin_tones if k != "light"]
+    # кожа перекрашивается программно по маске, так что по умолчанию генерируется только светлая база
+    skins = args.skin or ["light"]
     items = doll.items_from_sets(project, args.set)
     poses = args.pose or ["idle"]
     n = len(args.gender) * (1 + (len(poses) - 1) + len(poses) * (len(skins) - 1 + sum(map(len, items.values()))))
@@ -269,7 +270,8 @@ def main(argv=None):
     p = dl.add_parser("build", help="сгенерировать базу, цвета кожи и вещи из сетов")
     p.add_argument("--gender", nargs="*", default=["male", "female"], choices=["male", "female"])
     p.add_argument("--pose", nargs="*", choices=list(POSES))
-    p.add_argument("--skin", nargs="*", help="первый — базовый (на нём рисуется одежда)")
+    p.add_argument("--skin", nargs="*", help="какие цвета кожи генерировать (первый — база); по умолчанию только light, "
+                                         "остальные страница делает перекраской")
     p.add_argument("--set", nargs="*", help="названия сетов из wardrobe.yaml (по умолчанию все)")
     p.add_argument("--force", action="store_true")
     p.set_defaults(fn=cmd_doll_build)

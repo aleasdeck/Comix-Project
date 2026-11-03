@@ -1,0 +1,329 @@
+<title>Гардероб персонажа</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Russo+One&family=Rubik:wght@400;500;700&display=swap">
+<style>
+/* Layout: comic "dressing room" — tall halftone stage on the left, wardrobe rack of chips on the right; stacks on phones */
+:root {
+  --paper: #eef0f3;      /* newsprint, cool */
+  --panel: #ffffff;
+  --ink: #15171c;
+  --muted: #5b6170;
+  --line: #15171c;
+  --dot: #d5d9e1;        /* halftone */
+  --accent: #ffd23f;     /* process yellow, selected */
+  --accent-ink: #15171c;
+  --display: "Russo One", "Arial Black", system-ui, sans-serif;
+  --body: "Rubik", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #14161b; --panel: #1d2027; --ink: #eceef2; --muted: #9aa1b0; --line: #eceef2;
+    --dot: #262a33; --accent: #ffd23f; --accent-ink: #15171c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #14161b; --panel: #1d2027; --ink: #eceef2; --muted: #9aa1b0; --line: #eceef2;
+  --dot: #262a33; --accent: #ffd23f; --accent-ink: #15171c; color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px;
+}
+.wrap { max-width: 1100px; margin: 0 auto; display: grid; gap: 20px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 20px; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(26px, 4vw, 38px); letter-spacing: .01em; margin: 0; text-wrap: balance; }
+.sub { color: var(--muted); margin: 0; }
+.main { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 760px) { .main { grid-template-columns: minmax(0, 1fr); } }
+
+.stage {
+  position: relative; aspect-ratio: 832 / 1216; max-width: 100%; width: 100%;
+  border: 3px solid var(--line); background-color: var(--panel);
+  background-image: radial-gradient(var(--dot) 1.6px, transparent 1.7px); background-size: 11px 11px;
+  box-shadow: 6px 6px 0 var(--line); overflow: hidden;
+}
+@media (max-width: 760px) { .stage { max-width: 360px; margin: 0 auto; } }
+.stage img, .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+.stage .tag {
+  position: absolute; left: 10px; top: 10px; background: var(--accent); color: var(--accent-ink);
+  font-family: var(--display); font-size: 13px; padding: 3px 8px; border: 2px solid #15171c; z-index: 5;
+}
+.empty { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 24px; color: var(--muted); }
+
+.rack { display: grid; gap: 18px; min-width: 0; }
+.group { display: grid; gap: 8px; }
+.label { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font: inherit; font-weight: 500; cursor: pointer; background: var(--panel); color: var(--ink);
+  border: 2px solid var(--line); padding: 7px 12px; border-radius: 3px; min-height: 38px;
+}
+.chip:hover { transform: translate(-1px, -1px); box-shadow: 2px 2px 0 var(--line); }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); box-shadow: 3px 3px 0 var(--line); }
+.chip:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; }
+.chip:focus-visible, .swatch:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.swatch {
+  width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--line); cursor: pointer; padding: 0;
+}
+.swatch[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--paper), 0 0 0 6px var(--line); }
+.swatch:disabled { opacity: .3; cursor: not-allowed; }
+.slot-head { display: flex; align-items: baseline; gap: 10px; }
+.set-note { color: var(--muted); font-size: 13px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.btn {
+  font-family: var(--display); font-size: 15px; cursor: pointer; background: var(--ink); color: var(--paper);
+  border: 2px solid var(--line); padding: 9px 16px; border-radius: 3px;
+}
+.btn.ghost { background: var(--panel); color: var(--ink); }
+.btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.yaml {
+  font: 13px/1.5 ui-monospace, "Cascadia Mono", Consolas, monospace; background: var(--panel); border: 2px solid var(--line);
+  padding: 10px 12px; margin: 0; white-space: pre; overflow-x: auto; max-width: 100%;
+}
+input[type=color].swatch { -webkit-appearance: none; appearance: none; background: none; overflow: hidden; }
+input[type=color].swatch::-webkit-color-swatch-wrapper { padding: 0; }
+input[type=color].swatch::-webkit-color-swatch { border: none; border-radius: 50%; }
+input[type=color].swatch::-moz-color-swatch { border: none; border-radius: 50%; }
+input[type=text] {
+  font: inherit; color: var(--ink); background: var(--panel); border: 2px solid var(--line); padding: 7px 10px;
+  border-radius: 3px; min-width: 0; width: 14em; max-width: 100%;
+}
+.toast { color: var(--muted); font-size: 13px; min-height: 1.2em; }
+@media (prefers-reduced-motion: reduce) { .chip:hover { transform: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Гардероб персонажа</h1>
+    <p class="sub" id="summary">Загружаю слои…</p>
+  </header>
+
+  <div class="main">
+    <div class="stage" id="stage" aria-label="Персонаж">
+      <span class="tag" id="tag">—</span>
+      <div class="empty" id="empty" hidden>Слои ещё не сгенерированы. Запусти <code>comix doll build</code> и <code>comix doll export</code>.</div>
+    </div>
+
+    <div class="rack">
+      <div class="group">
+        <span class="label">Пол</span>
+        <div class="chips" id="genders"></div>
+      </div>
+      <div class="group">
+        <span class="label">Цвет кожи</span>
+        <div class="chips" id="skins"></div>
+      </div>
+      <div class="group">
+        <span class="label">Сет целиком</span>
+        <div class="chips" id="sets"></div>
+      </div>
+      <div id="slots" class="rack"></div>
+
+      <div class="group">
+        <span class="label">Сохранить в comix</span>
+        <div class="row">
+          <input type="text" id="cid" value="hero1" aria-label="id персонажа (латиницей)">
+          <button class="btn" id="copy">Скопировать для characters.yaml</button>
+          <button class="btn ghost" id="random">Случайный</button>
+        </div>
+        <pre class="yaml" id="yaml"></pre>
+        <div class="toast" id="toast" role="status"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SLOT_NAMES = { head: "Голова", top: "Верх", bottom: "Низ", shoes: "Обувь" };
+const GENDER_NAMES = { male: "Мужской", female: "Женский" };
+const SKIN_NAMES = { pale: "Очень светлая", light: "Светлая", medium: "Оливковая", tan: "Смуглая", dark: "Тёмная", deep: "Очень тёмная" };
+const ITEM_NAMES = {
+  none: "ничего", baseball_cap: "Кепка", fedora: "Федора", hero_mask: "Маска героя",
+  hoodie: "Худи", trench_coat: "Тренч", hero_suit_top: "Костюм героя",
+  jeans: "Джинсы", black_trousers: "Брюки", hero_suit_legs: "Трико героя",
+  sneakers: "Кеды", dress_shoes: "Туфли", hero_boots: "Сапоги героя",
+};
+const state = { gender: null, skin: null, pose: "idle", outfit: { head: "none", top: "none", bottom: "none", shoes: "none" } };
+let M = null;
+
+function remember() { try { localStorage.setItem("doll", JSON.stringify(state)); } catch (e) {} }
+function recall() { try { return JSON.parse(localStorage.getItem("doll") || "null"); } catch (e) { return null; } }
+
+function chip(text, pressed, onClick, disabled) {
+  const b = document.createElement("button");
+  b.className = "chip"; b.type = "button"; b.textContent = text;
+  b.setAttribute("aria-pressed", pressed ? "true" : "false");
+  b.disabled = !!disabled; b.addEventListener("click", onClick);
+  return b;
+}
+function entry() { return M.genders[state.gender]?.[state.pose]; }
+
+function render() {
+  const e = entry();
+  // pol
+  const g = document.getElementById("genders"); g.replaceChildren();
+  for (const k of Object.keys(GENDER_NAMES)) {
+    g.append(chip(GENDER_NAMES[k], state.gender === k, () => { state.gender = k; fix(); render(); }, !M.genders[k]));
+  }
+  // skin: generated base if it exists, otherwise recolour by mask
+  const s = document.getElementById("skins"); s.replaceChildren();
+  const canTint = !!(e && e.skin_mask);
+  for (const [k, col] of Object.entries(M.skins)) {
+    const b = document.createElement("button");
+    b.className = "swatch"; b.type = "button"; b.style.background = col || "#999";
+    b.title = SKIN_NAMES[k] || k; b.setAttribute("aria-label", SKIN_NAMES[k] || k);
+    b.setAttribute("aria-pressed", state.skin === k ? "true" : "false");
+    b.disabled = !e || !(e.base[k] || canTint);
+    b.addEventListener("click", () => { state.skin = k; render(); });
+    s.append(b);
+  }
+  if (canTint) {
+    const c = document.createElement("input");
+    c.type = "color"; c.id = "skin-custom"; c.className = "swatch"; c.title = "Свой оттенок";
+    c.setAttribute("aria-label", "Свой оттенок кожи");
+    c.value = /^#/.test(state.skin) ? state.skin : (M.skins[state.skin] || "#c99a6e");
+    c.setAttribute("aria-pressed", /^#/.test(state.skin) ? "true" : "false");
+    c.addEventListener("input", () => { state.skin = c.value; drawStage(entry()); writeYaml(); remember(); });
+    s.append(c);
+  }
+  // sets
+  const st = document.getElementById("sets"); st.replaceChildren();
+  for (const [name, outfit] of Object.entries(M.sets || {})) {
+    const on = Object.keys(SLOT_NAMES).every(sl => (outfit[sl] || "none") === state.outfit[sl]);
+    st.append(chip(name, on, () => { for (const sl in SLOT_NAMES) state.outfit[sl] = outfit[sl] || "none"; render(); }));
+  }
+  st.append(chip("Без одежды", Object.values(state.outfit).every(v => v === "none"),
+    () => { for (const sl in SLOT_NAMES) state.outfit[sl] = "none"; render(); }));
+  // slots
+  const box = document.getElementById("slots"); box.replaceChildren();
+  for (const sl of Object.keys(SLOT_NAMES)) {
+    const grp = document.createElement("div"); grp.className = "group";
+    const lab = document.createElement("span"); lab.className = "label"; lab.textContent = SLOT_NAMES[sl];
+    const ch = document.createElement("div"); ch.className = "chips";
+    ch.append(chip(ITEM_NAMES.none, state.outfit[sl] === "none", () => { state.outfit[sl] = "none"; render(); }));
+    const avail = e ? e.layers[sl] || {} : {};
+    for (const it of Object.keys(avail)) {
+      ch.append(chip(ITEM_NAMES[it] || it, state.outfit[sl] === it, () => { state.outfit[sl] = it; render(); }));
+    }
+    grp.append(lab, ch); box.append(grp);
+  }
+  drawStage(e);
+  writeYaml();
+  remember();
+}
+
+const imgCache = {};
+function load(src) {
+  if (!imgCache[src]) imgCache[src] = new Promise((ok, bad) => { const i = new Image(); i.onload = () => ok(i); i.onerror = bad; i.src = src; });
+  return imgCache[src];
+}
+function skinHex() { return /^#/.test(state.skin) ? state.skin : (M.skins[state.skin] || "#eac3a2"); }
+let drawSeq = 0;
+async function drawStage(e) {
+  const seq = ++drawSeq;
+  const stage = document.getElementById("stage");
+  document.getElementById("empty").hidden = !!e;
+  if (!e) { stage.querySelectorAll("img,canvas").forEach(i => i.remove()); return; }
+  const layers = [];
+  for (const sl of M.layer_order) {
+    const it = state.outfit[sl];
+    if (it && it !== "none" && e.layers[sl]?.[it]) layers.push(e.layers[sl][it]);
+  }
+  const genBase = !/^#/.test(state.skin) && e.base[state.skin];
+  const baseSrc = genBase || e.base.light || Object.values(e.base)[0];
+  const [base, mask, ...imgs] = await Promise.all([load(baseSrc), e.skin_mask && !genBase ? load(e.skin_mask) : null,
+                                                  ...layers.map(load)]).catch(() => []);
+  if (seq !== drawSeq || !base) return;
+  const cv = document.createElement("canvas");
+  cv.width = base.naturalWidth; cv.height = base.naturalHeight;
+  cv.setAttribute("role", "img"); cv.setAttribute("aria-label", "Персонаж");
+  const ctx = cv.getContext("2d");
+  ctx.drawImage(base, 0, 0);
+  if (mask) tint(ctx, cv.width, cv.height, mask, e.skin_ref || [234, 195, 162], skinHex());
+  for (const im of imgs) ctx.drawImage(im, 0, 0);
+  stage.querySelectorAll("img,canvas").forEach(i => i.remove());
+  stage.append(cv);
+  document.getElementById("tag").textContent =
+    `${GENDER_NAMES[state.gender] || state.gender} · ${SKIN_NAMES[state.skin] || state.skin}`;
+}
+// skin -> target colour, keeping the light and shade of the original (same as comix/doll.py recolor)
+function tint(ctx, w, h, mask, ref, hex) {
+  const t = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+  const refL = 0.299 * ref[0] + 0.587 * ref[1] + 0.114 * ref[2] || 1;
+  const mc = document.createElement("canvas"); mc.width = w; mc.height = h;
+  const mx = mc.getContext("2d"); mx.drawImage(mask, 0, 0, w, h);
+  const m = mx.getImageData(0, 0, w, h).data;
+  const img = ctx.getImageData(0, 0, w, h), d = img.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const a = m[i + 3] / 255; if (!a) continue;
+    const L = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) / refL;
+    for (let c = 0; c < 3; c++) d[i + c] = d[i + c] * (1 - a) + Math.min(255, t[c] * L) * a;
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+function writeYaml() {
+  const id = (document.getElementById("cid").value || "hero1").trim().toLowerCase().replace(/[^a-z0-9_]+/g, "_") || "hero1";
+  const o = state.outfit;
+  document.getElementById("yaml").textContent =
+`  ${id}:
+    name: "${id}"
+    gender: ${state.gender}
+    skin: ${/^#/.test(state.skin) ? "custom  # " + state.skin : state.skin}
+    outfit: {head: ${o.head}, top: ${o.top}, bottom: ${o.bottom}, shoes: ${o.shoes}}`;
+}
+
+function fix() {
+  // keep choices that exist for the current gender/pose
+  const e = entry(); if (!e) return;
+  if (!e.base[state.skin] && !e.skin_mask && !/^#/.test(state.skin)) state.skin = Object.keys(e.base)[0];
+  for (const sl in SLOT_NAMES) if (state.outfit[sl] !== "none" && !(e.layers[sl] || {})[state.outfit[sl]]) state.outfit[sl] = "none";
+}
+
+function randomize() {
+  const gs = Object.keys(M.genders); state.gender = gs[Math.floor(Math.random() * gs.length)];
+  const e = entry(); const pick = a => a[Math.floor(Math.random() * a.length)];
+  state.skin = e.skin_mask ? pick(Object.keys(M.skins)) : pick(Object.keys(e.base));
+  for (const sl in SLOT_NAMES) state.outfit[sl] = pick(["none", ...Object.keys(e.layers[sl] || {})]);
+  render();
+}
+
+document.getElementById("cid").addEventListener("input", writeYaml);
+document.getElementById("random").addEventListener("click", randomize);
+document.getElementById("copy").addEventListener("click", () => {
+  const text = document.getElementById("yaml").textContent;
+  const t = document.getElementById("toast");
+  navigator.clipboard.writeText(text).then(
+    () => { t.textContent = "Скопировано. Вставь в config/characters.yaml в раздел characters."; },
+    () => { const r = document.createRange(); r.selectNodeContents(document.getElementById("yaml"));
+            const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+            t.textContent = "Текст выделен, нажми Ctrl+C."; });
+});
+
+fetch("manifest.json").then(r => r.json()).then(m => {
+  M = m;
+  const genders = Object.keys(M.genders);
+  const saved = recall();
+  if (saved && M.genders[saved.gender]) Object.assign(state, saved, { pose: "idle" });
+  else {
+    state.gender = genders[0] || "male";
+    const first = Object.values(M.sets || {})[0];
+    if (first) for (const sl in SLOT_NAMES) state.outfit[sl] = first[sl] || "none";
+  }
+  state.skin = state.skin || "light";
+  fix();
+  const e = entry();
+  const nItems = e ? Object.values(e.layers).reduce((n, d) => n + Object.keys(d).length, 0) : 0;
+  document.getElementById("summary").textContent = genders.length
+    ? `${genders.length === 2 ? "2 пола" : "1 пол"}, кожа любого оттенка, ${nItems} вещей. Вещи из разных сетов сочетаются.`
+    : "Слоёв пока нет.";
+  render();
+}).catch(() => {
+  M = { genders: {}, skins: {}, sets: {}, layer_order: [] };
+  document.getElementById("summary").textContent = "Не нашёл manifest.json рядом со страницей.";
+  render();
+});
+</script>

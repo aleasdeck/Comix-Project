@@ -146,6 +146,37 @@ def _figure_rows(alpha: np.ndarray) -> tuple[int, int]:
     return (int(rows[0]), int(rows[-1])) if len(rows) else (0, alpha.shape[0] - 1)
 
 
+def skin_mask(base: Image.Image) -> tuple[Image.Image, list[int]]:
+    """Маска кожи на базовой картинке по цвету + опорный цвет кожи (медиана).
+
+    Кожа: тёплый оттенок (красный..жёлтый), средняя насыщенность, не тёмная.
+    Майка (белая), шорты (голубые), тёмные волосы и контуры сюда не попадают.
+    """
+    rgba = base.convert("RGBA")
+    hsv = np.asarray(rgba.convert("RGB").convert("HSV"), dtype=np.float32) / 255.0
+    alpha = np.asarray(rgba.getchannel("A")) > 128
+    hue, sat, val = hsv[..., 0] * 360, hsv[..., 1], hsv[..., 2]
+    m = alpha & ((hue <= 45) | (hue >= 345)) & (sat >= 0.12) & (sat <= 0.80) & (val >= 0.40)
+    img = Image.fromarray((m * 255).astype("uint8"))
+    img = img.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.GaussianBlur(0.7))
+    rgb = np.asarray(rgba.convert("RGB"))[m]
+    ref = [int(v) for v in np.median(rgb, axis=0)] if len(rgb) else [234, 195, 162]
+    return img, ref
+
+
+def recolor(base: Image.Image, mask: Image.Image, ref: list[int], target: str) -> Image.Image:
+    """То же, что делает страница: кожа -> целевой цвет с сохранением светотени."""
+    t = np.array([int(target.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)], dtype=np.float32)
+    a = np.asarray(base.convert("RGBA"), dtype=np.float32)
+    lum = a[..., :3] @ np.array([0.299, 0.587, 0.114], dtype=np.float32)
+    ref_l = float(np.dot(ref, [0.299, 0.587, 0.114])) or 1.0
+    new = np.clip(t[None, None, :] * (lum / ref_l)[..., None], 0, 255)
+    m = (np.asarray(mask, dtype=np.float32) / 255.0)[..., None]
+    out = a.copy()
+    out[..., :3] = a[..., :3] * (1 - m) + new * m
+    return Image.fromarray(out.astype("uint8"), "RGBA")
+
+
 def extract_layer(project: Project, base_rgb: Image.Image, base_alpha: np.ndarray, edited: Image.Image,
                   slot: str, threshold: int = 42) -> Image.Image:
     """Слой вещи = пиксели, которые редактирование заметно поменяло, в полосе своего слота."""
@@ -249,7 +280,11 @@ def process(project: Project, gender: str, pose: str, skins: list[str], items: d
         if p.exists():
             img = Image.open(p).convert("RGB") if k == skins[0] else _align(base_raw, Image.open(p))
             cutout(img, cut.get("method", "auto"), cut.get("tolerance", 28)).save(d / f"base_{k}.png")
-    base_alpha = np.asarray(Image.open(d / f"base_{skins[0]}.png").getchannel("A"))
+    base_img = Image.open(d / f"base_{skins[0]}.png")
+    mask, ref = skin_mask(base_img)
+    mask.save(d / "skin_mask.png")
+    (d / "skin_ref.json").write_text(json.dumps(ref))
+    base_alpha = np.asarray(base_img.getchannel("A"))
     for slot in SLOTS:
         for it in items.get(slot, []):
             p = d / f"raw_{slot}__{it}.png"
@@ -284,6 +319,9 @@ def write_manifest(project: Project):
         g = data["genders"][gdir.name] = {}
         for pdir in sorted(p for p in gdir.glob("*") if p.is_dir()):
             entry = {"base": {}, "layers": {s: {} for s in SLOTS}}
+            if (pdir / "skin_mask.png").exists():
+                entry["skin_mask"] = f"{gdir.name}/{pdir.name}/skin_mask.png"
+                entry["skin_ref"] = json.loads((pdir / "skin_ref.json").read_text())
             for f in sorted(pdir.glob("base_*.png")):
                 entry["base"][f.stem[5:]] = f"{gdir.name}/{pdir.name}/{f.name}"
             for f in sorted(pdir.glob("*__*.png")):
@@ -317,6 +355,15 @@ def export(out_dir: Path, scale: float = 0.5, fmt: str = "webp"):
         for entry in g.values():
             entry["base"] = {k: conv(v) for k, v in entry["base"].items()}
             entry["layers"] = {s: {k: conv(v) for k, v in d.items()} for s, d in entry["layers"].items()}
+            if entry.get("skin_mask"):
+                # маска кладётся в альфу белой картинки: webp её хранит, а страница читает альфу
+                src = DOLL / entry["skin_mask"]
+                m = Image.open(src).convert("L")
+                img = Image.new("RGBA", m.size, (255, 255, 255, 0))
+                img.putalpha(m)
+                tmp = src.with_name("skin_mask_rgba.png")
+                img.save(tmp)
+                entry["skin_mask"] = conv(str(tmp.relative_to(DOLL)).replace("\\", "/"))
     (out_dir / "manifest.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"Экспорт: {out_dir}")
 
