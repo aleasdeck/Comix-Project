@@ -98,6 +98,13 @@ def render(kind: str, text: str, font: ImageFont.FreeTypeFont, max_text_width: i
     else:
         spikes = 1.0
 
+    if tail and kind != "caption":
+        # хвостик должен заметно выглядывать за край облачка
+        n = math.hypot(*tail) or 1
+        ex, ey = _ellipse_edge(0, 0, a * spikes, b * spikes, tail[0], tail[1])
+        need = math.hypot(ex, ey) + max(font.size * 0.9, b * 0.5)
+        if n < need:
+            tail = (tail[0] / n * need, tail[1] / n * need)
     tx, ty = tail if tail else (0, 0)
     margin = stroke * 3 + 4
     left = min(-a * spikes, tx) - margin

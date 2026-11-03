@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageOps
+from PIL import Image, ImageDraw, ImageFilter, ImageOps
 
 from . import bubbles, placeholder
 from .config import CharacterShot, Project, background_path, load_yaml, make_shot
@@ -114,6 +115,13 @@ def render_panel(project: Project, spec: dict, size, missing: list, font) -> tup
             by = int(h * c["top"]) + img.height
         else:
             by = int(h * c.get("y", 1.0))
+        if c.get("shadow", True) and by <= h:
+            # мягкая тень под ногами, чтобы персонаж не «висел» над фоном
+            sw, sh = int(img.width * 0.9), max(6, int(img.width * 0.12))
+            sh_img = Image.new("RGBA", (sw * 2, sh * 2), (0, 0, 0, 0))
+            ImageDraw.Draw(sh_img).ellipse([sw // 2, sh // 2, sw * 3 // 2, sh * 3 // 2], fill=(0, 0, 0, 110))
+            sh_img = sh_img.filter(ImageFilter.GaussianBlur(sh / 3))
+            panel.paste(sh_img, (cx - sw, by - sh), sh_img)
         panel.paste(img, (cx - img.width // 2, by - img.height), img)
         heads[c["id"]] = (cx, by - img.height + int(img.height * 0.08))
     return panel, heads
@@ -162,7 +170,11 @@ def compose(project: Project, script: dict) -> tuple[Image.Image, list[Missing]]
             # голова может быть за кадром (крупный план) — держим хвостик внутри кадра
             tx = min(max(tx, x0 + pw * 0.05), x1 - pw * 0.05)
             ty = min(max(ty, y0 + ph * 0.05), y1 - ph * 0.05)
-            tail = ((tx - bx) * 0.8, (ty - by) * 0.8)
+            dx, dy = tx - bx, ty - by
+            dist = math.hypot(dx, dy) or 1
+            # хвостик доходит почти до головы, но не короче, чем нужно, чтобы выглянуть из облачка
+            want = max(dist - ph * 0.07, ph * 0.1)
+            tail = (dx / dist * want, dy / dist * want)
         f = font.font_variant(size=int(font.size * b.get("scale", 1.0)))
         img, (cx, cy) = bubbles.render(b.get("kind", "speech"), b.get("text", ""), f,
                                        max_text_width=int(pw * b.get("width", 0.42)), tail=tail)
