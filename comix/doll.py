@@ -275,9 +275,15 @@ def extract_layer(project: Project, base_rgb: Image.Image, base_alpha: np.ndarra
         dh = np.abs(hsv[..., 0] - r_hsv[0]) * 360
         dh = np.minimum(dh, 360 - dh)
         same_skin = bskin & _skin_like(edited) & (dh < 6) & (np.abs(hsv[..., 1] - r_hsv[1]) < 0.10)
-        # шорты базы, которые правка не тронула (между полами плаща)
-        shorts = np.asarray(underwear_mask(base_rgba)) > 128
-        final &= ~(same_skin | (shorts & (dist < 42)))
+        final &= ~same_skin
+        if slot == "top":
+            # шорты базы между полами плаща: в правке там всё ещё голубое
+            shorts = np.asarray(underwear_mask(base_rgba)) > 128
+            ed_shorts = np.asarray(underwear_mask(edited.convert("RGBA"))) > 128
+            final &= ~(shorts & (ed_shorts | (dist < 42)))
+        # убрать мелкие крапинки и залить дырки внутри вещи, которые эти правила могли проколоть
+        final = _morph(_morph(final, 1, np.logical_and), 1, np.logical_or)
+        final = (np.asarray(_fill_holes(Image.fromarray((final * 255).astype("uint8")))) > 128) & ed_alpha & band
     if slot == "head" and project.item(slot, item_id).get("kind") == "mask":
         # в прорезях маски — лицо базы, а не перерисованная кожа
         final &= ~(_skin_like(edited) | (dist < 42))
