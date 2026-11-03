@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+build/
+output/
+assets/previews/
+# сгенерированные нейросетью картинки большие — не храним в git
+assets/characters/
+assets/backgrounds/

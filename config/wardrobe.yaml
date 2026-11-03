@@ -1,0 +1,39 @@
+# Каталог одежды по слотам. id предмета используется в characters.yaml и в сценарии.
+# prompt: что уходит в промпт генератора.
+# color: цвет для черновой (placeholder) отрисовки, когда картинки ещё не сгенерированы.
+# Слот можно оставить пустым значением none.
+
+head:
+  none:          {prompt: "", color: null}
+  baseball_cap:  {prompt: "red baseball cap", color: "#c62828"}
+  fedora:        {prompt: "dark brown fedora hat", color: "#4e342e"}
+  beanie:        {prompt: "knitted grey beanie", color: "#78909c"}
+  cowboy_hat:    {prompt: "tan cowboy hat", color: "#a1887f"}
+  hero_mask:     {prompt: "black domino eye mask", color: "#111111", kind: mask}
+  gas_mask:      {prompt: "military gas mask covering the face", color: "#455a64", kind: mask}
+  bandana:       {prompt: "red bandana covering the lower face", color: "#b71c1c", kind: mask}
+
+top:
+  white_tshirt:    {prompt: "plain white t-shirt", color: "#f5f5f5"}
+  leather_jacket:  {prompt: "black leather biker jacket over a grey t-shirt", color: "#212121"}
+  hoodie:          {prompt: "green hoodie", color: "#2e7d32"}
+  business_shirt:  {prompt: "light blue button-up shirt with a dark tie", color: "#90caf9"}
+  trench_coat:     {prompt: "beige trench coat", color: "#c8b38a"}
+  hero_suit_top:   {prompt: "blue superhero suit torso with a yellow emblem", color: "#1565c0"}
+  tank_top:        {prompt: "black tank top", color: "#263238"}
+
+bottom:
+  jeans:           {prompt: "blue denim jeans", color: "#3f51b5"}
+  black_trousers:  {prompt: "black trousers", color: "#1b1b1b"}
+  cargo_pants:     {prompt: "olive cargo pants", color: "#6b6b3a"}
+  shorts:          {prompt: "khaki shorts", color: "#bfa76f"}
+  skirt:           {prompt: "red pleated knee-length skirt", color: "#d32f2f"}
+  hero_suit_legs:  {prompt: "blue superhero suit leggings", color: "#1565c0"}
+
+shoes:
+  sneakers:        {prompt: "white sneakers", color: "#eeeeee"}
+  boots:           {prompt: "brown leather boots", color: "#5d4037"}
+  dress_shoes:     {prompt: "black dress shoes", color: "#111111"}
+  combat_boots:    {prompt: "black combat boots", color: "#212121"}
+  heels:           {prompt: "red high heels", color: "#c62828"}
+  hero_boots:      {prompt: "red superhero boots", color: "#c62828"}

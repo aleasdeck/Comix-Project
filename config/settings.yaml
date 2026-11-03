@@ -1,0 +1,77 @@
+# Общие настройки пайплайна.
+
+comfyui:
+  url: "http://127.0.0.1:8188"
+  # Сколько секунд ждать одну картинку.
+  timeout: 600
+
+# Какой воркфлоу использовать для персонажей: flux или zimage.
+character_engine: flux
+
+# Шаблоны воркфлоу (ComfyUI, формат API). В них стоят плейсхолдеры {{...}},
+# которые подставляет comix (см. README).
+workflows:
+  flux: workflows/flux_character.json
+  flux_pose: workflows/flux_character_pose.json   # с ControlNet OpenPose
+  zimage: workflows/zimage_character.json
+  qwen: workflows/qwen_background.json
+
+# Имена файлов моделей, как они лежат в ComfyUI/models/...
+# Поправь под свою установку.
+models:
+  flux:
+    unet: flux1-dev.safetensors
+    clip_t5: t5xxl_fp8_e4m3fn.safetensors
+    clip_l: clip_l.safetensors
+    vae: ae.safetensors
+    controlnet: flux-controlnet-union-pro-2.0.safetensors
+    steps: 24
+    guidance: 3.5
+  zimage:
+    unet: z_image_turbo_bf16.safetensors
+    clip: qwen_3_4b.safetensors
+    vae: ae.safetensors
+    steps: 8
+  qwen:
+    unet: qwen_image_fp8_e4m3fn.safetensors
+    clip: qwen_2.5_vl_7b_fp8_scaled.safetensors
+    vae: qwen_image_vae.safetensors
+    steps: 20
+    cfg: 2.5
+
+# Использовать ли позы-скелеты OpenPose через ControlNet (только flux).
+# false: поза задаётся только текстом в промпте.
+use_pose_controlnet: true
+
+sizes:
+  character: [832, 1216]   # вертикально, персонаж в полный рост
+  background: [1664, 928]  # 16:9
+
+# Общий стиль, добавляется ко всем промптам.
+style:
+  character: "comic book illustration, bold clean ink outlines, flat cel shading, vibrant colors"
+  background: "comic book background art, bold clean ink outlines, flat cel shading, no people, empty scene"
+  character_negative: "blurry, photo, realistic, extra limbs, deformed hands, text, watermark, background scenery"
+  background_negative: "people, characters, person, text, watermark, blurry"
+
+# Удаление фона у персонажей: rembg (если установлен) или простая заливка от углов.
+cutout:
+  method: auto        # auto | rembg | floodfill | none
+  tolerance: 28
+
+page:
+  size: [1654, 2339]  # A4 при 200 dpi
+  margin: 48
+  gutter: 22
+  border: 6
+  background: "#ffffff"
+
+fonts:
+  # Шрифт для облачков. Нужна кириллица. На Windows можно указать
+  # C:/Windows/Fonts/comicbd.ttf (Comic Sans Bold), arialbd.ttf и т.п.
+  bubble:
+    - assets/fonts/bubble.ttf
+    - C:/Windows/Fonts/comicbd.ttf
+    - C:/Windows/Fonts/arialbd.ttf
+    - /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
+  bubble_size: 34

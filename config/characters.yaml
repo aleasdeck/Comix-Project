@@ -1,0 +1,35 @@
+# Персонажи. Создавать удобно командой:
+#   python -m comix character new
+# gender: male | female
+# skin:   ключ из skin_tones ниже
+# outfit: по одному предмету на слот из wardrobe.yaml
+# seed:   фиксированный сид, чтобы лицо было похожим между позами и нарядами
+
+skin_tones:
+  pale:   {prompt: "very pale fair skin", color: "#f6dcc8"}
+  light:  {prompt: "light skin", color: "#eac3a2"}
+  medium: {prompt: "olive medium skin", color: "#c99a6e"}
+  tan:    {prompt: "tan brown skin", color: "#a5734a"}
+  dark:   {prompt: "dark brown skin", color: "#6e4428"}
+  deep:   {prompt: "very dark deep brown skin", color: "#3f2617"}
+
+characters:
+  alex:
+    name: "Алекс"
+    gender: male
+    skin: light
+    age: "young adult"
+    hair: "short messy black hair"
+    features: "sharp jawline, determined look"
+    seed: 101
+    outfit: {head: none, top: leather_jacket, bottom: jeans, shoes: sneakers}
+
+  mira:
+    name: "Мира"
+    gender: female
+    skin: tan
+    age: "young adult"
+    hair: "long curly dark red hair"
+    features: "freckles, confident smile"
+    seed: 202
+    outfit: {head: beanie, top: hoodie, bottom: cargo_pants, shoes: boots}

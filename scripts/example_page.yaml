@@ -1,0 +1,48 @@
+# Пример сценария страницы на 5 кадров.
+# layout: auto (по числу кадров) или одна из: 3a 3b 3c 4a 4b 4c 5a 5b
+#
+# Кадр:
+#   background: локация/вариация из config/backgrounds.yaml
+#   zoom, focus: приблизить фон и выбрать, какую часть показать (0..1)
+#   characters: id, pose (idle/talk/point/walk/shock),
+#     x — центр по горизонтали, y — где ступни (0..1 от кадра),
+#     height — рост в долях высоты кадра (>1 = крупный план, ноги за кадром),
+#     flip — отразить, outfit — заменить отдельные слоты одежды
+#   bubbles: kind (speech/thought/shout/whisper/caption), text, x, y — центр,
+#     tail_to — id персонажа или [x, y], width — ширина текста в долях кадра
+
+layout: 5a
+panels:
+  - background: street/day_wide
+    characters:
+      - {id: alex, pose: walk, x: 0.5, y: 0.97, height: 0.8}
+    bubbles:
+      - {kind: caption, text: "Обычное утро. Ничто не предвещало беды.", x: 0.5, y: 0.1, width: 0.8}
+
+  - background: street/day_close
+    zoom: 1.3
+    characters:
+      - {id: mira, pose: talk, x: 0.55, y: 1.25, height: 1.4, flip: true}
+    bubbles:
+      - {kind: speech, text: "Алекс! Ты видел новости?", x: 0.3, y: 0.2, tail_to: [0.55, 0.05]}
+
+  - background: alley/night_wide
+    characters:
+      - {id: alex, pose: shock, x: 0.28, y: 0.97, height: 0.8}
+      - {id: mira, pose: point, x: 0.72, y: 0.97, height: 0.78, outfit: {head: none}}
+    bubbles:
+      - {kind: speech, text: "Вон там! Смотри!", x: 0.78, y: 0.14, tail_to: mira}
+      - {kind: shout, text: "ЧТО?!", x: 0.22, y: 0.16, tail_to: alex}
+
+  - background: rooftop/night_high
+    characters:
+      - {id: alex, pose: idle, x: 0.62, y: 0.97, height: 0.68, outfit: {head: hero_mask, top: hero_suit_top, bottom: hero_suit_legs, shoes: hero_boots}}
+    bubbles:
+      - {kind: thought, text: "Похоже, костюм снова пригодится...", x: 0.4, y: 0.14, tail_to: alex, width: 0.5}
+
+  - background: rooftop/sunset_low
+    characters:
+      - {id: mira, pose: idle, x: 0.3, y: 0.98, height: 0.75}
+      - {id: alex, pose: talk, x: 0.7, y: 0.98, height: 0.78, outfit: {head: hero_mask, top: hero_suit_top, bottom: hero_suit_legs, shoes: hero_boots}}
+    bubbles:
+      - {kind: whisper, text: "никому ни слова", x: 0.72, y: 0.15, tail_to: alex}

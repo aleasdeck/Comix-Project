@@ -1,0 +1,28 @@
+# Локации для фонов (Qwen-Image). Каждая локация генерируется в нескольких
+# вариациях, чтобы кадры не повторялись: разные ракурсы и время суток.
+# В сценарии фон указывается как "локация/вариация", например street/night_wide.
+
+locations:
+  street:
+    prompt: "a city street with brick buildings, shop fronts, street lamps and parked cars"
+    color: "#8d9db6"
+  rooftop:
+    prompt: "a flat city rooftop with water tanks, antennas and a skyline of skyscrapers behind"
+    color: "#6c7a96"
+  apartment:
+    prompt: "a cozy small apartment living room with a sofa, a window, bookshelves and a lamp"
+    color: "#c9a77c"
+  alley:
+    prompt: "a narrow back alley with dumpsters, fire escapes and puddles"
+    color: "#5f6b5a"
+  office:
+    prompt: "a modern office with desks, computers and big glass windows"
+    color: "#a8b8c0"
+
+# Вариации добавляются к каждой локации.
+variations:
+  day_wide:     "wide establishing shot, eye level, bright daylight"
+  day_close:    "medium shot, eye level, bright daylight, shallow depth"
+  sunset_low:   "low angle shot looking up, warm orange sunset light"
+  night_wide:   "wide shot, night, moody blue lighting, glowing lights"
+  night_high:   "high angle shot looking down, night, dramatic shadows"
