@@ -226,7 +226,7 @@ def underwear_mask(base: Image.Image) -> Image.Image:
 
 
 def extract_layer(project: Project, base_rgb: Image.Image, base_alpha: np.ndarray, edited: Image.Image,
-                  slot: str, threshold: int = 42) -> Image.Image:
+                  slot: str, threshold: int = 42, item_id: str = "") -> Image.Image:
     """Слой вещи = пиксели, которые редактирование заметно поменяло, в полосе своего слота."""
     edited = _align(base_rgb, edited)
     a = np.asarray(base_rgb, dtype=np.int16)
@@ -263,7 +263,25 @@ def extract_layer(project: Project, base_rgb: Image.Image, base_alpha: np.ndarra
     mask = _morph(_morph(mask, 1, np.logical_and), 1, np.logical_or)  # убрать одиночный шум
     mask = _close(mask, 7)                                              # закрыть щели (бежевое ≈ кожа)
     m = _fill_holes(Image.fromarray((mask * 255).astype("uint8")))     # дырки внутри силуэта вещи
-    m = Image.fromarray(((np.asarray(m) > 128) & ed_alpha & band).astype("uint8") * 255)
+    final = (np.asarray(m) > 128) & ed_alpha & band
+    if slot in ("top", "bottom"):
+        # руки/ноги, которые правка лишь чуть перерисовала: в базе это кожа, и в правке цвет кожи
+        # (тот же оттенок, что у опорной кожи; бежевый тренч желтее и сюда не попадает)
+        base_rgba = Image.fromarray(np.dstack([a.astype("uint8"), base_alpha.astype("uint8")]), "RGBA")
+        bskin_img, ref = skin_mask(base_rgba)
+        bskin = np.asarray(bskin_img) > 128
+        hsv = np.asarray(edited.convert("HSV"), dtype=np.float32) / 255.0
+        r_hsv = np.asarray(Image.new("RGB", (1, 1), tuple(ref)).convert("HSV"), dtype=np.float32)[0, 0] / 255.0
+        dh = np.abs(hsv[..., 0] - r_hsv[0]) * 360
+        dh = np.minimum(dh, 360 - dh)
+        same_skin = bskin & _skin_like(edited) & (dh < 6) & (np.abs(hsv[..., 1] - r_hsv[1]) < 0.10)
+        # шорты базы, которые правка не тронула (между полами плаща)
+        shorts = np.asarray(underwear_mask(base_rgba)) > 128
+        final &= ~(same_skin | (shorts & (dist < 42)))
+    if slot == "head" and project.item(slot, item_id).get("kind") == "mask":
+        # в прорезях маски — лицо базы, а не перерисованная кожа
+        final &= ~(_skin_like(edited) | (dist < 42))
+    m = Image.fromarray((final * 255).astype("uint8"))
     m = m.filter(ImageFilter.GaussianBlur(1.0))
     layer = edited.convert("RGBA")
     layer.putalpha(m)
@@ -355,7 +373,7 @@ def process(project: Project, gender: str, pose: str, skins: list[str], items: d
         for it in items.get(slot, []):
             p = d / f"raw_{slot}__{it}.png"
             if p.exists():
-                extract_layer(project, base_raw, base_alpha, Image.open(p), slot).save(d / f"{slot}__{it}.png")
+                extract_layer(project, base_raw, base_alpha, Image.open(p), slot, item_id=it).save(d / f"{slot}__{it}.png")
 
 
 def reprocess(project: Project):
