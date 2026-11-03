@@ -1,8 +1,23 @@
 # Общие настройки пайплайна.
 
+# Чем генерировать:
+#   imagegen — локальный ImageGen (D:\VibeProjects\ImageGen), он сам запускает ComfyUI
+#   comfyui  — напрямую в ComfyUI по шаблонам из workflows/ (нужен свой ComfyUI с ControlNet)
+backend: imagegen
+
+imagegen:
+  path: "D:/VibeProjects/ImageGen"
+  # Пресеты ImageGen: klein, klein-fast (FLUX.2 klein 4B), zimage (Z-Image Turbo), qwen, qwen-fast
+  character_model: klein
+  background_model: qwen
+  character_size: portrait      # 832x1216
+  background_size: wide         # 1344x768
+  timeout: 1800                 # сколько секунд ждать всю пачку
+  stop_after: true              # закрыть ComfyUI, когда пачка готова (освободить видеопамять)
+
+# Дальше настройки только для backend: comfyui
 comfyui:
   url: "http://127.0.0.1:8188"
-  # Сколько секунд ждать одну картинку.
   timeout: 600
 
 # Какой воркфлоу использовать для персонажей: flux или zimage.

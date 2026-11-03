@@ -14,33 +14,34 @@
 
 ## Установка
 
-```bash
-pip install -r requirements.txt
-# по желанию, для качественного удаления фона у персонажей:
-pip install rembg[gpu]
+```bat
+cd /d D:\VibeProjects
+git clone -b claude/project-thread-qry7qr https://github.com/aleasdeck/Comix-Project "Comix Project"
+cd "Comix Project"
+py -3 -m pip install -r requirements.txt
+rem по желанию, для качественного удаления фона у персонажей:
+py -3 -m pip install rembg
 ```
 
-Нужен запущенный **ComfyUI** (по умолчанию `http://127.0.0.1:8188`, адрес задаётся в `config/settings.yaml`).
+Дальше все команды запускаются через `comix.bat` (это то же, что `py -3 -m comix`).
 
-### Модели в ComfyUI
+### Генератор: ImageGen
 
-Имена файлов указываются в `config/settings.yaml` → `models`. По умолчанию ожидается:
+По умолчанию картинки делает локальный **ImageGen** (`D:\VibeProjects\ImageGen`, путь задаётся в `config/settings.yaml` → `imagegen.path`). Comix вызывает его `jobs.generate(items=...)` одной пачкой на модель, ждёт PNG, вырезает персонажей из фона и раскладывает файлы по `assets/`. ComfyUI ImageGen поднимает и закрывает сам.
 
-| Что | Папка ComfyUI | Файл |
+| Что | Пресет ImageGen | Настройка |
 |---|---|---|
-| Flux dev | `models/diffusion_models` | `flux1-dev.safetensors` |
-| T5 + CLIP-L | `models/text_encoders` | `t5xxl_fp8_e4m3fn.safetensors`, `clip_l.safetensors` |
-| Flux VAE | `models/vae` | `ae.safetensors` |
-| ControlNet для поз | `models/controlnet` | `flux-controlnet-union-pro-2.0.safetensors` |
-| Z-Image Turbo | `models/diffusion_models` | `z_image_turbo_bf16.safetensors` + `qwen_3_4b.safetensors` |
-| Qwen-Image | `models/diffusion_models` | `qwen_image_fp8_e4m3fn.safetensors` + `qwen_2.5_vl_7b_fp8_scaled.safetensors` + `qwen_image_vae.safetensors` |
+| Персонажи | `klein` (FLUX.2 klein 4B), можно `zimage` | `imagegen.character_model` |
+| Фоны | `qwen` (Qwen-Image-2512), можно `qwen-fast` | `imagegen.background_model` |
 
-Если ControlNet нет, поставь `use_pose_controlnet: false`: тогда поза задаётся только текстом промпта.
+Сначала генерируются все персонажи, потом все фоны: при переходе на Qwen ImageGen перезапускает ComfyUI, поэтому смешивать их нельзя. После пачки ComfyUI закрывается, когда опустеет очередь (`imagegen.stop_after`).
+
+В ImageGen нет ControlNet, поэтому поза задаётся только текстом промпта. Скелеты OpenPose из `assets/poses` пригодятся, если позы будут «плыть»: их можно подключить через `backend: comfyui` и шаблоны из `workflows/` (это запасной путь напрямую в ComfyUI, для него нужна модель ControlNet).
 
 ## Команды
 
 ```bash
-python -m comix ping                         # есть ли связь с ComfyUI
+python -m comix ping                         # видит ли ImageGen и есть ли нужные модели
 python -m comix wardrobe                     # каталог одежды
 python -m comix character list
 python -m comix character new                # создать персонажа, спросит всё по шагам
@@ -58,7 +59,7 @@ python -m comix gen page scripts/example_page.yaml          # только то,
 python -m comix page scripts/example_page.yaml              # собрать страницу -> output/
 ```
 
-У любой `gen` есть `--dry-run`: ничего не генерируется, собранные воркфлоу сохраняются в `build/dry_run/*.json`. Их можно открыть в ComfyUI и проверить. `--force` перегенерирует уже готовое.
+У любой `gen` есть `--dry-run`: ничего не генерируется, а промпты, сиды и размеры, которые ушли бы в ImageGen, сохраняются в `build/dry_run/*.json`. `--force` перегенерирует уже готовое.
 
 ## Как устроено
 
@@ -81,7 +82,7 @@ assets/
 
 **Похожесть лица.** У персонажа фиксированный `seed`, он один для всех поз и нарядов. Для полной стабильности лица следующим шагом можно добавить LoRA персонажа или PuLID / IP-Adapter в воркфлоу.
 
-**Свой воркфлоу.** Собери граф в ComfyUI, включи Dev mode, сделай *Export (API)* и замени нужные значения плейсхолдерами: `{{POSITIVE}}`, `{{NEGATIVE}}`, `{{SEED}}`, `{{WIDTH}}`, `{{HEIGHT}}`, `{{STEPS}}`, `{{CFG}}`, `{{GUIDANCE}}`, `{{UNET}}`, `{{CLIP}}`, `{{CLIP_T5}}`, `{{CLIP_L}}`, `{{VAE}}`, `{{CONTROLNET}}`, `{{POSE_IMAGE}}`, `{{PREFIX}}`. Потом пропиши путь к нему в `settings.yaml` → `workflows`.
+**Свой воркфлоу (только `backend: comfyui`).** Собери граф в ComfyUI, включи Dev mode, сделай *Export (API)* и замени нужные значения плейсхолдерами: `{{POSITIVE}}`, `{{NEGATIVE}}`, `{{SEED}}`, `{{WIDTH}}`, `{{HEIGHT}}`, `{{STEPS}}`, `{{CFG}}`, `{{GUIDANCE}}`, `{{UNET}}`, `{{CLIP}}`, `{{CLIP_T5}}`, `{{CLIP_L}}`, `{{VAE}}`, `{{CONTROLNET}}`, `{{POSE_IMAGE}}`, `{{PREFIX}}`. Потом пропиши путь к нему в `settings.yaml` → `workflows`.
 
 ## Сценарий страницы
 

@@ -107,3 +107,76 @@ def generate_background(project: Project, location: str, variation: str, client:
     out.parent.mkdir(parents=True, exist_ok=True)
     img.save(out)
     return out
+
+
+# --- пачки: выбор бэкенда ----------------------------------------------------
+
+def _finish_character(project: Project, shot: CharacterShot, raw_png: Path):
+    from PIL import Image
+
+    img = Image.open(raw_png).convert("RGB")
+    shot.path.parent.mkdir(parents=True, exist_ok=True)
+    img.save(shot.path.with_name(shot.pose + "_raw.png"))
+    cfg = project.settings.get("cutout", {})
+    trim(cutout(img, cfg.get("method", "auto"), cfg.get("tolerance", 28))).save(shot.path)
+
+
+def generate_characters(project: Project, shots: list[CharacterShot], dry: bool, force: bool = False) -> list[Path]:
+    todo = [s for s in shots if force or not s.path.exists()]
+    if not todo:
+        return []
+    s = project.settings
+    if s.get("backend", "imagegen") != "imagegen":
+        client = None if dry else _comfy_client(project)
+        return [generate_character(project, sh, client, force) for sh in todo]
+
+    from . import imagegen_backend as ig
+
+    c = s["imagegen"]
+    tasks, by_key = [], {}
+    for sh in todo:
+        key = f"{sh.char_id}__{sh.outfit_key}__{sh.pose}"
+        ch = project.character(sh.char_id)
+        tasks.append({"key": key, "prompt": character_prompt(project, sh), "negative": character_negative(project),
+                      "seed": int(ch.get("seed", _seed(sh.char_id))), "size": c.get("character_size", "portrait")})
+        by_key[key] = sh
+    raw = ig.run_batch(s, c.get("character_model", "klein"), "characters", tasks, dry)
+    done = []
+    for key, f in raw.items():
+        _finish_character(project, by_key[key], f)
+        done.append(by_key[key].path)
+    return done
+
+
+def generate_backgrounds(project: Project, bgs: list[tuple[str, str]], dry: bool, force: bool = False) -> list[Path]:
+    todo = [b for b in bgs if force or not background_path(*b).exists()]
+    if not todo:
+        return []
+    s = project.settings
+    if s.get("backend", "imagegen") != "imagegen":
+        client = None if dry else _comfy_client(project)
+        return [generate_background(project, loc, var, client, force) for loc, var in todo]
+
+    from . import imagegen_backend as ig
+
+    c = s["imagegen"]
+    tasks = [{"key": f"{loc}__{var}", "prompt": background_prompt(project, loc, var),
+              "negative": background_negative(project), "seed": _seed(f"{loc}/{var}"),
+              "size": c.get("background_size", "wide")} for loc, var in todo]
+    raw = ig.run_batch(s, c.get("background_model", "qwen"), "backgrounds", tasks, dry)
+    done = []
+    for key, f in raw.items():
+        loc, var = key.split("__")
+        ig.copy(f, background_path(loc, var))
+        done.append(background_path(loc, var))
+    return done
+
+
+def _comfy_client(project: Project) -> ComfyClient:
+    c = project.settings["comfyui"]
+    client = ComfyClient(c["url"], c.get("timeout", 600))
+    try:
+        client.ping()
+    except OSError as e:
+        raise SystemExit(f"ComfyUI недоступен по {c['url']} ({e}). Запусти ComfyUI или используй --dry-run.")
+    return client

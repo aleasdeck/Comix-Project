@@ -11,20 +11,8 @@ from . import bubbles, placeholder
 from .comfy import ComfyClient
 from .compose import LAYOUTS, compose_file, plan
 from .config import ASSETS, CONFIG, ROOT, SLOTS, Project, load_yaml, make_shot, save_yaml
-from .generate import DRY_DIR, generate_background, generate_character
+from .generate import DRY_DIR, generate_backgrounds, generate_characters
 from .poses import POSES, render_openpose
-
-
-def _client(project: Project, dry: bool) -> ComfyClient | None:
-    if dry:
-        return None
-    c = project.settings["comfyui"]
-    client = ComfyClient(c["url"], c.get("timeout", 600))
-    try:
-        client.ping()
-    except OSError as e:
-        sys.exit(f"ComfyUI недоступен по {c['url']} ({e}). Запусти ComfyUI или используй --dry-run.")
-    return client
 
 
 def _parse_outfit(pairs: list[str] | None) -> dict:
@@ -41,14 +29,24 @@ def _report(paths, dry: bool):
     for p in paths:
         print(("  воркфлоу: " if dry else "  готово: ") + str(Path(p).relative_to(ROOT)))
     if dry:
-        print(f"Сухой прогон: собранные воркфлоу лежат в {DRY_DIR.relative_to(ROOT)}. "
-              "Их можно перетащить в ComfyUI и проверить вручную.")
+        print(f"Сухой прогон: ничего не генерировалось, задания лежат в {DRY_DIR.relative_to(ROOT)}.")
+    elif not paths:
+        print("Всё уже сгенерировано (перегенерировать: --force).")
 
 
 # --- команды ----------------------------------------------------------------
 
 def cmd_ping(args, project):
-    c = project.settings["comfyui"]
+    s = project.settings
+    if s.get("backend", "imagegen") == "imagegen":
+        from . import imagegen_backend
+        need = {s["imagegen"]["character_model"], s["imagegen"]["background_model"]}
+        for m in imagegen_backend.models(s):
+            if m["name"] in need:
+                state = "установлена" if m["installed"] else f"НЕ ХВАТАЕТ {m.get('missing')}"
+                print(f"{m['name']:10} {m['model']}: {state}")
+        return
+    c = s["comfyui"]
     stats = ComfyClient(c["url"]).ping()
     dev = (stats.get("devices") or [{}])[0]
     print(f"ComfyUI на связи: {c['url']}, GPU: {dev.get('name', '?')}")
@@ -136,29 +134,32 @@ def cmd_char_new(args, project):
     print(f"Сгенерировать все позы: python -m comix gen characters --char {cid}")
 
 
+def _maybe_stop(project, dry):
+    s = project.settings
+    if not dry and s.get("backend", "imagegen") == "imagegen" and s["imagegen"].get("stop_after", True):
+        from . import imagegen_backend
+        imagegen_backend.server_stop(s, when="idle")
+
+
 def cmd_gen_characters(args, project):
-    client = _client(project, args.dry_run)
     chars = args.char or list(project.characters)
     poses = args.pose or list(POSES)
     override = _parse_outfit(args.outfit)
-    done = []
-    for cid in chars:
-        for pose in poses:
-            shot = make_shot(project, cid, pose, override)
-            print(f"{cid} / {shot.outfit_key} / {pose}")
-            done.append(generate_character(project, shot, client, args.force))
+    shots = [make_shot(project, cid, pose, override) for cid in chars for pose in poses]
+    for sh in shots:
+        print(f"{sh.char_id} / {sh.outfit_key} / {sh.pose}")
+    done = generate_characters(project, shots, args.dry_run, args.force)
+    _maybe_stop(project, args.dry_run or not done)
     _report(done, args.dry_run)
 
 
 def cmd_gen_backgrounds(args, project):
-    client = _client(project, args.dry_run)
     locs = args.location or list(project.backgrounds)
     vars_ = args.variation or list(project.variations)
-    done = []
-    for loc in locs:
-        for var in vars_:
-            print(f"{loc}/{var}")
-            done.append(generate_background(project, loc, var, client, args.force))
+    bgs = [(l, v) for l in locs for v in vars_]
+    print(f"фонов: {len(bgs)}")
+    done = generate_backgrounds(project, bgs, args.dry_run, args.force)
+    _maybe_stop(project, args.dry_run or not done)
     _report(done, args.dry_run)
 
 
@@ -166,15 +167,10 @@ def cmd_gen_page(args, project):
     """Сгенерировать только то, чего не хватает для сценария."""
     script = load_yaml(Path(args.script))
     shots, bgs = plan(project, script)
-    client = _client(project, args.dry_run)
-    done = []
-    for s in shots:
-        if args.force or not s.path.exists():
-            print(f"персонаж {s.char_id} / {s.outfit_key} / {s.pose}")
-            done.append(generate_character(project, s, client, args.force))
-    for loc, var in bgs:
-        print(f"фон {loc}/{var}")
-        done.append(generate_background(project, loc, var, client, args.force))
+    # сначала персонажи, потом фоны: Qwen тяжёлый, ImageGen перезапускает ComfyUI при переходе
+    done = generate_characters(project, shots, args.dry_run, args.force)
+    done += generate_backgrounds(project, bgs, args.dry_run, args.force)
+    _maybe_stop(project, args.dry_run or not done)
     _report(done, args.dry_run)
 
 
@@ -194,7 +190,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(prog="comix", description="Генератор страниц комикса")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
-    sub.add_parser("ping", help="проверить связь с ComfyUI").set_defaults(fn=cmd_ping)
+    sub.add_parser("ping", help="проверить генератор и модели").set_defaults(fn=cmd_ping)
     p = sub.add_parser("poses", help="скелеты OpenPose и превью 5 поз")
     p.add_argument("--char")
     p.set_defaults(fn=cmd_poses)

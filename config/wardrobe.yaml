@@ -19,7 +19,7 @@ top:
   hoodie:          {prompt: "green hoodie", color: "#2e7d32"}
   business_shirt:  {prompt: "light blue button-up shirt with a dark tie", color: "#90caf9"}
   trench_coat:     {prompt: "beige trench coat", color: "#c8b38a"}
-  hero_suit_top:   {prompt: "blue superhero suit torso with a yellow emblem", color: "#1565c0"}
+  hero_suit_top:   {prompt: "dark teal armored bodysuit top with orange stripes, original design, no logo", color: "#00695c"}
   tank_top:        {prompt: "black tank top", color: "#263238"}
 
 bottom:
@@ -28,7 +28,7 @@ bottom:
   cargo_pants:     {prompt: "olive cargo pants", color: "#6b6b3a"}
   shorts:          {prompt: "khaki shorts", color: "#bfa76f"}
   skirt:           {prompt: "red pleated knee-length skirt", color: "#d32f2f"}
-  hero_suit_legs:  {prompt: "blue superhero suit leggings", color: "#1565c0"}
+  hero_suit_legs:  {prompt: "dark teal armored bodysuit leggings with orange knee pads", color: "#00695c"}
 
 shoes:
   sneakers:        {prompt: "white sneakers", color: "#eeeeee"}
@@ -36,4 +36,4 @@ shoes:
   dress_shoes:     {prompt: "black dress shoes", color: "#111111"}
   combat_boots:    {prompt: "black combat boots", color: "#212121"}
   heels:           {prompt: "red high heels", color: "#c62828"}
-  hero_boots:      {prompt: "red superhero boots", color: "#c62828"}
+  hero_boots:      {prompt: "orange armored boots", color: "#ef6c00"}

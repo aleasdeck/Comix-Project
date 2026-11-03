@@ -20,13 +20,14 @@ def character_prompt(project: Project, shot: CharacterShot) -> str:
         if p:
             wear.append(p)
 
+    # поза и одежда в начале: FLUX.2 klein 4B теряет детали из конца длинного промпта
     parts = [
         f"full body shot of a single {c.get('age', 'adult')} {gender}",
+        POSES[shot.pose]["prompt"],
+        ("wearing " + ", ".join(wear)) if wear else "",
         skin,
         c.get("hair", ""),
         c.get("features", ""),
-        ("wearing " + ", ".join(wear)) if wear else "",
-        POSES[shot.pose]["prompt"],
         "whole figure visible from head to toes, centered",
         "isolated on a plain flat light grey background, no shadows on the background",
         project.settings["style"]["character"],
