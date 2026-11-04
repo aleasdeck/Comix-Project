@@ -1,5 +1,6 @@
 # Браузерная игра на GitHub Pages: сборка game/ и публикация.
-# Пока репозиторий закрытый, работает только сборка (проверка, что игра собирается).
+# Пока репозиторий закрытый, работает только сборка (проверка, что игра собирается):
+# архив сайта не загружается, потому что у закрытых репозиториев мало места под артефакты.
 # Публикация включится сама, когда репозиторий станет открытым и в Settings -> Pages
 # будет выбран источник «GitHub Actions». Для закрытого репозитория с платным планом
 # можно включить публикацию переменной репозитория PAGES_ENABLED=true.
@@ -27,15 +28,16 @@ jobs:
       run:
         working-directory: game
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: game/package-lock.json
       - run: npm ci
       - run: npm run build
-      - uses: actions/upload-pages-artifact@v3
+      - if: ${{ !github.event.repository.private || vars.PAGES_ENABLED == 'true' }}
+        uses: actions/upload-pages-artifact@v3
         with:
           path: game/dist
 
