@@ -1,0 +1,189 @@
+# Ночная фабрика ассетов: всё, что нужно игре для мира «Город».
+# Запуск: comix night            (сухой прогон с подсчётом времени: comix night --dry-run)
+# Готовое не перегенерируется, поэтому прерванный запуск просто продолжается с места остановки.
+# Промпты на английском: так их лучше понимают klein и qwen.
+
+world: city
+title: "Город"
+
+# Секунд на одну картинку, только для оценки времени в сухом прогоне
+seconds:
+  klein_edit: 20
+  klein: 15
+  qwen: 30
+
+# --- Герой: бумажная кукла в 10 позах -------------------------------------------
+hero:
+  genders: [male, female]
+  poses: [idle, talk, cross, point, think, walk, run, fight, shock, victory]
+  # вариантов базы на позу: 2 по скелету + 1 только по тексту, лучший выбирается автоматически
+  pose_candidates: 3
+  sets: ["Городской", "Детектив", "Герой"]   # 12 вещей из wardrobe.yaml
+  # лут города: тоже вещи из wardrobe.yaml
+  extra_items:
+    head: [beanie, bandana, gas_mask]
+    top: [leather_jacket, business_shirt]
+    bottom: [cargo_pants]
+    shoes: [combat_boots, boots]
+  # эмоции слоем лица; нейтральная это сама база
+  emotions:
+    joy:      "a big happy open-mouthed smile and cheerful eyes"
+    anger:    "an angry expression with furrowed eyebrows and gritted teeth"
+    surprise: "a surprised expression with raised eyebrows, wide eyes and a round open mouth"
+    sad:      "a sad expression with eyebrows angled up and a downturned mouth"
+    smirk:    "a sly smirk with one corner of the mouth raised and narrowed eyes"
+    tired:    "an exhausted expression with half-closed droopy eyes, a slightly open mouth and a sweat drop"
+  # одна автоматическая перегенерация вещи, если правка задела фигуру вне своего слота
+  qa_retry: true
+  qa_retry_max: 80      # не больше стольких перегенераций за ночь (самые плохие первыми)
+
+# --- Лица и причёски для NPC (слой лица поверх той же куклы) --------------------
+npc_faces:
+  male:
+    old_cop:   "an older man in his sixties with short grey hair, a thick grey moustache and wrinkles"
+    bald:      "a bald man with a heavy brow and dark stubble"
+    nerd:      "a young man with messy curly brown hair and round glasses"
+    punk:      "a young man with a tall spiky green mohawk"
+    bearded:   "a man with a full black beard and long black hair tied in a bun"
+    grandpa:   "an elderly man with thin white hair, bushy white eyebrows and a short white beard"
+    slick:     "a man with slicked-back black hair and a thin moustache"
+    teen:      "a teenage boy with a messy blond fringe and freckles"
+  female:
+    old_lady:  "an elderly woman with grey hair in a loose bun and wrinkles"
+    punk:      "a young woman with a short pink pixie cut and an eyebrow piercing"
+    office:    "a woman with a neat black bob haircut and glasses"
+    afro:      "a woman with big curly afro hair"
+    ponytail:  "a young woman with a long blonde ponytail"
+    braids:    "a woman with long dark box braids"
+    redhead:   "a woman with wavy red shoulder-length hair and freckles"
+    teen:      "a teenage girl with two short pigtails"
+
+# --- Враги, подручные и злодей: база + 3 позы правкой базы ----------------------
+creature_poses:
+  stand:    "standing in a ready stance, facing the viewer"
+  attack:   "attacking, lunging forward toward the viewer"
+  hit:      "recoiling from a hit, knocked back, grimacing in pain"
+  defeated: "defeated, lying knocked out on the ground, dazed"
+
+enemies:
+  guard_dog:
+    title: "Сторожевой пёс"
+    prompt: "a muscular black-and-tan guard dog in a spiked collar, side view, growling"
+    poses: {defeated: "lying on its side on the ground, knocked out with its tongue out"}
+  drone:
+    title: "Охранный дрон"
+    prompt: "a hovering quadcopter security drone with a red camera eye and a small stun gun underneath"
+    poses: {defeated: "crashed on the ground, broken, sparking and smoking"}
+  riot_robot:
+    title: "Робот-охранник"
+    prompt: "a bulky two-legged riot-control security robot with blue and white armor plates and a riot shield, original design"
+    poses: {defeated: "collapsed on the ground, broken, sparking"}
+  mutant:
+    title: "Мутант из канализации"
+    prompt: "a hunched sewer mutant creature with green slimy skin, glowing yellow eyes and torn grey clothes"
+  brute:
+    title: "Громила"
+    prompt: "a huge muscular bald street brute in a torn black tank top with a heavy chain wrapped around his fist"
+
+bosses:
+  gang_boss:
+    title: "Глава банды (подручная, глава 1)"
+    prompt: "a tough gang leader woman with a shaved undercut, a red bomber jacket, ripped jeans and brass knuckles"
+  security_chief:
+    title: "Шеф охраны (подручный, глава 1)"
+    prompt: "a cold corporate security chief man in a black suit with a chrome cybernetic arm and dark sunglasses"
+  villain:
+    title: "Злодей выпуска"
+    prompt: "a charismatic corporate tycoon villain man in a white suit with a glowing purple prototype energy core on his chest, slicked silver hair"
+
+# --- Предметы: одна картинка на вещь ---------------------------------------------
+# Битки для боя на фишках (вещь «в руке»)
+weapons:
+  bat:        {title: "Бита",         prompt: "a wooden baseball bat with black grip tape"}
+  knuckles:   {title: "Кастет",       prompt: "a pair of silver brass knuckles"}
+  crowbar:    {title: "Монтировка",   prompt: "a red steel crowbar"}
+  stun_baton: {title: "Шокер",        prompt: "a black police stun baton with blue electric sparks at the tip"}
+  skateboard: {title: "Скейт",        prompt: "a skateboard with a flame graphic on the deck"}
+  umbrella:   {title: "Зонт-трость",  prompt: "a closed black umbrella with a curved wooden handle"}
+
+# Сюжетные вещи и иконки
+props:
+  prototype:  {title: "Прототип (Сердце мира)", prompt: "a glowing purple prototype energy core in a chrome casing with cables"}
+  lockpicks:  {title: "Отмычки",      prompt: "a set of lockpicks in an open leather pouch"}
+  keycard:    {title: "Ключ-карта",   prompt: "a white plastic security keycard with a magnetic stripe and a clip"}
+  flash_drive: {title: "Флешка",      prompt: "a small black USB flash drive with a red cap"}
+  badge:      {title: "Полицейский жетон", prompt: "a gold police badge in a worn black leather holder"}
+  cash:       {title: "Пачка денег",  prompt: "a thick bundle of green banknotes held by a rubber band"}
+
+# Наклейки-артефакты: первые 8 из концепта, остальные пока без эффектов
+stickers:
+  lucky_star:  {title: "Счастливая звезда", prompt: "a shiny yellow five-pointed star with a smiling face"}
+  gum:         {title: "Жвачка",       prompt: "a pink bubble gum bubble being blown"}
+  lightning:   {title: "Молния",       prompt: "a yellow lightning bolt"}
+  skull:       {title: "Череп",        prompt: "a white cartoon skull"}
+  bandage:     {title: "Пластырь",     prompt: "a beige adhesive bandage in an X shape"}
+  cheat_sheet: {title: "Шпаргалка",    prompt: "a small folded paper note with scribbles"}
+  eye:         {title: "Глаз",         prompt: "a single big cartoon eye with a blue iris"}
+  piggy_bank:  {title: "Копилка",      prompt: "a pink piggy bank with a coin"}
+  heart:       {title: "Сердце",       prompt: "a red heart"}
+  flame:       {title: "Пламя",        prompt: "an orange flame"}
+  crown:       {title: "Корона",       prompt: "a golden crown with red gems"}
+  clover:      {title: "Клевер",       prompt: "a green four-leaf clover"}
+  rocket:      {title: "Ракета",       prompt: "a red and white cartoon rocket"}
+  ghost:       {title: "Призрак",      prompt: "a cute white cartoon ghost"}
+  cat:         {title: "Кот",          prompt: "a grinning orange cat face"}
+  smiley:      {title: "Смайлик",      prompt: "a yellow smiley face"}
+  anchor:      {title: "Якорь",        prompt: "a navy blue anchor"}
+  diamond:     {title: "Бриллиант",    prompt: "a sparkling light blue diamond"}
+  horseshoe:   {title: "Подкова",      prompt: "a lucky silver horseshoe"}
+  rainbow:     {title: "Радуга",       prompt: "a rainbow with two little clouds"}
+  moon:        {title: "Луна",         prompt: "a sleepy yellow crescent moon with a nightcap"}
+  sun:         {title: "Солнце",       prompt: "a smiling sun with sunglasses"}
+  cactus:      {title: "Кактус",       prompt: "a green cactus in a pot"}
+  pizza:       {title: "Пицца",        prompt: "a slice of pepperoni pizza"}
+  ufo:         {title: "НЛО",          prompt: "a flying saucer with a green beam"}
+  dragon:      {title: "Дракон",       prompt: "a small cute green dragon"}
+  thumbs_up:   {title: "Класс",        prompt: "a hand giving a thumbs up"}
+  boombox:     {title: "Магнитофон",   prompt: "a 90s boombox with big speakers"}
+  cassette:    {title: "Кассета",      prompt: "a retro audio cassette tape"}
+  banana:      {title: "Банан",        prompt: "a yellow banana"}
+  duck:        {title: "Уточка",       prompt: "a yellow rubber duck"}
+  robot:       {title: "Робот",        prompt: "a retro tin toy robot head"}
+  alien:       {title: "Пришелец",     prompt: "a green alien head with big black eyes"}
+  shuriken:    {title: "Сюрикен",      prompt: "a steel ninja throwing star"}
+  magnet:      {title: "Магнит",       prompt: "a red horseshoe magnet"}
+  hourglass:   {title: "Песочные часы", prompt: "an hourglass with golden sand"}
+  key:         {title: "Ключ",         prompt: "an old golden key"}
+  bomb:        {title: "Бомба",        prompt: "a round black cartoon bomb with a lit fuse"}
+  trophy:      {title: "Кубок",        prompt: "a golden trophy cup"}
+  paw:         {title: "Лапа",         prompt: "a pink paw print"}
+
+# --- Фоны (qwen) ------------------------------------------------------------------
+# Локации берутся из config/backgrounds.yaml. Существующие 5 локаций города
+# догенерируются только если каких-то вариаций нет.
+backgrounds:
+  # Глава 1, «Старый квартал»: street, alley, apartment (пролог) + новые
+  # Глава 2, «Логово»: office, rooftop + новые
+  locations: [street, alley, apartment, office, rooftop,
+              diner, pawn_shop, subway, warehouse,
+              parking, server_room, lab, penthouse, highway]
+
+# Крупные планы для кадров миниигр: попытка и итог. Руки в перчатках, чтобы не
+# зависеть от цвета кожи героя.
+closeups:
+  lock_try:      "extreme close-up of black-gloved hands picking an apartment door lock with lockpicks"
+  lock_done:     "close-up of an apartment door swinging open, black-gloved hand holding lockpicks"
+  safe_try:      "extreme close-up of a black-gloved hand turning the dial of an office wall safe"
+  safe_done:     "close-up of an open office safe with documents and bundles of cash inside"
+  hack_try:      "close-up of black-gloved hands typing on a keyboard in front of a monitor glowing with green code"
+  hack_done:     "close-up of a computer monitor showing a big green unlocked padlock icon"
+  bomb_try:      "extreme close-up of black-gloved hands holding wire cutters over a homemade bomb with red, blue and yellow wires and a digital timer"
+  bomb_done:     "close-up of a defused bomb with cut wires and a frozen digital timer"
+  bag_try:       "close-up of a black-gloved hand carefully reaching into an open handbag in a crowded subway car"
+  bag_done:      "close-up of a black-gloved hand holding a small black USB flash drive"
+  stealth_try:   "high angle view of an underground parking garage with security cameras and their cones of light"
+  stealth_done:  "close-up of a broken security camera hanging from a concrete ceiling, sparking"
+  chase_try:     "a motorcycle weaving between cars in a city traffic jam, speed lines, dynamic low angle"
+  chase_done:    "a motorcycle leaping over a car in city traffic, dramatic angle"
+  haggle_try:    "close-up of a pawn shop counter with a shopkeeper's hands counting money next to an old watch"
+  haggle_done:   "close-up of a handshake over a pawn shop counter"

@@ -1,0 +1,73 @@
+# Маленький набор для проверки ночной фабрики на фейковом ImageGen (см. tests/README.md)
+world: test
+title: Город
+seconds:
+  klein_edit: 20
+  klein: 15
+  qwen: 30
+hero:
+  genders:
+  - male
+  - female
+  poses:
+  - idle
+  - cross
+  - run
+  pose_candidates: 3
+  sets:
+  - Детектив
+  extra_items:
+    head:
+    - bandana
+    shoes:
+    - boots
+  emotions:
+    joy: a big happy open-mouthed smile and cheerful eyes
+    anger: an angry expression with furrowed eyebrows and gritted teeth
+  qa_retry: true
+npc_faces:
+  male:
+    old_cop: an older man in his sixties with short grey hair, a thick grey moustache
+      and wrinkles
+    bald: a bald man with a heavy brow and dark stubble
+  female:
+    old_lady: an elderly woman with grey hair in a loose bun and wrinkles
+    punk: a young woman with a short pink pixie cut and an eyebrow piercing
+creature_poses:
+  stand: standing in a ready stance, facing the viewer
+  attack: attacking, lunging forward toward the viewer
+  hit: recoiling from a hit, knocked back, grimacing in pain
+  defeated: defeated, lying knocked out on the ground, dazed
+enemies:
+  drone:
+    title: Охранный дрон
+    prompt: a hovering quadcopter security drone with a red camera eye and a small
+      stun gun underneath
+    poses:
+      defeated: crashed on the ground, broken, sparking and smoking
+bosses:
+  villain:
+    title: Злодей выпуска
+    prompt: a charismatic corporate tycoon villain man in a white suit with a glowing
+      purple prototype energy core on his chest, slicked silver hair
+weapons:
+  bat:
+    title: Бита
+    prompt: a wooden baseball bat with black grip tape
+props:
+  prototype:
+    title: Прототип (Сердце мира)
+    prompt: a glowing purple prototype energy core in a chrome casing with cables
+stickers:
+  lucky_star:
+    title: Счастливая звезда
+    prompt: a shiny yellow five-pointed star with a smiling face
+  skull:
+    title: Череп
+    prompt: a white cartoon skull
+backgrounds:
+  locations:
+  - diner
+closeups:
+  lock_try: extreme close-up of black-gloved hands picking an apartment door lock
+    with lockpicks

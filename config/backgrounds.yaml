@@ -19,7 +19,46 @@ locations:
     prompt: "a modern office with desks, computers and big glass windows"
     color: "#a8b8c0"
 
-# Вариации добавляются к каждой локации.
+  # --- город, глава 1 «Старый квартал» (4 вариации, см. variations ниже у локации)
+  diner:
+    prompt: "a retro 24-hour diner with red vinyl booths, a long counter with stools and neon signs in the windows"
+    color: "#b5524a"
+    variations: [day_wide, day_close, night_wide, night_high]
+  pawn_shop:
+    prompt: "a cluttered pawn shop with glass display cases, old guitars, watches and electronics on the walls"
+    color: "#8a7350"
+    variations: [day_wide, day_close, night_wide, night_high]
+  subway:
+    prompt: "a subway platform with white tiled walls, benches, route maps without text and a train arriving"
+    color: "#7a8c8c"
+    variations: [day_wide, day_close, night_wide, night_high]
+  warehouse:
+    prompt: "a gang hideout in an abandoned warehouse with graffiti on brick walls, wooden crates, a wrecked car and hanging lamps"
+    color: "#6b5a4a"
+    variations: [day_wide, day_close, night_wide, night_high]
+  # --- город, глава 2 «Логово»
+  parking:
+    prompt: "an underground parking garage with concrete pillars, security cameras on the ceiling and parked cars"
+    color: "#5a6470"
+    variations: [day_wide, day_close, night_wide, night_high]
+  server_room:
+    prompt: "a dark server room with rows of blinking server racks and bundles of cables on the floor"
+    color: "#3d5a73"
+    variations: [day_wide, day_close, night_wide, night_high]
+  lab:
+    prompt: "a secret high-tech laboratory with glass tanks, glowing purple equipment and a containment chamber in the center"
+    color: "#6a4c8c"
+    variations: [day_wide, day_close, night_wide, night_high]
+  penthouse:
+    prompt: "a luxurious penthouse office at the top of a skyscraper with a huge window over the city, marble floor and a massive desk"
+    color: "#9c8f7a"
+    variations: [day_wide, day_close, night_wide, night_high]
+  highway:
+    prompt: "a busy city highway in a traffic jam with cars, trucks and concrete overpasses"
+    color: "#7c8590"
+    variations: [day_wide, day_close, night_wide, night_high]
+
+# Вариации добавляются к каждой локации (или только перечисленные в её variations).
 variations:
   day_wide:     "wide establishing shot, eye level, bright daylight"
   day_close:    "medium shot, eye level, bright daylight, shallow depth"

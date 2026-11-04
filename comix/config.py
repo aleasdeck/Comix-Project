@@ -71,6 +71,11 @@ class Project:
             outfit[slot] = item
         return {s: outfit[s] for s in SLOTS}
 
+    def location_variations(self, location: str) -> list[str]:
+        """Вариации локации: свой список variations у локации или все общие."""
+        own = (self.backgrounds.get(location) or {}).get("variations")
+        return list(own) if own else list(self.variations)
+
     def item(self, slot: str, item_id: str) -> dict:
         return (self.wardrobe.get(slot) or {}).get(item_id) or {"prompt": "", "color": None}
 
