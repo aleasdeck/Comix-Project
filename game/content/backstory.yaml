@@ -1,0 +1,93 @@
+# Три карты предыстории. {мужской|женский} вариант слова подставляется по полу героя.
+# stats: str Сила, agi Ловкость, wit Смекалка, cha Обаяние (у всех база 1).
+
+origins:
+  merc:
+    title: "{Бывший наёмник|Бывшая наёмница}"
+    stats: {str: 2, agi: 1}
+    hp: 4
+    hand: knuckles
+    outfit: {top: leather_jacket, bottom: cargo_pants, shoes: combat_boots}
+    day: "{Бывший наёмник|Бывшая наёмница}. Утро начинается с отжиманий."
+  scientist:
+    title: "{Учёный|Учёная}"
+    stats: {wit: 2, cha: 1}
+    outfit: {top: business_shirt, bottom: black_trousers, shoes: dress_shoes}
+    ink: 1
+    day: "{Учёный|Учёная} без лаборатории. Опять ночь за чертежами."
+  thief:
+    title: "{Вор|Воровка}"
+    stats: {agi: 2, wit: 1}
+    props: [lockpicks]
+    outfit: {head: beanie, top: hoodie, bottom: jeans, shoes: sneakers}
+    day: "{Вор|Воровка} на пенсии. Почти."
+  aristocrat:
+    title: "{Изгнанный аристократ|Изгнанная аристократка}"
+    stats: {cha: 2, wit: 1}
+    coins: 10
+    outfit: {head: fedora, top: trench_coat, bottom: black_trousers, shoes: dress_shoes}
+    day: "Наследство отобрали, манеры остались."
+  mechanic:
+    title: "Механик"
+    stats: {str: 1, wit: 2}
+    hand: crowbar
+    outfit: {head: baseball_cap, top: hoodie, bottom: cargo_pants, shoes: boots}
+    day: "Механик из гаража на углу. Руки в мазуте с утра."
+  medium:
+    title: "Медиум"
+    stats: {cha: 1, wit: 1, agi: 1}
+    ink: 2
+    outfit: {head: bandana, top: hoodie, bottom: jeans, shoes: sneakers}
+    day: "Медиум с вывеской «Гадаю недорого». Сегодня карты молчат."
+
+motives:
+  revenge:
+    title: "Месть"
+    taken: "Ночью банда в красных бомберах разгромила твой дом. Их главарь уходила, смеясь."
+    face: anger
+    hook: "Рыжая знает, кто отдал приказ."
+  debt:
+    title: "Долг"
+    taken: "Старый друг, которому ты {должен|должна}, пропал. Записка: «Старый квартал»."
+    face: sad
+    hook: "Друг жив. Его держат у «Белого Шпиля»."
+  family:
+    title: "Поиск близкого"
+    taken: "Пропала младшая сестра. Последний звонок был из Старого квартала."
+    face: surprise
+    hook: "Сестру видели у склада в порту."
+  fame:
+    title: "Слава"
+    taken: "Про пропажи в Старом квартале молчат все газеты. Это твой шанс прославиться."
+    face: smirk
+    hook: "Это сенсация на первую полосу."
+  redemption:
+    title: "Искупление"
+    taken: "Когда-то ты {работал|работала} на корпорацию «Белый Шпиль». Теперь из-за неё пропадают люди."
+    face: tired
+    hook: "Ты {помог|помогла} построить то, что теперь ворует людей."
+  curiosity:
+    title: "Любопытство"
+    taken: "Под дверью кто-то оставил флешку с надписью «Не открывать»."
+    face: surprise
+    props: [flash_drive]
+    hook: "На флешке чертёж прототипа. Сердце города."
+
+flaws:
+  wanted:
+    title: "В розыске"
+    text: "Полиция и бывшие копы тебе не верят"
+    reward: {ink: 1}
+  heights:
+    title: "Боится высоты"
+    text: "Крыши и пожарные лестницы даются тяжело"
+    reward: {ink: 1}
+  debts:
+    title: "В долгах"
+    text: "Начинаешь без денег, кредиторы ищут тебя"
+    coins: -100
+    reward: {ink: 1}
+  honest:
+    title: "Не умеет врать"
+    text: "Обманы и блеф почти всегда проваливаются"
+    reward: {ink: 1}

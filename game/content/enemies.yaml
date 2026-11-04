@@ -1,0 +1,123 @@
+# Враги. Их фишки лежат в общей стопке. Верхняя вражья фишка с приёмом это план врага на ход,
+# он виден заранее. Перевернул её своим ударом, значит забрал, и приём пропадает.
+# Остальные вражьи фишки лежат рубашкой вверх: под ними бывают и ловушки.
+#
+# Фишки врага (act):
+#   hit N [times K]  удар N, K раз подряд
+#   shield N         враг закрывается: снимает N с твоего урона в следующем ударе
+#   heal N           враг лечится
+#   rage N           все его удары до конца боя +N
+#   knock            выбивает с тебя вещь: её фишки уходят из стопки до конца боя
+#   trap N           ловушка: если перевернул, бьёт тебя на N и обрывает каскад (не забирается)
+#
+# frame: рост фигуры в кадре и где её низ (доли высоты кадра).
+# keep: какой фишкой станет захваченный приём, если оставить его себе «на интерес».
+
+enemies:
+  guard_dog:
+    title: "Сторожевой пёс"
+    hp: 10
+    frame: {h: 0.36, y: 0.96}
+    chips:
+      - {name: "Укус", act: hit, n: 3}
+      - {name: "Рывок", act: hit, n: 2, times: 2}
+      - {name: "Рычание", act: rage, n: 1}
+      - {name: "Хватка", act: hit, n: 4}
+      - {name: "Цепь", act: trap, n: 2}
+    sfx: ["ГАВ!", "РРР!"]
+
+  drone:
+    title: "Охранный дрон"
+    hp: 11
+    frame: {h: 0.3, y: 0.62}
+    chips:
+      - {name: "Электрошок", act: hit, n: 3}
+      - {name: "Щит", act: shield, n: 3}
+      - {name: "Очередь", act: hit, n: 1, times: 3}
+      - {name: "Сеть", act: trap, n: 2}
+      - {name: "Искра", act: trap, n: 3}
+    sfx: ["БЗЗТ!", "ПИУ!"]
+
+  brute:
+    title: "Громила"
+    hp: 13
+    frame: {h: 0.86, y: 0.97}
+    chips:
+      - {name: "Цепью", act: hit, n: 5}
+      - {name: "Кулачище", act: hit, n: 3}
+      - {name: "Ярость", act: rage, n: 2}
+      - {name: "Захват", act: trap, n: 3}
+      - {name: "Отдышка", act: heal, n: 3}
+      - {name: "Подножка", act: trap, n: 2}
+    sfx: ["ХРЯСЬ!", "БУМ!"]
+
+  mutant:
+    title: "Мутант из канализации"
+    hp: 12
+    frame: {h: 0.6, y: 0.97}
+    chips:
+      - {name: "Слизь", act: trap, n: 2}
+      - {name: "Когти", act: hit, n: 2, times: 2}
+      - {name: "Регенерация", act: heal, n: 3}
+      - {name: "Прыжок", act: hit, n: 4}
+    sfx: ["ШЛЁП!", "ХЛЮП!"]
+
+  riot_robot:
+    title: "Робот-охранник"
+    hp: 14
+    frame: {h: 0.82, y: 0.97}
+    chips:
+      - {name: "Таран щитом", act: hit, n: 4}
+      - {name: "Щит", act: shield, n: 4}
+      - {name: "Перезагрузка", act: heal, n: 4}
+      - {name: "Разряд", act: trap, n: 3}
+    sfx: ["ДЗИНЬ!", "КЛАНГ!"]
+
+# Подручные злодея: стражи первой главы, две фазы. На второй фазе выбивают вещи.
+bosses:
+  gang_boss:
+    title: "Глава банды Рыжая"
+    hp: 20
+    frame: {h: 0.78, y: 0.97}
+    chips:
+      - {name: "Кастетом", act: hit, n: 4}
+      - {name: "Двойка", act: hit, n: 3, times: 2}
+      - {name: "Подсечка", act: trap, n: 3}
+      - {name: "Ярость", act: rage, n: 1}
+      - {name: "Бутылка", act: hit, n: 4}
+      - {name: "Битое стекло", act: trap, n: 2}
+    phase2:
+      at: 10
+      say: "Ну всё, держись!"
+      add:
+        - {name: "Сбить шляпу", act: knock}
+        - {name: "Добивание", act: hit, n: 5}
+    sfx: ["БАМ!", "ТРЕСЬ!"]
+
+  security_chief:
+    title: "Шеф охраны Штерн"
+    hp: 20
+    frame: {h: 0.8, y: 0.97}
+    chips:
+      - {name: "Кибер-удар", act: hit, n: 4}
+      - {name: "Блок рукой", act: shield, n: 4}
+      - {name: "Электросеть", act: trap, n: 3}
+      - {name: "Серия", act: hit, n: 2, times: 3}
+      - {name: "Перегрузка", act: rage, n: 1}
+      - {name: "Мина", act: trap, n: 4}
+    phase2:
+      at: 10
+      say: "Протокол «Ноль». Без пощады."
+      add:
+        - {name: "Обезоружить", act: knock}
+        - {name: "Разряд в упор", act: hit, n: 5}
+    sfx: ["ВЗЗЗ!", "КЛАЦ!"]
+
+# Во что превращается захваченная фишка, если оставить её себе
+keep:
+  hit: {act: hit}
+  shield: {act: block}
+  heal: {act: heal}
+  rage: {act: double}
+  knock: {act: stun}
+  trap: {act: block}

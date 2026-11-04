@@ -2,17 +2,20 @@
 // Порядок: база -> перекраска кожи по маске -> стереть шорты под штанами -> стереть то, что убирает
 // лицо NPC -> лицо (тоже перекрашенное) -> слои одежды снизу вверх.
 
-import { type DollManifest, type DollPose, type GameManifest, type Pt, image, noteMissing } from "./assets";
+import { type DollManifest, type DollPose, type GameManifest, type Pt, alphaBox, image, noteMissing } from "./assets";
 
 export interface Look {
   gender: string;
   skin: string;                    // имя тона из manifest.skins или #rrggbb
   outfit: Record<string, string>;  // слот -> вещь ("none" или нет ключа: пусто)
   face?: string;                   // эмоция героя или лицо NPC
+  hand?: string;                   // спрайт вещи в руке, напр. "weapons/bat"
+  decals?: Record<string, string>; // наклейки: слот (head/top/bottom/shoes/bat) -> "stickers/<id>"
 }
 
 export function lookKey(l: Look) {
-  return JSON.stringify([l.gender, l.skin, l.face || "", Object.entries(l.outfit).sort()]);
+  return JSON.stringify([l.gender, l.skin, l.face || "", Object.entries(l.outfit).sort(), l.hand || "",
+    Object.entries(l.decals || {}).sort()]);
 }
 
 function posesOf(m: DollManifest | undefined, gender: string) {
@@ -20,12 +23,12 @@ function posesOf(m: DollManifest | undefined, gender: string) {
 }
 
 /** Поза для отрисовки: нужная, а если её ещё нет, то idle (и пометка, что её не хватает). */
-export function resolvePose(m: DollManifest | undefined, gender: string, pose: string): DollPose | undefined {
+export function resolvePose(m: DollManifest | undefined, gender: string, pose: string): [DollPose | undefined, string] {
   const g = posesOf(m, gender);
-  if (!g) return undefined;
-  if (g[pose]) return g[pose];
+  if (!g) return [undefined, pose];
+  if (g[pose]) return [g[pose], pose];
   noteMissing("hero", `${gender === "female" ? "она" : "он"}/${pose}`);
-  return g.idle || Object.values(g)[0];
+  return g.idle ? [g.idle, "idle"] : [Object.values(g)[0], Object.keys(g)[0]];
 }
 
 function hexOf(m: DollManifest, skin: string) {
@@ -70,7 +73,7 @@ export function composeDoll(gm: GameManifest, look: Look, pose: string): Promise
 
 async function build(gm: GameManifest, look: Look, pose: string): Promise<HTMLCanvasElement | null> {
   const m = gm.doll;
-  const e = resolvePose(m, look.gender, pose);
+  const [e, used] = resolvePose(m, look.gender, pose);
   if (!m || !e) return null;
   const layers: string[] = [];
   for (const slot of m.layer_order) {
@@ -112,7 +115,106 @@ async function build(gm: GameManifest, look: Look, pose: string): Promise<HTMLCa
     ctx.drawImage(fc, 0, 0);
   }
   for (const im of imgs) if (im) ctx.drawImage(im, 0, 0, w, h);
+  await accessories(gm, ctx, look, used);
   return cv;
+}
+
+// --- вещь в руке и наклейки: крепятся по точкам скелета позы ------------------------------
+
+const NO_HAND = new Set(["cross", "think"]);
+
+/** Точки скелета в координатах картинки куклы: по рамке фигуры, без растяжения. */
+function posePoints(gm: GameManifest, pose: string, box: { x: number; y: number; w: number; h: number }) {
+  const pts = gm.poses[pose]?.points || BASE_POINTS;
+  const ys = Object.values(pts).map((p) => p[1]);
+  const top = Math.min(...ys) - 0.07, bottom = Math.max(...ys) + 0.04;
+  const k = box.h / (bottom - top);
+  const cx = box.x + box.w / 2;
+  const xs = Object.values(pts).map((p) => p[0]);
+  const mid = (Math.min(...xs) + Math.max(...xs)) / 2;
+  return (i: number): [number, number] => {
+    const p = pts[i] || BASE_POINTS[i];
+    return [cx + (p[0] - mid) * k, box.y + (p[1] - top) * k];
+  };
+}
+
+interface Axis { cx: number; cy: number; angle: number; len: number }
+const axes = new WeakMap<CanvasImageSource, Axis>();
+
+/** Главная ось непрозрачных пикселей спрайта: вдоль неё лежит бита или зонт. */
+function spriteAxis(img: HTMLImageElement): Axis {
+  const hit = axes.get(img);
+  if (hit) return hit;
+  const s = Math.min(1, 128 / Math.max(img.width, img.height));
+  const w = Math.max(1, Math.round(img.width * s)), h = Math.max(1, Math.round(img.height * s));
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const x = c.getContext("2d", { willReadFrequently: true })!;
+  x.drawImage(img, 0, 0, w, h);
+  const d = x.getImageData(0, 0, w, h).data;
+  let n = 0, sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0;
+  for (let y = 0; y < h; y++) for (let i = 0; i < w; i++) if (d[(y * w + i) * 4 + 3] > 40) {
+    n++; sx += i; sy += y; sxx += i * i; syy += y * y; sxy += i * y;
+  }
+  const mx = sx / (n || 1), my = sy / (n || 1);
+  const cxx = sxx / (n || 1) - mx * mx, cyy = syy / (n || 1) - my * my, cxy = sxy / (n || 1) - mx * my;
+  const angle = 0.5 * Math.atan2(2 * cxy, cxx - cyy);
+  const len = 4 * Math.sqrt(Math.max(1, (cxx + cyy) / 2 + Math.sqrt(((cxx - cyy) / 2) ** 2 + cxy * cxy)));
+  const a = { cx: mx / s, cy: my / s, angle, len: len / s };
+  axes.set(img, a);
+  return a;
+}
+
+function sprite(gm: GameManifest, id: string) {
+  const [g, k] = id.split("/");
+  return image(gm.sprites[g]?.[k]?.src);
+}
+
+async function accessories(gm: GameManifest, ctx: CanvasRenderingContext2D, look: Look, pose: string) {
+  if (!look.hand && !look.decals) return;
+  const box = alphaBox(ctx.canvas);
+  const P = posePoints(gm, pose, box);
+  const fig = box.h;
+  if (look.hand && !NO_HAND.has(pose)) {
+    const [ex, ey] = P(3), [wx, wy] = P(4);
+    const dir = Math.atan2(wy - ey, wx - ex);
+    const img = await sprite(gm, look.hand);
+    ctx.save();
+    ctx.translate(wx, wy);
+    if (img) {
+      const ax = spriteAxis(img);
+      const L = fig * 0.36;
+      const sc = L / ax.len;
+      ctx.rotate(dir - ax.angle);
+      ctx.drawImage(img, -ax.cx * sc + (L * 0.32), -ax.cy * sc, img.width * sc, img.height * sc);
+    } else {
+      ctx.rotate(dir);
+      ctx.fillStyle = "#7a4a26"; ctx.strokeStyle = "#1d1d22"; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.roundRect(-fig * 0.03, -fig * 0.012, fig * 0.3, fig * 0.024, fig * 0.012); ctx.fill(); ctx.stroke();
+    }
+    ctx.restore();
+  }
+  const spots: Record<string, [number, number]> = {
+    head: [(P(14)[0] + P(15)[0]) / 2, P(0)[1] - fig * 0.045],
+    top: [P(1)[0] + (P(5)[0] - P(1)[0]) * 0.45, P(1)[1] + (P(11)[1] - P(1)[1]) * 0.3],
+    bottom: [P(8)[0] + (P(9)[0] - P(8)[0]) * 0.4, P(8)[1] + (P(9)[1] - P(8)[1]) * 0.45],
+    shoes: [P(13)[0], P(13)[1] - fig * 0.01],
+  };
+  for (const [slot, id] of Object.entries(look.decals || {})) {
+    const at = spots[slot];
+    if (!at) continue;
+    const r = fig * 0.035;
+    const img = await sprite(gm, id);
+    ctx.save();
+    ctx.translate(at[0], at[1]);
+    ctx.rotate(-0.2);
+    if (img) ctx.drawImage(img, -r * 1.2, -r * 1.2, r * 2.4, r * 2.4);
+    else {
+      ctx.fillStyle = "#ffd23f"; ctx.strokeStyle = "#fff"; ctx.lineWidth = r * 0.3;
+      ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    }
+    ctx.restore();
+  }
 }
 
 // --- заглушка: манекен по скелету позы, пока куклы нет --------------------------------------

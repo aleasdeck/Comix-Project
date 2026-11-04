@@ -33,6 +33,7 @@ export interface Panel {
   bubbles?: Bubble[];
   sfx?: string;
   end?: boolean;       // «Продолжение следует…»
+  crossed?: boolean;   // кадр перерисован чернилами: зачёркнутый набросок в углу
 }
 
 export interface Cast {
@@ -147,7 +148,7 @@ async function actorImage(cast: Cast, a: Actor): Promise<CanvasImageSource & { w
   return enemyStub(id, pose);
 }
 
-function enemyStub(id: string, pose: string) {
+export function enemyStub(id: string, pose: string) {
   const c = document.createElement("canvas");
   c.width = 400; c.height = 400;
   const x = c.getContext("2d")!;
@@ -159,7 +160,7 @@ function enemyStub(id: string, pose: string) {
   for (const s of [-1, 1]) { x.beginPath(); x.ellipse(s * 55, -30, 22, 14, s * 0.3, 0, Math.PI * 2); x.fill(); }
   x.fillStyle = "#fff"; x.font = "600 30px Rubik, sans-serif"; x.textAlign = "center";
   x.fillText(id, 0, 70);
-  return c;
+  return Object.assign(c, { stub: true });
 }
 
 async function propImage(cast: Cast, id: string) {
@@ -218,7 +219,7 @@ export async function renderArt(cast: Cast, p: Panel, w: number, h: number): Pro
     const top = feet - box.h * sc;
     ctx.save();
     ctx.translate(cx, 0);
-    if (a.flip) ctx.scale(-1, 1);
+    if (a.flip && !(img as { stub?: boolean }).stub) ctx.scale(-1, 1);  // у заглушки подпись не зеркалим
     ctx.drawImage(img, -(box.x + box.w / 2) * sc, top - box.y * sc, img.width * sc, img.height * sc);
     ctx.restore();
     heads.push([cx, Math.max(top + box.h * sc * 0.08, 4)]);
@@ -267,8 +268,10 @@ export function drawText(ctx: CanvasRenderingContext2D, cast: Cast, p: Panel, r:
   let capBottom = 0;
 
   if (p.title) {
-    const fs = Math.round(56 * s);
+    let fs = Math.round(56 * s);
     ctx.font = `${fs}px "Russo One", Rubik, sans-serif`;
+    const tw = ctx.measureText(cast.say(p.title)).width;
+    if (tw > r.w * 0.92) { fs = Math.floor((fs * r.w * 0.92) / tw); ctx.font = `${fs}px "Russo One", Rubik, sans-serif`; }
     ctx.textAlign = "center"; ctx.textBaseline = "top";
     ctx.lineWidth = 9 * s; ctx.strokeStyle = sketch ? "rgba(66,68,80,.5)" : "#111";
     ctx.fillStyle = sketch ? "rgba(244,239,226,.9)" : "#ffd23f";
@@ -345,6 +348,21 @@ export function drawText(ctx: CanvasRenderingContext2D, cast: Cast, p: Panel, r:
     ctx.fillStyle = ink;
     lines.forEach((l, i) => ctx.fillText(l, cx, cy + (i - (lines.length - 1) / 2) * fs * 1.12));
     ctx.textAlign = "left";
+  }
+
+  if (p.crossed && !sketch) {
+    const w = r.w * 0.26, hh = r.h * 0.26, x = r.w - w - 10 * s, y = r.h - hh - 10 * s;
+    ctx.save();
+    ctx.translate(x, y); ctx.rotate(0.05);
+    ctx.fillStyle = "rgba(250,248,240,.92)"; ctx.strokeStyle = "#2b4c9b"; ctx.lineWidth = 3 * s;
+    ctx.fillRect(0, 0, w, hh); ctx.strokeRect(0, 0, w, hh);
+    ctx.strokeStyle = "rgba(66,68,80,.6)"; ctx.lineWidth = 2 * s;
+    for (let i = 0; i < 5; i++) { ctx.beginPath(); ctx.moveTo(w * 0.15, hh * (0.25 + i * 0.12)); ctx.lineTo(w * 0.85, hh * (0.2 + i * 0.13)); ctx.stroke(); }
+    ctx.strokeStyle = "#2b4c9b"; ctx.lineWidth = 5 * s;
+    ctx.beginPath(); ctx.moveTo(4, 4); ctx.lineTo(w - 4, hh - 4); ctx.moveTo(w - 4, 4); ctx.lineTo(4, hh - 4); ctx.stroke();
+    ctx.fillStyle = "#2b4c9b"; ctx.font = `${Math.round(18 * s)}px Neucha, sans-serif`; ctx.textAlign = "center";
+    ctx.fillText("перерисовано", w / 2, -6 * s);
+    ctx.restore();
   }
 
   if (p.sfx) {

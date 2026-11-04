@@ -1,0 +1,462 @@
+# Мир «Город»: пролог и глава 1 «Завязка» в Старом квартале.
+#
+# Кадр пишется коротко (shot) и собирается игрой:
+#   wide     общий план: герой (и союзник), можно with: второй персонаж
+#   two      герой и кто-то ещё в полный рост
+#   talk     средний план на двоих, hero_says / they_say
+#   close    крупно герой, say / think
+#   fight    драка: герой и with
+#   item     вещь крупно (prop), можно с героем
+#   closeup  крупный план миниигры (closeup: id из assets/closeups)
+# Общие поля: bg, hero (поза), face (эмоция), with (npc:id или enemy:id), with_pose,
+# caption, sfx, title. Без bg берётся фон сцены (для talk и close ближний ракурс).
+# Текст: {мужской|женский} вариант подставляется по полу героя.
+#
+# Вариант сцены:
+#   do      сразу итог
+#   check   {stat, diff}: шанс виден до выбора, итог win или lose
+#   fight   id врага: бой на фишках, итог win (проигрыш боя заканчивает выпуск)
+#   mini    {game: pins|flow, stat, diff}: миниигра, пропуск решается проверкой stat
+#   needs   {coins: N} {prop: id} {ally: id} {origin: id} {motive: id}: без этого вариант закрыт
+#   harder  {flaw_id: N}: сложнее с этим изъяном; easier {ally_id: N}: проще с союзником
+#   try     кадр попытки: его эскиз виден при наведении
+# Итог: panels, gain {coins, hp, ink, loot: N (1 из 3), props, ally, peek, sticker: N (пачка из N), flag: имя или список},
+#   cost {hp, coins},
+# fight (бой после кадров), then (сразу следующий итог).
+
+world: city
+title: "Город"
+issue: "Старый квартал"
+heart: "прототип"
+
+npcs:
+  old_cop:  {name: "Михалыч", gender: male, skin: medium, face: npc_old_cop, outfit: {top: leather_jacket, bottom: black_trousers, shoes: boots}}
+  grandpa:  {name: "Киоскёр", gender: male, skin: light, face: npc_grandpa, outfit: {top: business_shirt, bottom: black_trousers, shoes: dress_shoes}}
+  waitress: {name: "Официантка Люба", gender: female, skin: tan, face: npc_ponytail, outfit: {top: business_shirt, bottom: jeans, shoes: sneakers}}
+  pawnbroker: {name: "Ростовщик", gender: male, skin: pale, face: npc_slick, outfit: {top: trench_coat, bottom: black_trousers, shoes: dress_shoes}}
+  neighbor: {name: "Соседка", gender: female, skin: light, face: npc_old_lady, outfit: {top: hoodie, bottom: cargo_pants, shoes: boots}}
+  artist:   {name: "Художница", gender: female, skin: dark, face: npc_afro, outfit: {head: beanie, top: hoodie, bottom: cargo_pants, shoes: sneakers}}
+  witness:  {name: "Подросток", gender: male, skin: light, face: npc_teen, outfit: {head: baseball_cap, top: hoodie, bottom: jeans, shoes: sneakers}}
+
+# Пролог: одна страница. {origin.day} и {motive.taken} берутся из карт предыстории.
+prologue:
+  - {shot: wide, bg: apartment/day_wide, title: "ВЫПУСК №1. ГОРОД", caption: "{origin.day}", hero: idle}
+  - {shot: close, bg: apartment/night_wide, hero: shock, face: "{motive.face}", caption: "{motive.taken}"}
+  - {shot: wide, bg: street/night_wide, hero: walk, caption: "Все ниточки ведут в Старый квартал."}
+
+chapters:
+  - id: ch1
+    title: "ГЛАВА 1. ЗАВЯЗКА"
+    beats:
+      - {beat: arrival,  title: "Прибытие",    pick: 3, pool: [kiosk, alley_dog, subway_bag]}
+      - {beat: local,    title: "Местный",     pick: 3, pool: [taxi, diner, pawn]}
+      - {beat: obstacle, title: "Препятствие", pick: 3, pool: [door, hack, warehouse, artist]}
+      - {beat: twist,    title: "Поворот",     pick: 2, pool: [witness, drone_parking, rooftop]}
+      - {beat: guardian, title: "Страж",       pick: 1, pool: [boss_gang, boss_chief]}
+
+encounters:
+  # ---------------------------------------------------------------- прибытие
+  kiosk:
+    kind: meet
+    label: "Газетный киоск"
+    sketch: {shot: two, bg: street/day_wide, with: npc:grandpa, caption: "Старый квартал. Здесь пропадают люди."}
+    text: "Старик-киоскёр косится на тебя. Говорят, ночью отсюда снова кого-то увезли."
+    options:
+      - label: "Расспросить старика"
+        check: {stat: cha, diff: 1}
+        try: {shot: talk, with: npc:grandpa, hero_says: "Кого увезли ночью?"}
+        win:
+          panels: [{shot: talk, with: npc:grandpa, they_say: "Чёрный фургон. На боку белая башня, как у «Белого Шпиля»."}]
+          gain: {coins: 3, peek: 1}
+        lose:
+          panels: [{shot: close, hero: shock, face: surprise, caption: "Старик машет на тебя свёрнутой газетой.", sfx: "ШМЯК!"}]
+          cost: {hp: 1}
+      - label: "Купить газету"
+        needs: {coins: 2}
+        do:
+          panels: [{shot: item, prop: props/cash, caption: "В газете ни слова о пропажах. Зато в объявлениях: «Склад в порту. Работа ночью»."}]
+          cost: {coins: 2}
+          gain: {peek: 1}
+      - label: "Пройти мимо"
+        do: {panels: [{shot: wide, hero: walk, caption: "Не до разговоров."}]}
+
+  alley_dog:
+    kind: fight
+    label: "Переулок"
+    sketch: {shot: two, bg: alley/day_wide, with: enemy:guard_dog, with_pose: stand, caption: "В переулке кто-то рычит."}
+    text: "Из-за мусорных баков выходит сторожевой пёс в шипастом ошейнике. Он охраняет чёрный ход склада."
+    options:
+      - label: "Драться"
+        fight: guard_dog
+        win: {gain: {loot: 1}}
+      - label: "Отвлечь едой"
+        check: {stat: wit, diff: 1}
+        try: {shot: two, with: enemy:guard_dog, with_pose: stand, hero: point, caption: "Хороший пёсик. Смотри, сосиска!"}
+        win:
+          panels: [{shot: wide, hero: walk, caption: "Пёс занят сосиской. Чёрный ход открыт.", face: smirk}]
+          gain: {coins: 2}
+        lose:
+          panels: [{shot: fight, with: enemy:guard_dog, with_pose: attack, hero: shock, face: surprise, sfx: "ГАВ!", caption: "Сосиска ему неинтересна."}]
+          cost: {hp: 2}
+          fight: guard_dog
+      - label: "Перелезть через забор"
+        check: {stat: agi, diff: 2}
+        harder: {heights: 1}
+        try: {shot: wide, hero: run, caption: "Забор не такой уж высокий."}
+        win:
+          panels: [{shot: wide, hero: victory, face: joy, caption: "Пёс остался по ту сторону забора."}]
+          gain: {ink: 1}
+        lose:
+          panels: [{shot: close, hero: shock, face: surprise, sfx: "ТРЕСЬ!", caption: "Штанина осталась на заборе. Пёс уже рядом."}]
+          cost: {hp: 1}
+          fight: guard_dog
+
+  subway_bag:
+    kind: mystery
+    label: "Станция метро"
+    sketch: {shot: wide, bg: subway/night_wide, hero: think, caption: "На пустой платформе забыта сумка."}
+    text: "Спортивная сумка, бирка «Склад №7». Рядом никого, только камера над турникетами."
+    options:
+      - label: "Осмотреть сумку"
+        check: {stat: agi, diff: 1}
+        try: {shot: close, hero: think, think: "Быстро, пока никто не смотрит."}
+        win:
+          panels: [{shot: wide, hero: victory, face: joy, caption: "В сумке вещи пропавшего курьера. Кое-что пригодится."}]
+          gain: {loot: 1}
+        lose:
+          panels: [{shot: close, hero: shock, face: surprise, caption: "Охранник метро выписывает штраф.", sfx: "СВИСТ!"}]
+          cost: {coins: 3}
+      - label: "Сдать охране"
+        do:
+          panels: [{shot: wide, hero: talk, caption: "Охранник благодарит. Доброе дело засчитано."}]
+          gain: {ink: 1}
+      - label: "Не трогать"
+        do: {panels: [{shot: wide, hero: walk, caption: "Чужие сумки к беде."}]}
+
+  # ---------------------------------------------------------------- местный
+  taxi:
+    kind: meet
+    label: "Таксист"
+    sketch: {shot: two, bg: street/day_wide, with: npc:old_cop, caption: "Старое такси тормозит у обочины."}
+    text: "За рулём седой таксист. На приборной панели старый полицейский значок. «Ищешь пропавших? Я тоже»."
+    options:
+      - label: "Рассказать правду"
+        check: {stat: cha, diff: 1}
+        harder: {wanted: 2}
+        try: {shot: talk, with: npc:old_cop, hero_says: "Я {ищу|ищу}, кто ворует людей."}
+        win:
+          panels: [{shot: talk, with: npc:old_cop, they_say: "Садись. Михалыч, бывший опер. Вместе быстрее.", face: joy}]
+          gain: {ally: old_cop}
+        lose:
+          panels: [{shot: two, with: npc:old_cop, caption: "Михалыч хмыкает и уезжает.", hero: shock}]
+      - label: "Показать жетон"
+        needs: {prop: badge}
+        do:
+          panels: [{shot: talk, with: npc:old_cop, they_say: "Свои, значит. Садись."}]
+          gain: {ally: old_cop}
+      - label: "Заплатить за поездку (5)"
+        needs: {coins: 5}
+        do:
+          panels: [{shot: talk, with: npc:old_cop, they_say: "За деньги довезу. А там посмотрим."}]
+          cost: {coins: 5}
+          gain: {ally: old_cop}
+      - label: "Отказаться"
+        do: {panels: [{shot: wide, hero: walk, caption: "Пешком надёжнее."}]}
+
+  diner:
+    kind: rest
+    label: "Закусочная «24 часа»"
+    sketch: {shot: wide, bg: diner/night_wide, hero: idle, caption: "Закусочная «24 часа». Пахнет кофе."}
+    text: "Официантка Люба наливает кофе, не спрашивая. Здесь можно перевести дух."
+    options:
+      - label: "Поужинать (3)"
+        needs: {coins: 3}
+        do:
+          panels: [{shot: talk, with: npc:waitress, they_say: "Фирменный бургер. За счёт заведения почти."}]
+          cost: {coins: 3}
+          gain: {hp: 8}
+      - label: "Подслушать разговоры"
+        check: {stat: wit, diff: 1}
+        try: {shot: close, hero: think, think: "За соседним столиком говорят о складе."}
+        win:
+          panels: [{shot: close, hero: think, face: smirk, caption: "Охранники склада ругают начальство. Ты запоминаешь пароль от ворот."}]
+          gain: {peek: 1, coins: 2, hp: 2}
+        lose:
+          panels: [{shot: close, hero: shock, face: surprise, caption: "Тебя заметили. Разговор стих."}]
+      - label: "Вздремнуть в углу"
+        do:
+          panels: [{shot: wide, hero: think, face: tired, caption: "Полчаса сна в углу у окна."}]
+          gain: {hp: 4}
+
+  pawn:
+    kind: trader
+    label: "Ломбард"
+    sketch: {shot: two, bg: pawn_shop/day_wide, with: npc:pawnbroker, caption: "Ломбард «Всё по-честному»."}
+    text: "Ростовщик раскладывает товар. «Для тебя особая цена. Почти»."
+    shop: {count: 3, price: [4, 9]}
+    options:
+      - label: "Поторговаться"
+        check: {stat: cha, diff: 2}
+        harder: {honest: 1}
+        try: {shot: talk, with: npc:pawnbroker, hero_says: "Это же барахло. Половина цены."}
+        win:
+          panels: [{shot: talk, with: npc:pawnbroker, they_say: "Ладно, ладно! Бери за полцены."}]
+          gain: {flag: discount}
+          then: shop
+        lose:
+          panels: [{shot: talk, with: npc:pawnbroker, they_say: "Цена окончательная."}]
+          then: shop
+      - label: "Просто посмотреть товар"
+        do: {then: shop}
+      - label: "Уйти"
+        do: {panels: [{shot: wide, hero: walk, caption: "Ничего стоящего."}]}
+
+  # ---------------------------------------------------------------- препятствие
+  door:
+    kind: obstacle
+    label: "Квартира пропавшего"
+    sketch: {shot: wide, bg: apartment/day_close, hero: think, caption: "Дверь пропавшего курьера. Заперто."}
+    text: "Кто-то уже был здесь: на замке свежие царапины. Внутри могут быть ответы."
+    options:
+      - label: "Вскрыть замок"
+        mini: {game: pins, stat: agi, diff: 2}
+        win:
+          panels:
+            - {shot: closeup, closeup: lock_try, caption: "Штифт за штифтом…"}
+            - {shot: closeup, closeup: lock_done, sfx: "ЩЁЛК!", caption: "Открыто. В шкафу курьера кое-что осталось."}
+          gain: {loot: 1, flag: clue}
+        lose:
+          panels:
+            - {shot: closeup, closeup: lock_try, caption: "Отмычка гнётся…"}
+            - {shot: close, hero: shock, face: surprise, sfx: "ХРУСТЬ!", caption: "Отмычка сломалась. На шум выглядывает соседка."}
+          cost: {hp: 1}
+      - label: "Выбить дверь"
+        check: {stat: str, diff: 2}
+        try: {shot: wide, hero: fight, caption: "Раз, два…"}
+        win:
+          panels: [{shot: wide, hero: victory, sfx: "БУМ!", caption: "Дверь с петель. В шкафу курьера кое-что осталось."}]
+          gain: {loot: 1}
+          cost: {hp: 1}
+        lose:
+          panels: [{shot: close, hero: shock, face: tired, sfx: "БАМ!", caption: "Дверь цела. Плечо нет."}]
+          cost: {hp: 3}
+      - label: "Позвать соседку"
+        check: {stat: cha, diff: 1}
+        try: {shot: talk, with: npc:neighbor, hero_says: "У вас случайно нет ключа?"}
+        win:
+          panels: [{shot: talk, with: npc:neighbor, they_say: "Есть запасной. Он мне цветы поливать оставлял."}]
+          gain: {loot: 1, ink: 1}
+        lose:
+          panels: [{shot: talk, with: npc:neighbor, they_say: "Сейчас полицию вызову!"}]
+
+  hack:
+    kind: obstacle
+    label: "Офис «Белого Шпиля»"
+    sketch: {shot: wide, bg: office/night_wide, hero: think, caption: "Пустой офис. Один компьютер ещё включён."}
+    text: "Филиал «Белого Шпиля». На экране вход в систему охраны, по коридору гудит дрон."
+    options:
+      - label: "Взломать систему"
+        mini: {game: flow, stat: wit, diff: 2}
+        win:
+          panels:
+            - {shot: closeup, closeup: hack_try, caption: "Соединить потоки, пока не сработала тревога."}
+            - {shot: closeup, closeup: hack_done, sfx: "ПИП!", caption: "Доступ есть. Список адресов и ключ-карта в ящике."}
+          gain: {props: [keycard], coins: 4, flag: clue}
+        lose:
+          panels:
+            - {shot: closeup, closeup: hack_try, caption: "Неверный пароль…"}
+            - {shot: close, hero: shock, face: surprise, sfx: "ВИИ-ИУ!", caption: "Тревога! Дрон уже здесь."}
+          fight: drone
+      - label: "Порыться в столах"
+        check: {stat: wit, diff: 1}
+        try: {shot: close, hero: think, think: "Пароли всегда на стикерах."}
+        win:
+          panels: [{shot: item, prop: props/keycard, caption: "Ключ-карта под клавиатурой. Классика."}]
+          gain: {props: [keycard]}
+        lose:
+          panels: [{shot: wide, hero: shock, with: enemy:drone, with_pose: attack, sfx: "БЗЗТ!", caption: "Дрон включил прожектор."}]
+          fight: drone
+      - label: "Уйти тихо"
+        do: {panels: [{shot: wide, hero: walk, caption: "Не сегодня."}]}
+
+  warehouse:
+    kind: fight
+    label: "Склад №7"
+    sketch: {shot: two, bg: warehouse/night_wide, with: enemy:brute, with_pose: stand, caption: "У ворот склада дежурит громила."}
+    text: "Громила с цепью на кулаке. За его спиной фургон с белой башней на боку."
+    options:
+      - label: "Драться"
+        fight: brute
+        win: {gain: {loot: 1, flag: clue}}
+      - label: "Обмануть: «Я новенький»"
+        check: {stat: wit, diff: 2}
+        harder: {honest: 2}
+        try: {shot: talk, with: enemy:brute, hero_says: "Меня прислали на ночную смену."}
+        win:
+          panels: [{shot: wide, hero: walk, face: smirk, caption: "Громила пропускает. Внутри клетки, как для людей."}]
+          gain: {flag: clue, ink: 1}
+        lose:
+          panels: [{shot: fight, with: enemy:brute, with_pose: attack, hero: shock, sfx: "ХРЯСЬ!", caption: "Новеньких тут не бывает."}]
+          cost: {hp: 2}
+          fight: brute
+      - label: "Открыть ключ-картой"
+        needs: {prop: keycard}
+        do:
+          panels: [{shot: wide, bg: warehouse/night_high, hero: walk, caption: "Карта подошла к служебной двери. Громила ничего не заметил."}]
+          gain: {flag: clue, coins: 3}
+
+  artist:
+    kind: mystery
+    label: "Уличная художница"
+    sketch: {shot: two, bg: street/day_wide, with: npc:artist, caption: "Художница рисует портреты прохожих."}
+    text: "«Садись, нарисую. Денег не надо, у тебя лицо героя комиксов»."
+    options:
+      - label: "Позировать"
+        do:
+          panels: [{shot: talk, with: npc:artist, they_say: "Готово! И вот, держи наклейки на удачу.", face: joy}]
+          gain: {sticker: 2, ink: 1}
+      - label: "Спросить про пропавших"
+        check: {stat: cha, diff: 1}
+        try: {shot: talk, with: npc:artist, hero_says: "Ты видела чёрный фургон?"}
+        win:
+          panels: [{shot: talk, with: npc:artist, they_say: "Каждую ночь у склада. Я даже нарисовала номер."}]
+          gain: {peek: 1, flag: clue}
+        lose:
+          panels: [{shot: talk, with: npc:artist, they_say: "Я рисую, а не шпионю."}]
+
+  # ---------------------------------------------------------------- поворот
+  witness:
+    kind: meet
+    label: "Свидетель"
+    sketch: {shot: two, bg: diner/day_wide, with: npc:waitress, caption: "Люба отводит тебя в сторону."}
+    text: "«Я знаю, кто ты. {origin.title} из газет. И знаю, что им от тебя надо»."
+    options:
+      - label: "Сказать правду"
+        do:
+          panels: [{shot: talk, with: npc:waitress, hero_says: "Да. Это я.", they_say: "{motive.hook}"}]
+          gain: {flag: hook, ink: 1}
+      - label: "Соврать, что не ты"
+        check: {stat: cha, diff: 1}
+        harder: {honest: 3}
+        try: {shot: talk, with: npc:waitress, hero_says: "Вы меня с кем-то путаете."}
+        win:
+          panels: [{shot: talk, with: npc:waitress, they_say: "Ну-ну. Тогда вот тебе чаевые за честное лицо."}]
+          gain: {coins: 5}
+        lose:
+          panels: [{shot: close, hero: shock, face: sad, caption: "Люба молча звонит кому-то. Страж теперь ждёт тебя."}]
+          gain: {flag: alarmed}
+      - label: "Пригрозить"
+        check: {stat: str, diff: 1}
+        try: {shot: talk, with: npc:waitress, hero: point, face: anger, hero_says: "Говори всё, что знаешь."}
+        win:
+          panels: [{shot: talk, with: npc:waitress, they_say: "{motive.hook} Только не кричи!"}]
+          gain: {flag: hook}
+        lose:
+          panels: [{shot: two, with: npc:waitress, caption: "Повар выходит из кухни с тесаком. Ты уходишь."}]
+          cost: {hp: 1}
+
+  drone_parking:
+    kind: fight
+    label: "Парковка"
+    sketch: {shot: two, bg: parking/night_high, with: enemy:drone, with_pose: stand, caption: "На парковке за тобой следит дрон."}
+    text: "Охранный дрон «Белого Шпиля» снимает тебя красным глазом. Если улетит, о тебе узнает страж."
+    options:
+      - label: "Сбить дрон"
+        fight: drone
+        win: {gain: {loot: 1, flag: hook}}
+      - label: "Спрятаться за машинами"
+        check: {stat: agi, diff: 1}
+        try: {shot: wide, hero: run, caption: "Между машинами, пригнувшись…"}
+        win:
+          panels: [{shot: wide, hero: think, face: smirk, caption: "Дрон потерял тебя и улетел ни с чем."}]
+          gain: {ink: 1}
+        lose:
+          panels: [{shot: two, with: enemy:drone, with_pose: attack, hero: shock, sfx: "ПИУ!", caption: "Дрон заметил тебя."}]
+          fight: drone
+
+  rooftop:
+    kind: meet
+    label: "Крыша"
+    sketch: {shot: two, bg: rooftop/night_wide, with: npc:witness, caption: "На крыше прячется подросток."}
+    text: "Парень видел, как увозили людей, и боится спускаться. На краю крыши ветрено."
+    options:
+      - label: "Подойти к краю и поговорить"
+        check: {stat: cha, diff: 1}
+        harder: {heights: 3}
+        try: {shot: talk, with: npc:witness, hero_says: "Я не из них. Что ты видел?"}
+        win:
+          panels: [{shot: talk, with: npc:witness, they_say: "Их возят на склад. А главная там рыжая, с кастетом."}]
+          gain: {flag: hook, peek: 1}
+        lose:
+          panels: [{shot: close, hero: shock, face: surprise, caption: "Голова кружится. Парень убегает по пожарной лестнице."}]
+          cost: {hp: 1}
+      - label: "Заплатить за рассказ (4)"
+        needs: {coins: 4}
+        do:
+          panels: [{shot: talk, with: npc:witness, they_say: "Склад в порту. Там главная. Больше ничего не знаю!"}]
+          cost: {coins: 4}
+          gain: {flag: hook}
+      - label: "Оставить его"
+        do: {panels: [{shot: wide, hero: walk, caption: "У каждого свои страхи."}]}
+
+  # ---------------------------------------------------------------- страж
+  boss_gang:
+    kind: boss
+    label: "Глава банды"
+    sketch: {shot: two, bg: warehouse/night_high, with: enemy:gang_boss, with_pose: stand, caption: "В глубине склада тебя ждут."}
+    text: "Рыжая, глава банды. Кастет на руке, за спиной клетки с пропавшими. «Шеф предупреждал, что ты придёшь»."
+    options:
+      - label: "Драться"
+        fight: gang_boss
+        win:
+          panels: [{shot: wide, hero: victory, face: joy, caption: "Клетки открыты. Пропавшие свободны."}]
+          gain: {flag: guardian, sticker: 3}
+      - label: "Уговорить отпустить людей"
+        check: {stat: cha, diff: 3}
+        easier: {old_cop: 1}
+        harder: {alarmed: 1}
+        try: {shot: talk, with: enemy:gang_boss, hero_says: "Тебя тоже используют. Отпусти их."}
+        win:
+          panels: [{shot: talk, with: enemy:gang_boss, they_say: "…Ладно. Но шефу ты сам{|а} всё объяснишь."}]
+          gain: {flag: [guardian, talked], sticker: 3}
+        lose:
+          panels: [{shot: talk, with: enemy:gang_boss, they_say: "Красиво говоришь. А теперь держись."}]
+          fight: gang_boss
+          then: boss_gang_win
+
+  boss_chief:
+    kind: boss
+    label: "Шеф охраны"
+    sketch: {shot: two, bg: server_room/night_wide, with: enemy:security_chief, with_pose: stand, caption: "Серверная. Здесь держат пропавших."}
+    text: "Штерн, шеф охраны «Белого Шпиля». Хромированная рука щёлкает суставами. «Вы зашли слишком далеко»."
+    options:
+      - label: "Драться"
+        fight: security_chief
+        win:
+          panels: [{shot: wide, hero: victory, face: joy, caption: "Двери серверной открыты. Пропавшие свободны."}]
+          gain: {flag: guardian, sticker: 3}
+      - label: "Уговорить отпустить людей"
+        check: {stat: cha, diff: 3}
+        easier: {old_cop: 1}
+        harder: {alarmed: 1}
+        try: {shot: talk, with: enemy:security_chief, hero_says: "Вы же охраняете людей, а не держите их в клетках."}
+        win:
+          panels: [{shot: talk, with: enemy:security_chief, they_say: "…Протокол можно и нарушить. Один раз."}]
+          gain: {flag: [guardian, talked], sticker: 3}
+        lose:
+          panels: [{shot: talk, with: enemy:security_chief, they_say: "Сентиментальность. Устранить."}]
+          fight: security_chief
+          then: boss_chief_win
+
+# Итоги, на которые ссылается then
+outcomes:
+  boss_gang_win:
+    panels: [{shot: wide, hero: victory, face: joy, caption: "Клетки открыты. Пропавшие свободны."}]
+    gain: {flag: guardian, sticker: 3}
+  boss_chief_win:
+    panels: [{shot: wide, hero: victory, face: joy, caption: "Двери серверной открыты. Пропавшие свободны."}]
+    gain: {flag: guardian, sticker: 3}
+
+ending:
+  win: "Конец главы 1. Злодей выпуска уже знает твоё имя…"
+  lose: "Продолжение следует… не следует."
