@@ -223,6 +223,11 @@ def cmd_night(args, project):
     night.run(project, args.world, args.only, args.skip, args.dry_run)
 
 
+def cmd_export_game(args, project):
+    from .game_export import export_game
+    export_game(project, world=args.world)
+
+
 def cmd_page(args, project):
     out = Path(args.out) if args.out else ROOT / "output" / (Path(args.script).stem + ".png")
     missing = compose_file(project, Path(args.script), out)
@@ -305,6 +310,10 @@ def main(argv=None):
     p.add_argument("--skip", nargs="*", choices=STAGES, help="пропустить стадии")
     p.add_argument("--dry-run", action="store_true", help="ничего не генерировать, показать план и время")
     p.set_defaults(fn=cmd_night)
+
+    p = sub.add_parser("export-game", help="картинки и manifest для браузерной игры (game/public/assets)")
+    p.add_argument("--world", default="city")
+    p.set_defaults(fn=cmd_export_game)
 
     sub.add_parser("recut", help="заново вырезать персонажей из *_raw.png").set_defaults(fn=cmd_recut)
 

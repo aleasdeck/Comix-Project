@@ -1,0 +1,989 @@
+{
+ "backgrounds": {
+  "street": {
+   "color": "#8d9db6",
+   "variations": {}
+  },
+  "rooftop": {
+   "color": "#6c7a96",
+   "variations": {}
+  },
+  "apartment": {
+   "color": "#c9a77c",
+   "variations": {}
+  },
+  "alley": {
+   "color": "#5f6b5a",
+   "variations": {}
+  },
+  "office": {
+   "color": "#a8b8c0",
+   "variations": {}
+  },
+  "diner": {
+   "color": "#b5524a",
+   "variations": {}
+  },
+  "pawn_shop": {
+   "color": "#8a7350",
+   "variations": {}
+  },
+  "subway": {
+   "color": "#7a8c8c",
+   "variations": {}
+  },
+  "warehouse": {
+   "color": "#6b5a4a",
+   "variations": {}
+  },
+  "parking": {
+   "color": "#5a6470",
+   "variations": {}
+  },
+  "server_room": {
+   "color": "#3d5a73",
+   "variations": {}
+  },
+  "lab": {
+   "color": "#6a4c8c",
+   "variations": {}
+  },
+  "penthouse": {
+   "color": "#9c8f7a",
+   "variations": {}
+  },
+  "highway": {
+   "color": "#7c8590",
+   "variations": {}
+  }
+ },
+ "enemies": {},
+ "sprites": {},
+ "closeups": {},
+ "poses": {
+  "idle": {
+   "title": "Стоит спокойно",
+   "points": {
+    "0": [
+     0.5,
+     0.145
+    ],
+    "1": [
+     0.5,
+     0.225
+    ],
+    "2": [
+     0.405,
+     0.235
+    ],
+    "3": [
+     0.38,
+     0.36
+    ],
+    "4": [
+     0.37,
+     0.48
+    ],
+    "5": [
+     0.595,
+     0.235
+    ],
+    "6": [
+     0.62,
+     0.36
+    ],
+    "7": [
+     0.63,
+     0.48
+    ],
+    "8": [
+     0.445,
+     0.5
+    ],
+    "9": [
+     0.445,
+     0.68
+    ],
+    "10": [
+     0.445,
+     0.865
+    ],
+    "11": [
+     0.555,
+     0.5
+    ],
+    "12": [
+     0.555,
+     0.68
+    ],
+    "13": [
+     0.555,
+     0.865
+    ],
+    "14": [
+     0.482,
+     0.13
+    ],
+    "15": [
+     0.518,
+     0.13
+    ],
+    "16": [
+     0.462,
+     0.14
+    ],
+    "17": [
+     0.538,
+     0.14
+    ]
+   }
+  },
+  "talk": {
+   "title": "Говорит, жестикулирует",
+   "points": {
+    "0": [
+     0.5,
+     0.145
+    ],
+    "1": [
+     0.5,
+     0.225
+    ],
+    "2": [
+     0.405,
+     0.235
+    ],
+    "3": [
+     0.38,
+     0.36
+    ],
+    "4": [
+     0.37,
+     0.48
+    ],
+    "5": [
+     0.595,
+     0.235
+    ],
+    "6": [
+     0.67,
+     0.33
+    ],
+    "7": [
+     0.7,
+     0.245
+    ],
+    "8": [
+     0.445,
+     0.5
+    ],
+    "9": [
+     0.445,
+     0.68
+    ],
+    "10": [
+     0.445,
+     0.865
+    ],
+    "11": [
+     0.555,
+     0.5
+    ],
+    "12": [
+     0.555,
+     0.68
+    ],
+    "13": [
+     0.555,
+     0.865
+    ],
+    "14": [
+     0.482,
+     0.13
+    ],
+    "15": [
+     0.518,
+     0.13
+    ],
+    "16": [
+     0.462,
+     0.14
+    ],
+    "17": [
+     0.538,
+     0.14
+    ]
+   }
+  },
+  "point": {
+   "title": "Указывает в сторону",
+   "points": {
+    "0": [
+     0.488,
+     0.145
+    ],
+    "1": [
+     0.5,
+     0.225
+    ],
+    "2": [
+     0.405,
+     0.235
+    ],
+    "3": [
+     0.3,
+     0.24
+    ],
+    "4": [
+     0.2,
+     0.235
+    ],
+    "5": [
+     0.595,
+     0.235
+    ],
+    "6": [
+     0.62,
+     0.36
+    ],
+    "7": [
+     0.63,
+     0.48
+    ],
+    "8": [
+     0.445,
+     0.5
+    ],
+    "9": [
+     0.445,
+     0.68
+    ],
+    "10": [
+     0.445,
+     0.865
+    ],
+    "11": [
+     0.555,
+     0.5
+    ],
+    "12": [
+     0.555,
+     0.68
+    ],
+    "13": [
+     0.555,
+     0.865
+    ],
+    "14": [
+     0.47,
+     0.13
+    ],
+    "15": [
+     0.505,
+     0.13
+    ],
+    "16": [
+     0.462,
+     0.14
+    ],
+    "17": [
+     0.538,
+     0.14
+    ]
+   }
+  },
+  "walk": {
+   "title": "Идёт",
+   "points": {
+    "0": [
+     0.5,
+     0.145
+    ],
+    "1": [
+     0.5,
+     0.225
+    ],
+    "2": [
+     0.405,
+     0.235
+    ],
+    "3": [
+     0.395,
+     0.355
+    ],
+    "4": [
+     0.43,
+     0.465
+    ],
+    "5": [
+     0.595,
+     0.235
+    ],
+    "6": [
+     0.635,
+     0.355
+    ],
+    "7": [
+     0.6,
+     0.46
+    ],
+    "8": [
+     0.445,
+     0.5
+    ],
+    "9": [
+     0.415,
+     0.675
+    ],
+    "10": [
+     0.37,
+     0.86
+    ],
+    "11": [
+     0.555,
+     0.5
+    ],
+    "12": [
+     0.58,
+     0.67
+    ],
+    "13": [
+     0.62,
+     0.85
+    ],
+    "14": [
+     0.482,
+     0.13
+    ],
+    "15": [
+     0.518,
+     0.13
+    ],
+    "16": [
+     0.462,
+     0.14
+    ],
+    "17": [
+     0.538,
+     0.14
+    ]
+   }
+  },
+  "shock": {
+   "title": "Испуг, отпрянул",
+   "points": {
+    "0": [
+     0.505,
+     0.15
+    ],
+    "1": [
+     0.5,
+     0.225
+    ],
+    "2": [
+     0.405,
+     0.235
+    ],
+    "3": [
+     0.355,
+     0.32
+    ],
+    "4": [
+     0.395,
+     0.215
+    ],
+    "5": [
+     0.595,
+     0.235
+    ],
+    "6": [
+     0.645,
+     0.32
+    ],
+    "7": [
+     0.605,
+     0.215
+    ],
+    "8": [
+     0.445,
+     0.5
+    ],
+    "9": [
+     0.425,
+     0.68
+    ],
+    "10": [
+     0.405,
+     0.865
+    ],
+    "11": [
+     0.555,
+     0.5
+    ],
+    "12": [
+     0.575,
+     0.68
+    ],
+    "13": [
+     0.595,
+     0.865
+    ],
+    "14": [
+     0.487,
+     0.135
+    ],
+    "15": [
+     0.523,
+     0.135
+    ],
+    "16": [
+     0.462,
+     0.14
+    ],
+    "17": [
+     0.538,
+     0.14
+    ]
+   }
+  },
+  "cross": {
+   "title": "Руки скрещены",
+   "points": {
+    "0": [
+     0.5,
+     0.145
+    ],
+    "1": [
+     0.5,
+     0.225
+    ],
+    "2": [
+     0.405,
+     0.235
+    ],
+    "3": [
+     0.395,
+     0.335
+    ],
+    "4": [
+     0.57,
+     0.305
+    ],
+    "5": [
+     0.595,
+     0.235
+    ],
+    "6": [
+     0.605,
+     0.335
+    ],
+    "7": [
+     0.43,
+     0.315
+    ],
+    "8": [
+     0.445,
+     0.5
+    ],
+    "9": [
+     0.445,
+     0.68
+    ],
+    "10": [
+     0.445,
+     0.865
+    ],
+    "11": [
+     0.555,
+     0.5
+    ],
+    "12": [
+     0.555,
+     0.68
+    ],
+    "13": [
+     0.555,
+     0.865
+    ],
+    "14": [
+     0.482,
+     0.13
+    ],
+    "15": [
+     0.518,
+     0.13
+    ],
+    "16": [
+     0.462,
+     0.14
+    ],
+    "17": [
+     0.538,
+     0.14
+    ]
+   }
+  },
+  "think": {
+   "title": "Думает, рука у подбородка",
+   "points": {
+    "0": [
+     0.5,
+     0.145
+    ],
+    "1": [
+     0.5,
+     0.225
+    ],
+    "2": [
+     0.405,
+     0.235
+    ],
+    "3": [
+     0.42,
+     0.335
+    ],
+    "4": [
+     0.485,
+     0.19
+    ],
+    "5": [
+     0.595,
+     0.235
+    ],
+    "6": [
+     0.59,
+     0.35
+    ],
+    "7": [
+     0.445,
+     0.35
+    ],
+    "8": [
+     0.445,
+     0.5
+    ],
+    "9": [
+     0.445,
+     0.68
+    ],
+    "10": [
+     0.445,
+     0.865
+    ],
+    "11": [
+     0.555,
+     0.5
+    ],
+    "12": [
+     0.555,
+     0.68
+    ],
+    "13": [
+     0.555,
+     0.865
+    ],
+    "14": [
+     0.482,
+     0.13
+    ],
+    "15": [
+     0.518,
+     0.13
+    ],
+    "16": [
+     0.462,
+     0.14
+    ],
+    "17": [
+     0.538,
+     0.14
+    ]
+   }
+  },
+  "run": {
+   "title": "Бежит",
+   "points": {
+    "0": [
+     0.495,
+     0.155
+    ],
+    "1": [
+     0.5,
+     0.225
+    ],
+    "2": [
+     0.405,
+     0.235
+    ],
+    "3": [
+     0.36,
+     0.32
+    ],
+    "4": [
+     0.395,
+     0.24
+    ],
+    "5": [
+     0.595,
+     0.235
+    ],
+    "6": [
+     0.65,
+     0.335
+    ],
+    "7": [
+     0.68,
+     0.43
+    ],
+    "8": [
+     0.445,
+     0.5
+    ],
+    "9": [
+     0.425,
+     0.63
+    ],
+    "10": [
+     0.4,
+     0.79
+    ],
+    "11": [
+     0.555,
+     0.5
+    ],
+    "12": [
+     0.585,
+     0.69
+    ],
+    "13": [
+     0.64,
+     0.85
+    ],
+    "14": [
+     0.477,
+     0.14
+    ],
+    "15": [
+     0.513,
+     0.14
+    ],
+    "16": [
+     0.462,
+     0.14
+    ],
+    "17": [
+     0.538,
+     0.14
+    ]
+   }
+  },
+  "fight": {
+   "title": "Боевая стойка, удар",
+   "points": {
+    "0": [
+     0.5,
+     0.145
+    ],
+    "1": [
+     0.5,
+     0.225
+    ],
+    "2": [
+     0.405,
+     0.235
+    ],
+    "3": [
+     0.32,
+     0.25
+    ],
+    "4": [
+     0.225,
+     0.245
+    ],
+    "5": [
+     0.595,
+     0.235
+    ],
+    "6": [
+     0.625,
+     0.32
+    ],
+    "7": [
+     0.57,
+     0.215
+    ],
+    "8": [
+     0.445,
+     0.5
+    ],
+    "9": [
+     0.405,
+     0.68
+    ],
+    "10": [
+     0.355,
+     0.865
+    ],
+    "11": [
+     0.555,
+     0.5
+    ],
+    "12": [
+     0.6,
+     0.68
+    ],
+    "13": [
+     0.65,
+     0.865
+    ],
+    "14": [
+     0.482,
+     0.13
+    ],
+    "15": [
+     0.518,
+     0.13
+    ],
+    "16": [
+     0.462,
+     0.14
+    ],
+    "17": [
+     0.538,
+     0.14
+    ]
+   }
+  },
+  "victory": {
+   "title": "Победа, кулак вверх",
+   "points": {
+    "0": [
+     0.5,
+     0.145
+    ],
+    "1": [
+     0.5,
+     0.225
+    ],
+    "2": [
+     0.405,
+     0.235
+    ],
+    "3": [
+     0.37,
+     0.15
+    ],
+    "4": [
+     0.385,
+     0.055
+    ],
+    "5": [
+     0.595,
+     0.235
+    ],
+    "6": [
+     0.64,
+     0.34
+    ],
+    "7": [
+     0.59,
+     0.44
+    ],
+    "8": [
+     0.445,
+     0.5
+    ],
+    "9": [
+     0.445,
+     0.68
+    ],
+    "10": [
+     0.445,
+     0.865
+    ],
+    "11": [
+     0.555,
+     0.5
+    ],
+    "12": [
+     0.555,
+     0.68
+    ],
+    "13": [
+     0.555,
+     0.865
+    ],
+    "14": [
+     0.482,
+     0.13
+    ],
+    "15": [
+     0.518,
+     0.13
+    ],
+    "16": [
+     0.462,
+     0.14
+    ],
+    "17": [
+     0.538,
+     0.14
+    ]
+   }
+  }
+ },
+ "doll": {
+  "layer_order": [
+   "shoes",
+   "bottom",
+   "top",
+   "head"
+  ],
+  "skins": {
+   "pale": "#f6dcc8",
+   "light": "#eac3a2",
+   "medium": "#c99a6e",
+   "tan": "#a5734a",
+   "dark": "#6e4428",
+   "deep": "#3f2617"
+  },
+  "items": {
+   "head": {
+    "none": "",
+    "baseball_cap": "red baseball cap",
+    "fedora": "dark brown fedora hat",
+    "beanie": "knitted grey beanie",
+    "cowboy_hat": "tan cowboy hat",
+    "hero_mask": "a thin black superhero eye mask, a narrow band across the eyes with almond-shaped eye holes, eyebrows and nose stay visible",
+    "gas_mask": "military gas mask covering the face",
+    "bandana": "red bandana covering the lower face"
+   },
+   "top": {
+    "white_tshirt": "plain white t-shirt",
+    "leather_jacket": "black leather biker jacket over a grey t-shirt",
+    "hoodie": "green hoodie",
+    "business_shirt": "light blue button-up shirt with a dark tie",
+    "trench_coat": "beige trench coat",
+    "hero_suit_top": "dark teal armored bodysuit top with orange stripes, original design, no logo",
+    "tank_top": "black tank top"
+   },
+   "bottom": {
+    "jeans": "blue denim jeans",
+    "black_trousers": "black trousers",
+    "cargo_pants": "olive cargo pants",
+    "shorts": "khaki shorts",
+    "skirt": "red pleated knee-length skirt",
+    "hero_suit_legs": "dark teal armored bodysuit leggings with orange knee pads"
+   },
+   "shoes": {
+    "sneakers": "white sneakers",
+    "boots": "brown leather boots",
+    "dress_shoes": "black dress shoes",
+    "combat_boots": "black combat boots",
+    "heels": "red high heels",
+    "hero_boots": "orange armored boots"
+   }
+  },
+  "poses": {
+   "idle": "Стоит спокойно",
+   "talk": "Говорит, жестикулирует",
+   "point": "Указывает в сторону",
+   "walk": "Идёт",
+   "shock": "Шок / удивление"
+  },
+  "genders": {
+   "female": {
+    "idle": {
+     "base": {
+      "light": "doll/female/idle/base_light.webp"
+     },
+     "layers": {
+      "head": {
+       "baseball_cap": "doll/female/idle/head__baseball_cap.webp",
+       "fedora": "doll/female/idle/head__fedora.webp",
+       "hero_mask": "doll/female/idle/head__hero_mask.webp"
+      },
+      "top": {
+       "hero_suit_top": "doll/female/idle/top__hero_suit_top.webp",
+       "hoodie": "doll/female/idle/top__hoodie.webp",
+       "trench_coat": "doll/female/idle/top__trench_coat.webp"
+      },
+      "bottom": {
+       "black_trousers": "doll/female/idle/bottom__black_trousers.webp",
+       "hero_suit_legs": "doll/female/idle/bottom__hero_suit_legs.webp",
+       "jeans": "doll/female/idle/bottom__jeans.webp"
+      },
+      "shoes": {
+       "dress_shoes": "doll/female/idle/shoes__dress_shoes.webp",
+       "hero_boots": "doll/female/idle/shoes__hero_boots.webp",
+       "sneakers": "doll/female/idle/shoes__sneakers.webp"
+      }
+     },
+     "skin_mask": "doll/female/idle/skin_mask_rgba.webp",
+     "skin_ref": [
+      255,
+      209,
+      167
+     ],
+     "shorts_mask": "doll/female/idle/shorts_mask_rgba.webp"
+    }
+   },
+   "male": {
+    "idle": {
+     "base": {
+      "light": "doll/male/idle/base_light.webp"
+     },
+     "layers": {
+      "head": {
+       "baseball_cap": "doll/male/idle/head__baseball_cap.webp",
+       "fedora": "doll/male/idle/head__fedora.webp",
+       "hero_mask": "doll/male/idle/head__hero_mask.webp"
+      },
+      "top": {
+       "hero_suit_top": "doll/male/idle/top__hero_suit_top.webp",
+       "hoodie": "doll/male/idle/top__hoodie.webp",
+       "trench_coat": "doll/male/idle/top__trench_coat.webp"
+      },
+      "bottom": {
+       "black_trousers": "doll/male/idle/bottom__black_trousers.webp",
+       "hero_suit_legs": "doll/male/idle/bottom__hero_suit_legs.webp",
+       "jeans": "doll/male/idle/bottom__jeans.webp"
+      },
+      "shoes": {
+       "dress_shoes": "doll/male/idle/shoes__dress_shoes.webp",
+       "hero_boots": "doll/male/idle/shoes__hero_boots.webp",
+       "sneakers": "doll/male/idle/shoes__sneakers.webp"
+      }
+     },
+     "skin_mask": "doll/male/idle/skin_mask_rgba.webp",
+     "skin_ref": [
+      255,
+      202,
+      157
+     ],
+     "shorts_mask": "doll/male/idle/shorts_mask_rgba.webp"
+    }
+   }
+  },
+  "sets": {
+   "Городской": {
+    "head": "baseball_cap",
+    "top": "hoodie",
+    "bottom": "jeans",
+    "shoes": "sneakers"
+   },
+   "Детектив": {
+    "head": "fedora",
+    "top": "trench_coat",
+    "bottom": "black_trousers",
+    "shoes": "dress_shoes"
+   },
+   "Герой": {
+    "head": "hero_mask",
+    "top": "hero_suit_top",
+    "bottom": "hero_suit_legs",
+    "shoes": "hero_boots"
+   }
+  }
+ }
+}

@@ -1,0 +1,51 @@
+# Браузерная игра на GitHub Pages: сборка game/ и публикация.
+# Пока репозиторий закрытый, работает только сборка (проверка, что игра собирается).
+# Публикация включится сама, когда репозиторий станет открытым и в Settings -> Pages
+# будет выбран источник «GitHub Actions». Для закрытого репозитория с платным планом
+# можно включить публикацию переменной репозитория PAGES_ENABLED=true.
+name: Игра на GitHub Pages
+
+on:
+  push:
+    branches: [claude/project-thread-r11h4h]
+    paths: ["game/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: game
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: game/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: game/dist
+
+  deploy:
+    needs: build
+    if: ${{ !github.event.repository.private || vars.PAGES_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

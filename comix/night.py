@@ -27,7 +27,7 @@ from .config import CONFIG, ROOT, SLOTS, Project, background_path, load_yaml
 NIGHT = ROOT / "build" / "night"
 STAGES = ["hero_poses", "hero_sets", "hero_emotions", "world_items", "npc_faces", "hero_qa",
           "enemies", "bosses", "weapons", "props", "stickers", "backgrounds", "closeups",
-          "hero_process", "report"]
+          "hero_process", "game_export", "report"]
 TITLES = {
     "hero_poses": "Герой: базы 10 поз (варианты и автовыбор)",
     "hero_sets": "Герой: 12 вещей трёх сетов во всех позах",
@@ -43,6 +43,7 @@ TITLES = {
     "backgrounds": "Фоны локаций",
     "closeups": "Крупные планы миниигр",
     "hero_process": "Нарезка слоёв, manifest и экспорт для страницы",
+    "game_export": "Экспорт картинок в браузерную игру (game/public/assets)",
     "report": "Отчёт build/night/report.html",
 }
 
@@ -222,6 +223,11 @@ def run_stage(project: Project, f: dict, stage: str) -> int:
         doll.write_manifest(project)
         doll.export(ROOT / "web" / "doll", 0.5)
         return n
+    if stage == "game_export":
+        from .game_export import export_game
+
+        export_game(project, world=f.get("world", "city"))
+        return 1
     if stage == "report":
         make_report(project, f)
         return 1
@@ -266,7 +272,7 @@ def run(project: Project, world: str = "city", only: list[str] | None = None, sk
             try:
                 n = run_stage(project, f, st)
                 left, _ = todo(project, f, st)
-                state = "ok" if not left or st in ("hero_qa", "hero_process", "report") else "partial"
+                state = "ok" if not left or st in ("hero_qa", "hero_process", "game_export", "report") else "partial"
                 status[st] = {"state": state, "made": n, "left": left, "minutes": round((time.time() - t0) / 60, 1)}
                 print(f"--- {st}: готово {n}, осталось {left}, {status[st]['minutes']} мин")
             except Exception as e:  # одна упавшая стадия не должна останавливать всю ночь

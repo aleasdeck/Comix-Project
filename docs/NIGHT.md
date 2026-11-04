@@ -37,6 +37,7 @@ night.bat                      :: запуск на ночь
 | backgrounds | 14 локаций города (9 новых) | до 61 |
 | closeups | 16 крупных планов для кадров миниигр | 16 |
 | hero_process | Нарезка слоёв, manifest, экспорт для страницы-гардероба | процессор |
+| game_export | Картинки и manifest для браузерной игры в `game/public/assets` (см. [GAME.md](GAME.md)) | процессор |
 
 Сначала идут все стадии klein, потом qwen: при смене модели ImageGen перезапускает ComfyUI.
 
@@ -48,6 +49,7 @@ night.bat                      :: запуск на ночь
 * Если для какой-то позы автоматически выбран плохой вариант, выбери другой и запусти снова:
   `comix.bat doll pick --gender male --pose run --candidate 1`, потом `night.bat`.
   Слои старой базы уберутся в `old\` и перегенерируются на новой.
+* Чтобы картинки появились в игре на GitHub Pages: `git add game/public/assets`, commit и push.
 * Можно запустить только часть: `comix.bat night --only enemies stickers` или `--skip npc_faces`.
 
 ## Модели
