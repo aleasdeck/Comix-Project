@@ -357,7 +357,8 @@ def make_report(project: Project, f: dict, status: dict | None = None):
             for c in sorted((d / "candidates").glob("raw_base_light_c*.png")):
                 k = c.stem.rsplit("_c", 1)[1]
                 sc = (info.get("scores") or {}).get(k, {})
-                fig(c, f"c{k}: {sc.get('score', '?')} (покрытие {sc.get('coverage', '?')}, лишнее {sc.get('extra', '?')})",
+                fig(c, f"c{k}: {sc.get('score', '?')} (поза {sc.get('coverage', '?')}, не сдвинулось {sc.get('stale', '?')}, "
+                    f"лишнее {sc.get('extra', '?')})",
                     "best" if str(info.get("picked")) == k else "")
             parts.append("</div>")
 
