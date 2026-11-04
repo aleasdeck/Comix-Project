@@ -2,7 +2,7 @@
 // миниигры, награды 1 из 3, наклейки и обложка. Всё, что игрок выбрал, монтируется в кадры.
 
 import type { GameManifest } from "./assets";
-import { fight } from "./battle";
+import { fight, preloadTable } from "./battle";
 import { Comic, type Sketch } from "./comic";
 import {
   type Beat, type Encounter, type OptionDef, type Outcome, type Shot,
@@ -115,6 +115,7 @@ export class Game {
       this.run = newRun(o);
       try { localStorage.setItem("comix.gender", o.gender); } catch { /* приватный режим */ }
       await this.side();
+      preloadTable();
       await this.play(g);
     } catch (e) {
       if (e !== STOP) throw e;
