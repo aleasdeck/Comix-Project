@@ -55,31 +55,260 @@
   "talk": "Говорит, жестикулирует",
   "point": "Указывает в сторону",
   "walk": "Идёт",
-  "shock": "Шок / удивление"
+  "shock": "Испуг, отпрянул",
+  "cross": "Руки скрещены",
+  "think": "Думает, рука у подбородка",
+  "run": "Бежит",
+  "fight": "Боевая стойка, удар",
+  "victory": "Победа, кулак вверх"
  },
  "genders": {
   "female": {
+   "cross": {
+    "base": {
+     "light": "female/cross/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "female/cross/head__bandana.webp",
+      "baseball_cap": "female/cross/head__baseball_cap.webp",
+      "beanie": "female/cross/head__beanie.webp",
+      "fedora": "female/cross/head__fedora.webp",
+      "gas_mask": "female/cross/head__gas_mask.webp",
+      "hero_mask": "female/cross/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "female/cross/top__business_shirt.webp",
+      "hero_suit_top": "female/cross/top__hero_suit_top.webp",
+      "hoodie": "female/cross/top__hoodie.webp",
+      "leather_jacket": "female/cross/top__leather_jacket.webp",
+      "trench_coat": "female/cross/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "female/cross/bottom__black_trousers.webp",
+      "cargo_pants": "female/cross/bottom__cargo_pants.webp",
+      "hero_suit_legs": "female/cross/bottom__hero_suit_legs.webp",
+      "jeans": "female/cross/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "female/cross/shoes__boots.webp",
+      "combat_boots": "female/cross/shoes__combat_boots.webp",
+      "dress_shoes": "female/cross/shoes__dress_shoes.webp",
+      "hero_boots": "female/cross/shoes__hero_boots.webp",
+      "sneakers": "female/cross/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "female/cross/skin_mask_rgba.webp",
+    "skin_ref": [
+     249,
+     204,
+     165
+    ],
+    "shorts_mask": "female/cross/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "female/cross/face__anger.webp",
+      "skin": "female/cross/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "female/cross/face__joy.webp",
+      "skin": "female/cross/face__joy_skin_rgba.webp"
+     },
+     "npc_afro": {
+      "layer": "female/cross/face__npc_afro.webp",
+      "skin": "female/cross/face__npc_afro_skin_rgba.webp",
+      "erase": "female/cross/face__npc_afro_erase_rgba.webp"
+     },
+     "npc_braids": {
+      "layer": "female/cross/face__npc_braids.webp",
+      "skin": "female/cross/face__npc_braids_skin_rgba.webp",
+      "erase": "female/cross/face__npc_braids_erase_rgba.webp"
+     },
+     "npc_office": {
+      "layer": "female/cross/face__npc_office.webp",
+      "skin": "female/cross/face__npc_office_skin_rgba.webp",
+      "erase": "female/cross/face__npc_office_erase_rgba.webp"
+     },
+     "npc_old_lady": {
+      "layer": "female/cross/face__npc_old_lady.webp",
+      "skin": "female/cross/face__npc_old_lady_skin_rgba.webp",
+      "erase": "female/cross/face__npc_old_lady_erase_rgba.webp"
+     },
+     "npc_ponytail": {
+      "layer": "female/cross/face__npc_ponytail.webp",
+      "skin": "female/cross/face__npc_ponytail_skin_rgba.webp",
+      "erase": "female/cross/face__npc_ponytail_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "female/cross/face__npc_punk.webp",
+      "skin": "female/cross/face__npc_punk_skin_rgba.webp",
+      "erase": "female/cross/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_redhead": {
+      "layer": "female/cross/face__npc_redhead.webp",
+      "skin": "female/cross/face__npc_redhead_skin_rgba.webp",
+      "erase": "female/cross/face__npc_redhead_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "female/cross/face__npc_teen.webp",
+      "skin": "female/cross/face__npc_teen_skin_rgba.webp",
+      "erase": "female/cross/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "female/cross/face__sad.webp",
+      "skin": "female/cross/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "female/cross/face__smirk.webp",
+      "skin": "female/cross/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "female/cross/face__surprise.webp",
+      "skin": "female/cross/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "female/cross/face__tired.webp",
+      "skin": "female/cross/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "fight": {
+    "base": {
+     "light": "female/fight/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "female/fight/head__bandana.webp",
+      "baseball_cap": "female/fight/head__baseball_cap.webp",
+      "beanie": "female/fight/head__beanie.webp",
+      "fedora": "female/fight/head__fedora.webp",
+      "gas_mask": "female/fight/head__gas_mask.webp",
+      "hero_mask": "female/fight/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "female/fight/top__business_shirt.webp",
+      "hero_suit_top": "female/fight/top__hero_suit_top.webp",
+      "hoodie": "female/fight/top__hoodie.webp",
+      "leather_jacket": "female/fight/top__leather_jacket.webp",
+      "trench_coat": "female/fight/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "female/fight/bottom__black_trousers.webp",
+      "cargo_pants": "female/fight/bottom__cargo_pants.webp",
+      "hero_suit_legs": "female/fight/bottom__hero_suit_legs.webp",
+      "jeans": "female/fight/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "female/fight/shoes__boots.webp",
+      "combat_boots": "female/fight/shoes__combat_boots.webp",
+      "dress_shoes": "female/fight/shoes__dress_shoes.webp",
+      "hero_boots": "female/fight/shoes__hero_boots.webp",
+      "sneakers": "female/fight/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "female/fight/skin_mask_rgba.webp",
+    "skin_ref": [
+     250,
+     206,
+     170
+    ],
+    "shorts_mask": "female/fight/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "female/fight/face__anger.webp",
+      "skin": "female/fight/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "female/fight/face__joy.webp",
+      "skin": "female/fight/face__joy_skin_rgba.webp"
+     },
+     "npc_afro": {
+      "layer": "female/fight/face__npc_afro.webp",
+      "skin": "female/fight/face__npc_afro_skin_rgba.webp",
+      "erase": "female/fight/face__npc_afro_erase_rgba.webp"
+     },
+     "npc_braids": {
+      "layer": "female/fight/face__npc_braids.webp",
+      "skin": "female/fight/face__npc_braids_skin_rgba.webp",
+      "erase": "female/fight/face__npc_braids_erase_rgba.webp"
+     },
+     "npc_office": {
+      "layer": "female/fight/face__npc_office.webp",
+      "skin": "female/fight/face__npc_office_skin_rgba.webp",
+      "erase": "female/fight/face__npc_office_erase_rgba.webp"
+     },
+     "npc_old_lady": {
+      "layer": "female/fight/face__npc_old_lady.webp",
+      "skin": "female/fight/face__npc_old_lady_skin_rgba.webp",
+      "erase": "female/fight/face__npc_old_lady_erase_rgba.webp"
+     },
+     "npc_ponytail": {
+      "layer": "female/fight/face__npc_ponytail.webp",
+      "skin": "female/fight/face__npc_ponytail_skin_rgba.webp",
+      "erase": "female/fight/face__npc_ponytail_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "female/fight/face__npc_punk.webp",
+      "skin": "female/fight/face__npc_punk_skin_rgba.webp",
+      "erase": "female/fight/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_redhead": {
+      "layer": "female/fight/face__npc_redhead.webp",
+      "skin": "female/fight/face__npc_redhead_skin_rgba.webp",
+      "erase": "female/fight/face__npc_redhead_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "female/fight/face__npc_teen.webp",
+      "skin": "female/fight/face__npc_teen_skin_rgba.webp",
+      "erase": "female/fight/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "female/fight/face__sad.webp",
+      "skin": "female/fight/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "female/fight/face__smirk.webp",
+      "skin": "female/fight/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "female/fight/face__surprise.webp",
+      "skin": "female/fight/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "female/fight/face__tired.webp",
+      "skin": "female/fight/face__tired_skin_rgba.webp"
+     }
+    }
+   },
    "idle": {
     "base": {
      "light": "female/idle/base_light.webp"
     },
     "layers": {
      "head": {
+      "bandana": "female/idle/head__bandana.webp",
       "baseball_cap": "female/idle/head__baseball_cap.webp",
+      "beanie": "female/idle/head__beanie.webp",
       "fedora": "female/idle/head__fedora.webp",
+      "gas_mask": "female/idle/head__gas_mask.webp",
       "hero_mask": "female/idle/head__hero_mask.webp"
      },
      "top": {
+      "business_shirt": "female/idle/top__business_shirt.webp",
       "hero_suit_top": "female/idle/top__hero_suit_top.webp",
       "hoodie": "female/idle/top__hoodie.webp",
+      "leather_jacket": "female/idle/top__leather_jacket.webp",
       "trench_coat": "female/idle/top__trench_coat.webp"
      },
      "bottom": {
       "black_trousers": "female/idle/bottom__black_trousers.webp",
+      "cargo_pants": "female/idle/bottom__cargo_pants.webp",
       "hero_suit_legs": "female/idle/bottom__hero_suit_legs.webp",
       "jeans": "female/idle/bottom__jeans.webp"
      },
      "shoes": {
+      "boots": "female/idle/shoes__boots.webp",
+      "combat_boots": "female/idle/shoes__combat_boots.webp",
       "dress_shoes": "female/idle/shoes__dress_shoes.webp",
       "hero_boots": "female/idle/shoes__hero_boots.webp",
       "sneakers": "female/idle/shoes__sneakers.webp"
@@ -91,31 +320,1077 @@
      209,
      167
     ],
-    "shorts_mask": "female/idle/shorts_mask_rgba.webp"
+    "shorts_mask": "female/idle/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "female/idle/face__anger.webp",
+      "skin": "female/idle/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "female/idle/face__joy.webp",
+      "skin": "female/idle/face__joy_skin_rgba.webp"
+     },
+     "npc_afro": {
+      "layer": "female/idle/face__npc_afro.webp",
+      "skin": "female/idle/face__npc_afro_skin_rgba.webp",
+      "erase": "female/idle/face__npc_afro_erase_rgba.webp"
+     },
+     "npc_braids": {
+      "layer": "female/idle/face__npc_braids.webp",
+      "skin": "female/idle/face__npc_braids_skin_rgba.webp",
+      "erase": "female/idle/face__npc_braids_erase_rgba.webp"
+     },
+     "npc_office": {
+      "layer": "female/idle/face__npc_office.webp",
+      "skin": "female/idle/face__npc_office_skin_rgba.webp",
+      "erase": "female/idle/face__npc_office_erase_rgba.webp"
+     },
+     "npc_old_lady": {
+      "layer": "female/idle/face__npc_old_lady.webp",
+      "skin": "female/idle/face__npc_old_lady_skin_rgba.webp",
+      "erase": "female/idle/face__npc_old_lady_erase_rgba.webp"
+     },
+     "npc_ponytail": {
+      "layer": "female/idle/face__npc_ponytail.webp",
+      "skin": "female/idle/face__npc_ponytail_skin_rgba.webp",
+      "erase": "female/idle/face__npc_ponytail_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "female/idle/face__npc_punk.webp",
+      "skin": "female/idle/face__npc_punk_skin_rgba.webp",
+      "erase": "female/idle/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_redhead": {
+      "layer": "female/idle/face__npc_redhead.webp",
+      "skin": "female/idle/face__npc_redhead_skin_rgba.webp",
+      "erase": "female/idle/face__npc_redhead_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "female/idle/face__npc_teen.webp",
+      "skin": "female/idle/face__npc_teen_skin_rgba.webp",
+      "erase": "female/idle/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "female/idle/face__sad.webp",
+      "skin": "female/idle/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "female/idle/face__smirk.webp",
+      "skin": "female/idle/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "female/idle/face__surprise.webp",
+      "skin": "female/idle/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "female/idle/face__tired.webp",
+      "skin": "female/idle/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "point": {
+    "base": {
+     "light": "female/point/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "female/point/head__bandana.webp",
+      "baseball_cap": "female/point/head__baseball_cap.webp",
+      "beanie": "female/point/head__beanie.webp",
+      "fedora": "female/point/head__fedora.webp",
+      "gas_mask": "female/point/head__gas_mask.webp",
+      "hero_mask": "female/point/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "female/point/top__business_shirt.webp",
+      "hero_suit_top": "female/point/top__hero_suit_top.webp",
+      "hoodie": "female/point/top__hoodie.webp",
+      "leather_jacket": "female/point/top__leather_jacket.webp",
+      "trench_coat": "female/point/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "female/point/bottom__black_trousers.webp",
+      "cargo_pants": "female/point/bottom__cargo_pants.webp",
+      "hero_suit_legs": "female/point/bottom__hero_suit_legs.webp",
+      "jeans": "female/point/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "female/point/shoes__boots.webp",
+      "combat_boots": "female/point/shoes__combat_boots.webp",
+      "dress_shoes": "female/point/shoes__dress_shoes.webp",
+      "hero_boots": "female/point/shoes__hero_boots.webp",
+      "sneakers": "female/point/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "female/point/skin_mask_rgba.webp",
+    "skin_ref": [
+     250,
+     205,
+     169
+    ],
+    "shorts_mask": "female/point/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "female/point/face__anger.webp",
+      "skin": "female/point/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "female/point/face__joy.webp",
+      "skin": "female/point/face__joy_skin_rgba.webp"
+     },
+     "npc_afro": {
+      "layer": "female/point/face__npc_afro.webp",
+      "skin": "female/point/face__npc_afro_skin_rgba.webp",
+      "erase": "female/point/face__npc_afro_erase_rgba.webp"
+     },
+     "npc_braids": {
+      "layer": "female/point/face__npc_braids.webp",
+      "skin": "female/point/face__npc_braids_skin_rgba.webp",
+      "erase": "female/point/face__npc_braids_erase_rgba.webp"
+     },
+     "npc_office": {
+      "layer": "female/point/face__npc_office.webp",
+      "skin": "female/point/face__npc_office_skin_rgba.webp",
+      "erase": "female/point/face__npc_office_erase_rgba.webp"
+     },
+     "npc_old_lady": {
+      "layer": "female/point/face__npc_old_lady.webp",
+      "skin": "female/point/face__npc_old_lady_skin_rgba.webp",
+      "erase": "female/point/face__npc_old_lady_erase_rgba.webp"
+     },
+     "npc_ponytail": {
+      "layer": "female/point/face__npc_ponytail.webp",
+      "skin": "female/point/face__npc_ponytail_skin_rgba.webp",
+      "erase": "female/point/face__npc_ponytail_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "female/point/face__npc_punk.webp",
+      "skin": "female/point/face__npc_punk_skin_rgba.webp",
+      "erase": "female/point/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_redhead": {
+      "layer": "female/point/face__npc_redhead.webp",
+      "skin": "female/point/face__npc_redhead_skin_rgba.webp",
+      "erase": "female/point/face__npc_redhead_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "female/point/face__npc_teen.webp",
+      "skin": "female/point/face__npc_teen_skin_rgba.webp",
+      "erase": "female/point/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "female/point/face__sad.webp",
+      "skin": "female/point/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "female/point/face__smirk.webp",
+      "skin": "female/point/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "female/point/face__surprise.webp",
+      "skin": "female/point/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "female/point/face__tired.webp",
+      "skin": "female/point/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "run": {
+    "base": {
+     "light": "female/run/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "female/run/head__bandana.webp",
+      "baseball_cap": "female/run/head__baseball_cap.webp",
+      "beanie": "female/run/head__beanie.webp",
+      "fedora": "female/run/head__fedora.webp",
+      "gas_mask": "female/run/head__gas_mask.webp",
+      "hero_mask": "female/run/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "female/run/top__business_shirt.webp",
+      "hero_suit_top": "female/run/top__hero_suit_top.webp",
+      "hoodie": "female/run/top__hoodie.webp",
+      "leather_jacket": "female/run/top__leather_jacket.webp",
+      "trench_coat": "female/run/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "female/run/bottom__black_trousers.webp",
+      "cargo_pants": "female/run/bottom__cargo_pants.webp",
+      "hero_suit_legs": "female/run/bottom__hero_suit_legs.webp",
+      "jeans": "female/run/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "female/run/shoes__boots.webp",
+      "combat_boots": "female/run/shoes__combat_boots.webp",
+      "dress_shoes": "female/run/shoes__dress_shoes.webp",
+      "hero_boots": "female/run/shoes__hero_boots.webp",
+      "sneakers": "female/run/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "female/run/skin_mask_rgba.webp",
+    "skin_ref": [
+     249,
+     203,
+     167
+    ],
+    "shorts_mask": "female/run/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "female/run/face__anger.webp",
+      "skin": "female/run/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "female/run/face__joy.webp",
+      "skin": "female/run/face__joy_skin_rgba.webp"
+     },
+     "npc_afro": {
+      "layer": "female/run/face__npc_afro.webp",
+      "skin": "female/run/face__npc_afro_skin_rgba.webp",
+      "erase": "female/run/face__npc_afro_erase_rgba.webp"
+     },
+     "npc_braids": {
+      "layer": "female/run/face__npc_braids.webp",
+      "skin": "female/run/face__npc_braids_skin_rgba.webp",
+      "erase": "female/run/face__npc_braids_erase_rgba.webp"
+     },
+     "npc_office": {
+      "layer": "female/run/face__npc_office.webp",
+      "skin": "female/run/face__npc_office_skin_rgba.webp",
+      "erase": "female/run/face__npc_office_erase_rgba.webp"
+     },
+     "npc_old_lady": {
+      "layer": "female/run/face__npc_old_lady.webp",
+      "skin": "female/run/face__npc_old_lady_skin_rgba.webp",
+      "erase": "female/run/face__npc_old_lady_erase_rgba.webp"
+     },
+     "npc_ponytail": {
+      "layer": "female/run/face__npc_ponytail.webp",
+      "skin": "female/run/face__npc_ponytail_skin_rgba.webp",
+      "erase": "female/run/face__npc_ponytail_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "female/run/face__npc_punk.webp",
+      "skin": "female/run/face__npc_punk_skin_rgba.webp",
+      "erase": "female/run/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_redhead": {
+      "layer": "female/run/face__npc_redhead.webp",
+      "skin": "female/run/face__npc_redhead_skin_rgba.webp",
+      "erase": "female/run/face__npc_redhead_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "female/run/face__npc_teen.webp",
+      "skin": "female/run/face__npc_teen_skin_rgba.webp",
+      "erase": "female/run/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "female/run/face__sad.webp",
+      "skin": "female/run/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "female/run/face__smirk.webp",
+      "skin": "female/run/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "female/run/face__surprise.webp",
+      "skin": "female/run/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "female/run/face__tired.webp",
+      "skin": "female/run/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "shock": {
+    "base": {
+     "light": "female/shock/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "female/shock/head__bandana.webp",
+      "baseball_cap": "female/shock/head__baseball_cap.webp",
+      "beanie": "female/shock/head__beanie.webp",
+      "fedora": "female/shock/head__fedora.webp",
+      "gas_mask": "female/shock/head__gas_mask.webp",
+      "hero_mask": "female/shock/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "female/shock/top__business_shirt.webp",
+      "hero_suit_top": "female/shock/top__hero_suit_top.webp",
+      "hoodie": "female/shock/top__hoodie.webp",
+      "leather_jacket": "female/shock/top__leather_jacket.webp",
+      "trench_coat": "female/shock/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "female/shock/bottom__black_trousers.webp",
+      "cargo_pants": "female/shock/bottom__cargo_pants.webp",
+      "hero_suit_legs": "female/shock/bottom__hero_suit_legs.webp",
+      "jeans": "female/shock/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "female/shock/shoes__boots.webp",
+      "combat_boots": "female/shock/shoes__combat_boots.webp",
+      "dress_shoes": "female/shock/shoes__dress_shoes.webp",
+      "hero_boots": "female/shock/shoes__hero_boots.webp",
+      "sneakers": "female/shock/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "female/shock/skin_mask_rgba.webp",
+    "skin_ref": [
+     249,
+     205,
+     167
+    ],
+    "shorts_mask": "female/shock/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "female/shock/face__anger.webp",
+      "skin": "female/shock/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "female/shock/face__joy.webp",
+      "skin": "female/shock/face__joy_skin_rgba.webp"
+     },
+     "npc_afro": {
+      "layer": "female/shock/face__npc_afro.webp",
+      "skin": "female/shock/face__npc_afro_skin_rgba.webp",
+      "erase": "female/shock/face__npc_afro_erase_rgba.webp"
+     },
+     "npc_braids": {
+      "layer": "female/shock/face__npc_braids.webp",
+      "skin": "female/shock/face__npc_braids_skin_rgba.webp",
+      "erase": "female/shock/face__npc_braids_erase_rgba.webp"
+     },
+     "npc_office": {
+      "layer": "female/shock/face__npc_office.webp",
+      "skin": "female/shock/face__npc_office_skin_rgba.webp",
+      "erase": "female/shock/face__npc_office_erase_rgba.webp"
+     },
+     "npc_old_lady": {
+      "layer": "female/shock/face__npc_old_lady.webp",
+      "skin": "female/shock/face__npc_old_lady_skin_rgba.webp",
+      "erase": "female/shock/face__npc_old_lady_erase_rgba.webp"
+     },
+     "npc_ponytail": {
+      "layer": "female/shock/face__npc_ponytail.webp",
+      "skin": "female/shock/face__npc_ponytail_skin_rgba.webp",
+      "erase": "female/shock/face__npc_ponytail_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "female/shock/face__npc_punk.webp",
+      "skin": "female/shock/face__npc_punk_skin_rgba.webp",
+      "erase": "female/shock/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_redhead": {
+      "layer": "female/shock/face__npc_redhead.webp",
+      "skin": "female/shock/face__npc_redhead_skin_rgba.webp",
+      "erase": "female/shock/face__npc_redhead_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "female/shock/face__npc_teen.webp",
+      "skin": "female/shock/face__npc_teen_skin_rgba.webp",
+      "erase": "female/shock/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "female/shock/face__sad.webp",
+      "skin": "female/shock/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "female/shock/face__smirk.webp",
+      "skin": "female/shock/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "female/shock/face__surprise.webp",
+      "skin": "female/shock/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "female/shock/face__tired.webp",
+      "skin": "female/shock/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "talk": {
+    "base": {
+     "light": "female/talk/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "female/talk/head__bandana.webp",
+      "baseball_cap": "female/talk/head__baseball_cap.webp",
+      "beanie": "female/talk/head__beanie.webp",
+      "fedora": "female/talk/head__fedora.webp",
+      "gas_mask": "female/talk/head__gas_mask.webp",
+      "hero_mask": "female/talk/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "female/talk/top__business_shirt.webp",
+      "hero_suit_top": "female/talk/top__hero_suit_top.webp",
+      "hoodie": "female/talk/top__hoodie.webp",
+      "leather_jacket": "female/talk/top__leather_jacket.webp",
+      "trench_coat": "female/talk/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "female/talk/bottom__black_trousers.webp",
+      "cargo_pants": "female/talk/bottom__cargo_pants.webp",
+      "hero_suit_legs": "female/talk/bottom__hero_suit_legs.webp",
+      "jeans": "female/talk/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "female/talk/shoes__boots.webp",
+      "combat_boots": "female/talk/shoes__combat_boots.webp",
+      "dress_shoes": "female/talk/shoes__dress_shoes.webp",
+      "hero_boots": "female/talk/shoes__hero_boots.webp",
+      "sneakers": "female/talk/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "female/talk/skin_mask_rgba.webp",
+    "skin_ref": [
+     251,
+     203,
+     163
+    ],
+    "shorts_mask": "female/talk/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "female/talk/face__anger.webp",
+      "skin": "female/talk/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "female/talk/face__joy.webp",
+      "skin": "female/talk/face__joy_skin_rgba.webp"
+     },
+     "npc_afro": {
+      "layer": "female/talk/face__npc_afro.webp",
+      "skin": "female/talk/face__npc_afro_skin_rgba.webp",
+      "erase": "female/talk/face__npc_afro_erase_rgba.webp"
+     },
+     "npc_braids": {
+      "layer": "female/talk/face__npc_braids.webp",
+      "skin": "female/talk/face__npc_braids_skin_rgba.webp",
+      "erase": "female/talk/face__npc_braids_erase_rgba.webp"
+     },
+     "npc_office": {
+      "layer": "female/talk/face__npc_office.webp",
+      "skin": "female/talk/face__npc_office_skin_rgba.webp",
+      "erase": "female/talk/face__npc_office_erase_rgba.webp"
+     },
+     "npc_old_lady": {
+      "layer": "female/talk/face__npc_old_lady.webp",
+      "skin": "female/talk/face__npc_old_lady_skin_rgba.webp",
+      "erase": "female/talk/face__npc_old_lady_erase_rgba.webp"
+     },
+     "npc_ponytail": {
+      "layer": "female/talk/face__npc_ponytail.webp",
+      "skin": "female/talk/face__npc_ponytail_skin_rgba.webp",
+      "erase": "female/talk/face__npc_ponytail_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "female/talk/face__npc_punk.webp",
+      "skin": "female/talk/face__npc_punk_skin_rgba.webp",
+      "erase": "female/talk/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_redhead": {
+      "layer": "female/talk/face__npc_redhead.webp",
+      "skin": "female/talk/face__npc_redhead_skin_rgba.webp",
+      "erase": "female/talk/face__npc_redhead_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "female/talk/face__npc_teen.webp",
+      "skin": "female/talk/face__npc_teen_skin_rgba.webp",
+      "erase": "female/talk/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "female/talk/face__sad.webp",
+      "skin": "female/talk/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "female/talk/face__smirk.webp",
+      "skin": "female/talk/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "female/talk/face__surprise.webp",
+      "skin": "female/talk/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "female/talk/face__tired.webp",
+      "skin": "female/talk/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "think": {
+    "base": {
+     "light": "female/think/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "female/think/head__bandana.webp",
+      "baseball_cap": "female/think/head__baseball_cap.webp",
+      "beanie": "female/think/head__beanie.webp",
+      "fedora": "female/think/head__fedora.webp",
+      "gas_mask": "female/think/head__gas_mask.webp",
+      "hero_mask": "female/think/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "female/think/top__business_shirt.webp",
+      "hero_suit_top": "female/think/top__hero_suit_top.webp",
+      "hoodie": "female/think/top__hoodie.webp",
+      "leather_jacket": "female/think/top__leather_jacket.webp",
+      "trench_coat": "female/think/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "female/think/bottom__black_trousers.webp",
+      "cargo_pants": "female/think/bottom__cargo_pants.webp",
+      "hero_suit_legs": "female/think/bottom__hero_suit_legs.webp",
+      "jeans": "female/think/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "female/think/shoes__boots.webp",
+      "combat_boots": "female/think/shoes__combat_boots.webp",
+      "dress_shoes": "female/think/shoes__dress_shoes.webp",
+      "hero_boots": "female/think/shoes__hero_boots.webp",
+      "sneakers": "female/think/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "female/think/skin_mask_rgba.webp",
+    "skin_ref": [
+     249,
+     204,
+     166
+    ],
+    "shorts_mask": "female/think/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "female/think/face__anger.webp",
+      "skin": "female/think/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "female/think/face__joy.webp",
+      "skin": "female/think/face__joy_skin_rgba.webp"
+     },
+     "npc_afro": {
+      "layer": "female/think/face__npc_afro.webp",
+      "skin": "female/think/face__npc_afro_skin_rgba.webp",
+      "erase": "female/think/face__npc_afro_erase_rgba.webp"
+     },
+     "npc_braids": {
+      "layer": "female/think/face__npc_braids.webp",
+      "skin": "female/think/face__npc_braids_skin_rgba.webp",
+      "erase": "female/think/face__npc_braids_erase_rgba.webp"
+     },
+     "npc_office": {
+      "layer": "female/think/face__npc_office.webp",
+      "skin": "female/think/face__npc_office_skin_rgba.webp",
+      "erase": "female/think/face__npc_office_erase_rgba.webp"
+     },
+     "npc_old_lady": {
+      "layer": "female/think/face__npc_old_lady.webp",
+      "skin": "female/think/face__npc_old_lady_skin_rgba.webp",
+      "erase": "female/think/face__npc_old_lady_erase_rgba.webp"
+     },
+     "npc_ponytail": {
+      "layer": "female/think/face__npc_ponytail.webp",
+      "skin": "female/think/face__npc_ponytail_skin_rgba.webp",
+      "erase": "female/think/face__npc_ponytail_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "female/think/face__npc_punk.webp",
+      "skin": "female/think/face__npc_punk_skin_rgba.webp",
+      "erase": "female/think/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_redhead": {
+      "layer": "female/think/face__npc_redhead.webp",
+      "skin": "female/think/face__npc_redhead_skin_rgba.webp",
+      "erase": "female/think/face__npc_redhead_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "female/think/face__npc_teen.webp",
+      "skin": "female/think/face__npc_teen_skin_rgba.webp",
+      "erase": "female/think/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "female/think/face__sad.webp",
+      "skin": "female/think/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "female/think/face__smirk.webp",
+      "skin": "female/think/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "female/think/face__surprise.webp",
+      "skin": "female/think/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "female/think/face__tired.webp",
+      "skin": "female/think/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "victory": {
+    "base": {
+     "light": "female/victory/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "female/victory/head__bandana.webp",
+      "baseball_cap": "female/victory/head__baseball_cap.webp",
+      "beanie": "female/victory/head__beanie.webp",
+      "fedora": "female/victory/head__fedora.webp",
+      "gas_mask": "female/victory/head__gas_mask.webp",
+      "hero_mask": "female/victory/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "female/victory/top__business_shirt.webp",
+      "hero_suit_top": "female/victory/top__hero_suit_top.webp",
+      "hoodie": "female/victory/top__hoodie.webp",
+      "leather_jacket": "female/victory/top__leather_jacket.webp",
+      "trench_coat": "female/victory/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "female/victory/bottom__black_trousers.webp",
+      "cargo_pants": "female/victory/bottom__cargo_pants.webp",
+      "hero_suit_legs": "female/victory/bottom__hero_suit_legs.webp",
+      "jeans": "female/victory/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "female/victory/shoes__boots.webp",
+      "combat_boots": "female/victory/shoes__combat_boots.webp",
+      "dress_shoes": "female/victory/shoes__dress_shoes.webp",
+      "hero_boots": "female/victory/shoes__hero_boots.webp",
+      "sneakers": "female/victory/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "female/victory/skin_mask_rgba.webp",
+    "skin_ref": [
+     248,
+     203,
+     164
+    ],
+    "shorts_mask": "female/victory/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "female/victory/face__anger.webp",
+      "skin": "female/victory/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "female/victory/face__joy.webp",
+      "skin": "female/victory/face__joy_skin_rgba.webp"
+     },
+     "npc_afro": {
+      "layer": "female/victory/face__npc_afro.webp",
+      "skin": "female/victory/face__npc_afro_skin_rgba.webp",
+      "erase": "female/victory/face__npc_afro_erase_rgba.webp"
+     },
+     "npc_braids": {
+      "layer": "female/victory/face__npc_braids.webp",
+      "skin": "female/victory/face__npc_braids_skin_rgba.webp",
+      "erase": "female/victory/face__npc_braids_erase_rgba.webp"
+     },
+     "npc_office": {
+      "layer": "female/victory/face__npc_office.webp",
+      "skin": "female/victory/face__npc_office_skin_rgba.webp",
+      "erase": "female/victory/face__npc_office_erase_rgba.webp"
+     },
+     "npc_old_lady": {
+      "layer": "female/victory/face__npc_old_lady.webp",
+      "skin": "female/victory/face__npc_old_lady_skin_rgba.webp",
+      "erase": "female/victory/face__npc_old_lady_erase_rgba.webp"
+     },
+     "npc_ponytail": {
+      "layer": "female/victory/face__npc_ponytail.webp",
+      "skin": "female/victory/face__npc_ponytail_skin_rgba.webp",
+      "erase": "female/victory/face__npc_ponytail_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "female/victory/face__npc_punk.webp",
+      "skin": "female/victory/face__npc_punk_skin_rgba.webp",
+      "erase": "female/victory/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_redhead": {
+      "layer": "female/victory/face__npc_redhead.webp",
+      "skin": "female/victory/face__npc_redhead_skin_rgba.webp",
+      "erase": "female/victory/face__npc_redhead_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "female/victory/face__npc_teen.webp",
+      "skin": "female/victory/face__npc_teen_skin_rgba.webp",
+      "erase": "female/victory/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "female/victory/face__sad.webp",
+      "skin": "female/victory/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "female/victory/face__smirk.webp",
+      "skin": "female/victory/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "female/victory/face__surprise.webp",
+      "skin": "female/victory/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "female/victory/face__tired.webp",
+      "skin": "female/victory/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "walk": {
+    "base": {
+     "light": "female/walk/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "female/walk/head__bandana.webp",
+      "baseball_cap": "female/walk/head__baseball_cap.webp",
+      "beanie": "female/walk/head__beanie.webp",
+      "fedora": "female/walk/head__fedora.webp",
+      "gas_mask": "female/walk/head__gas_mask.webp",
+      "hero_mask": "female/walk/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "female/walk/top__business_shirt.webp",
+      "hero_suit_top": "female/walk/top__hero_suit_top.webp",
+      "hoodie": "female/walk/top__hoodie.webp",
+      "leather_jacket": "female/walk/top__leather_jacket.webp",
+      "trench_coat": "female/walk/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "female/walk/bottom__black_trousers.webp",
+      "cargo_pants": "female/walk/bottom__cargo_pants.webp",
+      "hero_suit_legs": "female/walk/bottom__hero_suit_legs.webp",
+      "jeans": "female/walk/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "female/walk/shoes__boots.webp",
+      "combat_boots": "female/walk/shoes__combat_boots.webp",
+      "dress_shoes": "female/walk/shoes__dress_shoes.webp",
+      "hero_boots": "female/walk/shoes__hero_boots.webp",
+      "sneakers": "female/walk/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "female/walk/skin_mask_rgba.webp",
+    "skin_ref": [
+     254,
+     207,
+     163
+    ],
+    "shorts_mask": "female/walk/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "female/walk/face__anger.webp",
+      "skin": "female/walk/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "female/walk/face__joy.webp",
+      "skin": "female/walk/face__joy_skin_rgba.webp"
+     },
+     "npc_afro": {
+      "layer": "female/walk/face__npc_afro.webp",
+      "skin": "female/walk/face__npc_afro_skin_rgba.webp",
+      "erase": "female/walk/face__npc_afro_erase_rgba.webp"
+     },
+     "npc_braids": {
+      "layer": "female/walk/face__npc_braids.webp",
+      "skin": "female/walk/face__npc_braids_skin_rgba.webp",
+      "erase": "female/walk/face__npc_braids_erase_rgba.webp"
+     },
+     "npc_office": {
+      "layer": "female/walk/face__npc_office.webp",
+      "skin": "female/walk/face__npc_office_skin_rgba.webp",
+      "erase": "female/walk/face__npc_office_erase_rgba.webp"
+     },
+     "npc_old_lady": {
+      "layer": "female/walk/face__npc_old_lady.webp",
+      "skin": "female/walk/face__npc_old_lady_skin_rgba.webp",
+      "erase": "female/walk/face__npc_old_lady_erase_rgba.webp"
+     },
+     "npc_ponytail": {
+      "layer": "female/walk/face__npc_ponytail.webp",
+      "skin": "female/walk/face__npc_ponytail_skin_rgba.webp",
+      "erase": "female/walk/face__npc_ponytail_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "female/walk/face__npc_punk.webp",
+      "skin": "female/walk/face__npc_punk_skin_rgba.webp",
+      "erase": "female/walk/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_redhead": {
+      "layer": "female/walk/face__npc_redhead.webp",
+      "skin": "female/walk/face__npc_redhead_skin_rgba.webp",
+      "erase": "female/walk/face__npc_redhead_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "female/walk/face__npc_teen.webp",
+      "skin": "female/walk/face__npc_teen_skin_rgba.webp",
+      "erase": "female/walk/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "female/walk/face__sad.webp",
+      "skin": "female/walk/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "female/walk/face__smirk.webp",
+      "skin": "female/walk/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "female/walk/face__surprise.webp",
+      "skin": "female/walk/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "female/walk/face__tired.webp",
+      "skin": "female/walk/face__tired_skin_rgba.webp"
+     }
+    }
    }
   },
   "male": {
+   "cross": {
+    "base": {
+     "light": "male/cross/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "male/cross/head__bandana.webp",
+      "baseball_cap": "male/cross/head__baseball_cap.webp",
+      "beanie": "male/cross/head__beanie.webp",
+      "fedora": "male/cross/head__fedora.webp",
+      "gas_mask": "male/cross/head__gas_mask.webp",
+      "hero_mask": "male/cross/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "male/cross/top__business_shirt.webp",
+      "hero_suit_top": "male/cross/top__hero_suit_top.webp",
+      "hoodie": "male/cross/top__hoodie.webp",
+      "leather_jacket": "male/cross/top__leather_jacket.webp",
+      "trench_coat": "male/cross/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "male/cross/bottom__black_trousers.webp",
+      "cargo_pants": "male/cross/bottom__cargo_pants.webp",
+      "hero_suit_legs": "male/cross/bottom__hero_suit_legs.webp",
+      "jeans": "male/cross/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "male/cross/shoes__boots.webp",
+      "combat_boots": "male/cross/shoes__combat_boots.webp",
+      "dress_shoes": "male/cross/shoes__dress_shoes.webp",
+      "hero_boots": "male/cross/shoes__hero_boots.webp",
+      "sneakers": "male/cross/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "male/cross/skin_mask_rgba.webp",
+    "skin_ref": [
+     248,
+     194,
+     152
+    ],
+    "shorts_mask": "male/cross/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "male/cross/face__anger.webp",
+      "skin": "male/cross/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "male/cross/face__joy.webp",
+      "skin": "male/cross/face__joy_skin_rgba.webp"
+     },
+     "npc_bald": {
+      "layer": "male/cross/face__npc_bald.webp",
+      "skin": "male/cross/face__npc_bald_skin_rgba.webp",
+      "erase": "male/cross/face__npc_bald_erase_rgba.webp"
+     },
+     "npc_bearded": {
+      "layer": "male/cross/face__npc_bearded.webp",
+      "skin": "male/cross/face__npc_bearded_skin_rgba.webp",
+      "erase": "male/cross/face__npc_bearded_erase_rgba.webp"
+     },
+     "npc_grandpa": {
+      "layer": "male/cross/face__npc_grandpa.webp",
+      "skin": "male/cross/face__npc_grandpa_skin_rgba.webp",
+      "erase": "male/cross/face__npc_grandpa_erase_rgba.webp"
+     },
+     "npc_nerd": {
+      "layer": "male/cross/face__npc_nerd.webp",
+      "skin": "male/cross/face__npc_nerd_skin_rgba.webp",
+      "erase": "male/cross/face__npc_nerd_erase_rgba.webp"
+     },
+     "npc_old_cop": {
+      "layer": "male/cross/face__npc_old_cop.webp",
+      "skin": "male/cross/face__npc_old_cop_skin_rgba.webp",
+      "erase": "male/cross/face__npc_old_cop_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "male/cross/face__npc_punk.webp",
+      "skin": "male/cross/face__npc_punk_skin_rgba.webp",
+      "erase": "male/cross/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_slick": {
+      "layer": "male/cross/face__npc_slick.webp",
+      "skin": "male/cross/face__npc_slick_skin_rgba.webp",
+      "erase": "male/cross/face__npc_slick_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "male/cross/face__npc_teen.webp",
+      "skin": "male/cross/face__npc_teen_skin_rgba.webp",
+      "erase": "male/cross/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "male/cross/face__sad.webp",
+      "skin": "male/cross/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "male/cross/face__smirk.webp",
+      "skin": "male/cross/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "male/cross/face__surprise.webp",
+      "skin": "male/cross/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "male/cross/face__tired.webp",
+      "skin": "male/cross/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "fight": {
+    "base": {
+     "light": "male/fight/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "male/fight/head__bandana.webp",
+      "baseball_cap": "male/fight/head__baseball_cap.webp",
+      "beanie": "male/fight/head__beanie.webp",
+      "fedora": "male/fight/head__fedora.webp",
+      "gas_mask": "male/fight/head__gas_mask.webp",
+      "hero_mask": "male/fight/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "male/fight/top__business_shirt.webp",
+      "hero_suit_top": "male/fight/top__hero_suit_top.webp",
+      "hoodie": "male/fight/top__hoodie.webp",
+      "leather_jacket": "male/fight/top__leather_jacket.webp",
+      "trench_coat": "male/fight/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "male/fight/bottom__black_trousers.webp",
+      "cargo_pants": "male/fight/bottom__cargo_pants.webp",
+      "hero_suit_legs": "male/fight/bottom__hero_suit_legs.webp",
+      "jeans": "male/fight/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "male/fight/shoes__boots.webp",
+      "combat_boots": "male/fight/shoes__combat_boots.webp",
+      "dress_shoes": "male/fight/shoes__dress_shoes.webp",
+      "hero_boots": "male/fight/shoes__hero_boots.webp",
+      "sneakers": "male/fight/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "male/fight/skin_mask_rgba.webp",
+    "skin_ref": [
+     244,
+     192,
+     153
+    ],
+    "shorts_mask": "male/fight/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "male/fight/face__anger.webp",
+      "skin": "male/fight/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "male/fight/face__joy.webp",
+      "skin": "male/fight/face__joy_skin_rgba.webp"
+     },
+     "npc_bald": {
+      "layer": "male/fight/face__npc_bald.webp",
+      "skin": "male/fight/face__npc_bald_skin_rgba.webp",
+      "erase": "male/fight/face__npc_bald_erase_rgba.webp"
+     },
+     "npc_bearded": {
+      "layer": "male/fight/face__npc_bearded.webp",
+      "skin": "male/fight/face__npc_bearded_skin_rgba.webp",
+      "erase": "male/fight/face__npc_bearded_erase_rgba.webp"
+     },
+     "npc_grandpa": {
+      "layer": "male/fight/face__npc_grandpa.webp",
+      "skin": "male/fight/face__npc_grandpa_skin_rgba.webp",
+      "erase": "male/fight/face__npc_grandpa_erase_rgba.webp"
+     },
+     "npc_nerd": {
+      "layer": "male/fight/face__npc_nerd.webp",
+      "skin": "male/fight/face__npc_nerd_skin_rgba.webp",
+      "erase": "male/fight/face__npc_nerd_erase_rgba.webp"
+     },
+     "npc_old_cop": {
+      "layer": "male/fight/face__npc_old_cop.webp",
+      "skin": "male/fight/face__npc_old_cop_skin_rgba.webp",
+      "erase": "male/fight/face__npc_old_cop_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "male/fight/face__npc_punk.webp",
+      "skin": "male/fight/face__npc_punk_skin_rgba.webp",
+      "erase": "male/fight/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_slick": {
+      "layer": "male/fight/face__npc_slick.webp",
+      "skin": "male/fight/face__npc_slick_skin_rgba.webp",
+      "erase": "male/fight/face__npc_slick_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "male/fight/face__npc_teen.webp",
+      "skin": "male/fight/face__npc_teen_skin_rgba.webp",
+      "erase": "male/fight/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "male/fight/face__sad.webp",
+      "skin": "male/fight/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "male/fight/face__smirk.webp",
+      "skin": "male/fight/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "male/fight/face__surprise.webp",
+      "skin": "male/fight/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "male/fight/face__tired.webp",
+      "skin": "male/fight/face__tired_skin_rgba.webp"
+     }
+    }
+   },
    "idle": {
     "base": {
      "light": "male/idle/base_light.webp"
     },
     "layers": {
      "head": {
+      "bandana": "male/idle/head__bandana.webp",
       "baseball_cap": "male/idle/head__baseball_cap.webp",
+      "beanie": "male/idle/head__beanie.webp",
       "fedora": "male/idle/head__fedora.webp",
+      "gas_mask": "male/idle/head__gas_mask.webp",
       "hero_mask": "male/idle/head__hero_mask.webp"
      },
      "top": {
+      "business_shirt": "male/idle/top__business_shirt.webp",
       "hero_suit_top": "male/idle/top__hero_suit_top.webp",
       "hoodie": "male/idle/top__hoodie.webp",
+      "leather_jacket": "male/idle/top__leather_jacket.webp",
       "trench_coat": "male/idle/top__trench_coat.webp"
      },
      "bottom": {
       "black_trousers": "male/idle/bottom__black_trousers.webp",
+      "cargo_pants": "male/idle/bottom__cargo_pants.webp",
       "hero_suit_legs": "male/idle/bottom__hero_suit_legs.webp",
       "jeans": "male/idle/bottom__jeans.webp"
      },
      "shoes": {
+      "boots": "male/idle/shoes__boots.webp",
+      "combat_boots": "male/idle/shoes__combat_boots.webp",
       "dress_shoes": "male/idle/shoes__dress_shoes.webp",
       "hero_boots": "male/idle/shoes__hero_boots.webp",
       "sneakers": "male/idle/shoes__sneakers.webp"
@@ -127,7 +1402,829 @@
      202,
      157
     ],
-    "shorts_mask": "male/idle/shorts_mask_rgba.webp"
+    "shorts_mask": "male/idle/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "male/idle/face__anger.webp",
+      "skin": "male/idle/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "male/idle/face__joy.webp",
+      "skin": "male/idle/face__joy_skin_rgba.webp"
+     },
+     "npc_bald": {
+      "layer": "male/idle/face__npc_bald.webp",
+      "skin": "male/idle/face__npc_bald_skin_rgba.webp",
+      "erase": "male/idle/face__npc_bald_erase_rgba.webp"
+     },
+     "npc_bearded": {
+      "layer": "male/idle/face__npc_bearded.webp",
+      "skin": "male/idle/face__npc_bearded_skin_rgba.webp",
+      "erase": "male/idle/face__npc_bearded_erase_rgba.webp"
+     },
+     "npc_grandpa": {
+      "layer": "male/idle/face__npc_grandpa.webp",
+      "skin": "male/idle/face__npc_grandpa_skin_rgba.webp",
+      "erase": "male/idle/face__npc_grandpa_erase_rgba.webp"
+     },
+     "npc_nerd": {
+      "layer": "male/idle/face__npc_nerd.webp",
+      "skin": "male/idle/face__npc_nerd_skin_rgba.webp",
+      "erase": "male/idle/face__npc_nerd_erase_rgba.webp"
+     },
+     "npc_old_cop": {
+      "layer": "male/idle/face__npc_old_cop.webp",
+      "skin": "male/idle/face__npc_old_cop_skin_rgba.webp",
+      "erase": "male/idle/face__npc_old_cop_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "male/idle/face__npc_punk.webp",
+      "skin": "male/idle/face__npc_punk_skin_rgba.webp",
+      "erase": "male/idle/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_slick": {
+      "layer": "male/idle/face__npc_slick.webp",
+      "skin": "male/idle/face__npc_slick_skin_rgba.webp",
+      "erase": "male/idle/face__npc_slick_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "male/idle/face__npc_teen.webp",
+      "skin": "male/idle/face__npc_teen_skin_rgba.webp",
+      "erase": "male/idle/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "male/idle/face__sad.webp",
+      "skin": "male/idle/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "male/idle/face__smirk.webp",
+      "skin": "male/idle/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "male/idle/face__surprise.webp",
+      "skin": "male/idle/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "male/idle/face__tired.webp",
+      "skin": "male/idle/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "point": {
+    "base": {
+     "light": "male/point/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "male/point/head__bandana.webp",
+      "baseball_cap": "male/point/head__baseball_cap.webp",
+      "beanie": "male/point/head__beanie.webp",
+      "fedora": "male/point/head__fedora.webp",
+      "gas_mask": "male/point/head__gas_mask.webp",
+      "hero_mask": "male/point/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "male/point/top__business_shirt.webp",
+      "hero_suit_top": "male/point/top__hero_suit_top.webp",
+      "hoodie": "male/point/top__hoodie.webp",
+      "leather_jacket": "male/point/top__leather_jacket.webp",
+      "trench_coat": "male/point/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "male/point/bottom__black_trousers.webp",
+      "cargo_pants": "male/point/bottom__cargo_pants.webp",
+      "hero_suit_legs": "male/point/bottom__hero_suit_legs.webp",
+      "jeans": "male/point/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "male/point/shoes__boots.webp",
+      "combat_boots": "male/point/shoes__combat_boots.webp",
+      "dress_shoes": "male/point/shoes__dress_shoes.webp",
+      "hero_boots": "male/point/shoes__hero_boots.webp",
+      "sneakers": "male/point/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "male/point/skin_mask_rgba.webp",
+    "skin_ref": [
+     249,
+     194,
+     154
+    ],
+    "shorts_mask": "male/point/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "male/point/face__anger.webp",
+      "skin": "male/point/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "male/point/face__joy.webp",
+      "skin": "male/point/face__joy_skin_rgba.webp"
+     },
+     "npc_bald": {
+      "layer": "male/point/face__npc_bald.webp",
+      "skin": "male/point/face__npc_bald_skin_rgba.webp",
+      "erase": "male/point/face__npc_bald_erase_rgba.webp"
+     },
+     "npc_bearded": {
+      "layer": "male/point/face__npc_bearded.webp",
+      "skin": "male/point/face__npc_bearded_skin_rgba.webp",
+      "erase": "male/point/face__npc_bearded_erase_rgba.webp"
+     },
+     "npc_grandpa": {
+      "layer": "male/point/face__npc_grandpa.webp",
+      "skin": "male/point/face__npc_grandpa_skin_rgba.webp",
+      "erase": "male/point/face__npc_grandpa_erase_rgba.webp"
+     },
+     "npc_nerd": {
+      "layer": "male/point/face__npc_nerd.webp",
+      "skin": "male/point/face__npc_nerd_skin_rgba.webp",
+      "erase": "male/point/face__npc_nerd_erase_rgba.webp"
+     },
+     "npc_old_cop": {
+      "layer": "male/point/face__npc_old_cop.webp",
+      "skin": "male/point/face__npc_old_cop_skin_rgba.webp",
+      "erase": "male/point/face__npc_old_cop_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "male/point/face__npc_punk.webp",
+      "skin": "male/point/face__npc_punk_skin_rgba.webp",
+      "erase": "male/point/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_slick": {
+      "layer": "male/point/face__npc_slick.webp",
+      "skin": "male/point/face__npc_slick_skin_rgba.webp",
+      "erase": "male/point/face__npc_slick_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "male/point/face__npc_teen.webp",
+      "skin": "male/point/face__npc_teen_skin_rgba.webp",
+      "erase": "male/point/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "male/point/face__sad.webp",
+      "skin": "male/point/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "male/point/face__smirk.webp",
+      "skin": "male/point/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "male/point/face__surprise.webp",
+      "skin": "male/point/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "male/point/face__tired.webp",
+      "skin": "male/point/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "run": {
+    "base": {
+     "light": "male/run/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "male/run/head__bandana.webp",
+      "baseball_cap": "male/run/head__baseball_cap.webp",
+      "beanie": "male/run/head__beanie.webp",
+      "fedora": "male/run/head__fedora.webp",
+      "gas_mask": "male/run/head__gas_mask.webp",
+      "hero_mask": "male/run/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "male/run/top__business_shirt.webp",
+      "hero_suit_top": "male/run/top__hero_suit_top.webp",
+      "hoodie": "male/run/top__hoodie.webp",
+      "leather_jacket": "male/run/top__leather_jacket.webp",
+      "trench_coat": "male/run/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "male/run/bottom__black_trousers.webp",
+      "cargo_pants": "male/run/bottom__cargo_pants.webp",
+      "hero_suit_legs": "male/run/bottom__hero_suit_legs.webp",
+      "jeans": "male/run/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "male/run/shoes__boots.webp",
+      "combat_boots": "male/run/shoes__combat_boots.webp",
+      "dress_shoes": "male/run/shoes__dress_shoes.webp",
+      "hero_boots": "male/run/shoes__hero_boots.webp",
+      "sneakers": "male/run/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "male/run/skin_mask_rgba.webp",
+    "skin_ref": [
+     248,
+     192,
+     150
+    ],
+    "shorts_mask": "male/run/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "male/run/face__anger.webp",
+      "skin": "male/run/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "male/run/face__joy.webp",
+      "skin": "male/run/face__joy_skin_rgba.webp"
+     },
+     "npc_bald": {
+      "layer": "male/run/face__npc_bald.webp",
+      "skin": "male/run/face__npc_bald_skin_rgba.webp",
+      "erase": "male/run/face__npc_bald_erase_rgba.webp"
+     },
+     "npc_bearded": {
+      "layer": "male/run/face__npc_bearded.webp",
+      "skin": "male/run/face__npc_bearded_skin_rgba.webp",
+      "erase": "male/run/face__npc_bearded_erase_rgba.webp"
+     },
+     "npc_grandpa": {
+      "layer": "male/run/face__npc_grandpa.webp",
+      "skin": "male/run/face__npc_grandpa_skin_rgba.webp",
+      "erase": "male/run/face__npc_grandpa_erase_rgba.webp"
+     },
+     "npc_nerd": {
+      "layer": "male/run/face__npc_nerd.webp",
+      "skin": "male/run/face__npc_nerd_skin_rgba.webp",
+      "erase": "male/run/face__npc_nerd_erase_rgba.webp"
+     },
+     "npc_old_cop": {
+      "layer": "male/run/face__npc_old_cop.webp",
+      "skin": "male/run/face__npc_old_cop_skin_rgba.webp",
+      "erase": "male/run/face__npc_old_cop_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "male/run/face__npc_punk.webp",
+      "skin": "male/run/face__npc_punk_skin_rgba.webp",
+      "erase": "male/run/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_slick": {
+      "layer": "male/run/face__npc_slick.webp",
+      "skin": "male/run/face__npc_slick_skin_rgba.webp",
+      "erase": "male/run/face__npc_slick_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "male/run/face__npc_teen.webp",
+      "skin": "male/run/face__npc_teen_skin_rgba.webp",
+      "erase": "male/run/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "male/run/face__sad.webp",
+      "skin": "male/run/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "male/run/face__smirk.webp",
+      "skin": "male/run/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "male/run/face__surprise.webp",
+      "skin": "male/run/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "male/run/face__tired.webp",
+      "skin": "male/run/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "shock": {
+    "base": {
+     "light": "male/shock/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "male/shock/head__bandana.webp",
+      "baseball_cap": "male/shock/head__baseball_cap.webp",
+      "beanie": "male/shock/head__beanie.webp",
+      "fedora": "male/shock/head__fedora.webp",
+      "gas_mask": "male/shock/head__gas_mask.webp",
+      "hero_mask": "male/shock/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "male/shock/top__business_shirt.webp",
+      "hero_suit_top": "male/shock/top__hero_suit_top.webp",
+      "hoodie": "male/shock/top__hoodie.webp",
+      "leather_jacket": "male/shock/top__leather_jacket.webp",
+      "trench_coat": "male/shock/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "male/shock/bottom__black_trousers.webp",
+      "cargo_pants": "male/shock/bottom__cargo_pants.webp",
+      "hero_suit_legs": "male/shock/bottom__hero_suit_legs.webp",
+      "jeans": "male/shock/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "male/shock/shoes__boots.webp",
+      "combat_boots": "male/shock/shoes__combat_boots.webp",
+      "dress_shoes": "male/shock/shoes__dress_shoes.webp",
+      "hero_boots": "male/shock/shoes__hero_boots.webp",
+      "sneakers": "male/shock/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "male/shock/skin_mask_rgba.webp",
+    "skin_ref": [
+     250,
+     193,
+     151
+    ],
+    "shorts_mask": "male/shock/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "male/shock/face__anger.webp",
+      "skin": "male/shock/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "male/shock/face__joy.webp",
+      "skin": "male/shock/face__joy_skin_rgba.webp"
+     },
+     "npc_bald": {
+      "layer": "male/shock/face__npc_bald.webp",
+      "skin": "male/shock/face__npc_bald_skin_rgba.webp",
+      "erase": "male/shock/face__npc_bald_erase_rgba.webp"
+     },
+     "npc_bearded": {
+      "layer": "male/shock/face__npc_bearded.webp",
+      "skin": "male/shock/face__npc_bearded_skin_rgba.webp",
+      "erase": "male/shock/face__npc_bearded_erase_rgba.webp"
+     },
+     "npc_grandpa": {
+      "layer": "male/shock/face__npc_grandpa.webp",
+      "skin": "male/shock/face__npc_grandpa_skin_rgba.webp",
+      "erase": "male/shock/face__npc_grandpa_erase_rgba.webp"
+     },
+     "npc_nerd": {
+      "layer": "male/shock/face__npc_nerd.webp",
+      "skin": "male/shock/face__npc_nerd_skin_rgba.webp",
+      "erase": "male/shock/face__npc_nerd_erase_rgba.webp"
+     },
+     "npc_old_cop": {
+      "layer": "male/shock/face__npc_old_cop.webp",
+      "skin": "male/shock/face__npc_old_cop_skin_rgba.webp",
+      "erase": "male/shock/face__npc_old_cop_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "male/shock/face__npc_punk.webp",
+      "skin": "male/shock/face__npc_punk_skin_rgba.webp",
+      "erase": "male/shock/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_slick": {
+      "layer": "male/shock/face__npc_slick.webp",
+      "skin": "male/shock/face__npc_slick_skin_rgba.webp",
+      "erase": "male/shock/face__npc_slick_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "male/shock/face__npc_teen.webp",
+      "skin": "male/shock/face__npc_teen_skin_rgba.webp",
+      "erase": "male/shock/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "male/shock/face__sad.webp",
+      "skin": "male/shock/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "male/shock/face__smirk.webp",
+      "skin": "male/shock/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "male/shock/face__surprise.webp",
+      "skin": "male/shock/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "male/shock/face__tired.webp",
+      "skin": "male/shock/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "talk": {
+    "base": {
+     "light": "male/talk/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "male/talk/head__bandana.webp",
+      "baseball_cap": "male/talk/head__baseball_cap.webp",
+      "beanie": "male/talk/head__beanie.webp",
+      "fedora": "male/talk/head__fedora.webp",
+      "gas_mask": "male/talk/head__gas_mask.webp",
+      "hero_mask": "male/talk/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "male/talk/top__business_shirt.webp",
+      "hero_suit_top": "male/talk/top__hero_suit_top.webp",
+      "hoodie": "male/talk/top__hoodie.webp",
+      "leather_jacket": "male/talk/top__leather_jacket.webp",
+      "trench_coat": "male/talk/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "male/talk/bottom__black_trousers.webp",
+      "cargo_pants": "male/talk/bottom__cargo_pants.webp",
+      "hero_suit_legs": "male/talk/bottom__hero_suit_legs.webp",
+      "jeans": "male/talk/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "male/talk/shoes__boots.webp",
+      "combat_boots": "male/talk/shoes__combat_boots.webp",
+      "dress_shoes": "male/talk/shoes__dress_shoes.webp",
+      "hero_boots": "male/talk/shoes__hero_boots.webp",
+      "sneakers": "male/talk/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "male/talk/skin_mask_rgba.webp",
+    "skin_ref": [
+     251,
+     198,
+     156
+    ],
+    "shorts_mask": "male/talk/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "male/talk/face__anger.webp",
+      "skin": "male/talk/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "male/talk/face__joy.webp",
+      "skin": "male/talk/face__joy_skin_rgba.webp"
+     },
+     "npc_bald": {
+      "layer": "male/talk/face__npc_bald.webp",
+      "skin": "male/talk/face__npc_bald_skin_rgba.webp",
+      "erase": "male/talk/face__npc_bald_erase_rgba.webp"
+     },
+     "npc_bearded": {
+      "layer": "male/talk/face__npc_bearded.webp",
+      "skin": "male/talk/face__npc_bearded_skin_rgba.webp",
+      "erase": "male/talk/face__npc_bearded_erase_rgba.webp"
+     },
+     "npc_grandpa": {
+      "layer": "male/talk/face__npc_grandpa.webp",
+      "skin": "male/talk/face__npc_grandpa_skin_rgba.webp",
+      "erase": "male/talk/face__npc_grandpa_erase_rgba.webp"
+     },
+     "npc_nerd": {
+      "layer": "male/talk/face__npc_nerd.webp",
+      "skin": "male/talk/face__npc_nerd_skin_rgba.webp",
+      "erase": "male/talk/face__npc_nerd_erase_rgba.webp"
+     },
+     "npc_old_cop": {
+      "layer": "male/talk/face__npc_old_cop.webp",
+      "skin": "male/talk/face__npc_old_cop_skin_rgba.webp",
+      "erase": "male/talk/face__npc_old_cop_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "male/talk/face__npc_punk.webp",
+      "skin": "male/talk/face__npc_punk_skin_rgba.webp",
+      "erase": "male/talk/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_slick": {
+      "layer": "male/talk/face__npc_slick.webp",
+      "skin": "male/talk/face__npc_slick_skin_rgba.webp",
+      "erase": "male/talk/face__npc_slick_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "male/talk/face__npc_teen.webp",
+      "skin": "male/talk/face__npc_teen_skin_rgba.webp",
+      "erase": "male/talk/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "male/talk/face__sad.webp",
+      "skin": "male/talk/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "male/talk/face__smirk.webp",
+      "skin": "male/talk/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "male/talk/face__surprise.webp",
+      "skin": "male/talk/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "male/talk/face__tired.webp",
+      "skin": "male/talk/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "think": {
+    "base": {
+     "light": "male/think/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "male/think/head__bandana.webp",
+      "baseball_cap": "male/think/head__baseball_cap.webp",
+      "beanie": "male/think/head__beanie.webp",
+      "fedora": "male/think/head__fedora.webp",
+      "gas_mask": "male/think/head__gas_mask.webp",
+      "hero_mask": "male/think/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "male/think/top__business_shirt.webp",
+      "hero_suit_top": "male/think/top__hero_suit_top.webp",
+      "hoodie": "male/think/top__hoodie.webp",
+      "leather_jacket": "male/think/top__leather_jacket.webp",
+      "trench_coat": "male/think/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "male/think/bottom__black_trousers.webp",
+      "cargo_pants": "male/think/bottom__cargo_pants.webp",
+      "hero_suit_legs": "male/think/bottom__hero_suit_legs.webp",
+      "jeans": "male/think/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "male/think/shoes__boots.webp",
+      "combat_boots": "male/think/shoes__combat_boots.webp",
+      "dress_shoes": "male/think/shoes__dress_shoes.webp",
+      "hero_boots": "male/think/shoes__hero_boots.webp",
+      "sneakers": "male/think/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "male/think/skin_mask_rgba.webp",
+    "skin_ref": [
+     250,
+     196,
+     154
+    ],
+    "shorts_mask": "male/think/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "male/think/face__anger.webp",
+      "skin": "male/think/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "male/think/face__joy.webp",
+      "skin": "male/think/face__joy_skin_rgba.webp"
+     },
+     "npc_bald": {
+      "layer": "male/think/face__npc_bald.webp",
+      "skin": "male/think/face__npc_bald_skin_rgba.webp",
+      "erase": "male/think/face__npc_bald_erase_rgba.webp"
+     },
+     "npc_bearded": {
+      "layer": "male/think/face__npc_bearded.webp",
+      "skin": "male/think/face__npc_bearded_skin_rgba.webp",
+      "erase": "male/think/face__npc_bearded_erase_rgba.webp"
+     },
+     "npc_grandpa": {
+      "layer": "male/think/face__npc_grandpa.webp",
+      "skin": "male/think/face__npc_grandpa_skin_rgba.webp",
+      "erase": "male/think/face__npc_grandpa_erase_rgba.webp"
+     },
+     "npc_nerd": {
+      "layer": "male/think/face__npc_nerd.webp",
+      "skin": "male/think/face__npc_nerd_skin_rgba.webp",
+      "erase": "male/think/face__npc_nerd_erase_rgba.webp"
+     },
+     "npc_old_cop": {
+      "layer": "male/think/face__npc_old_cop.webp",
+      "skin": "male/think/face__npc_old_cop_skin_rgba.webp",
+      "erase": "male/think/face__npc_old_cop_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "male/think/face__npc_punk.webp",
+      "skin": "male/think/face__npc_punk_skin_rgba.webp",
+      "erase": "male/think/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_slick": {
+      "layer": "male/think/face__npc_slick.webp",
+      "skin": "male/think/face__npc_slick_skin_rgba.webp",
+      "erase": "male/think/face__npc_slick_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "male/think/face__npc_teen.webp",
+      "skin": "male/think/face__npc_teen_skin_rgba.webp",
+      "erase": "male/think/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "male/think/face__sad.webp",
+      "skin": "male/think/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "male/think/face__smirk.webp",
+      "skin": "male/think/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "male/think/face__surprise.webp",
+      "skin": "male/think/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "male/think/face__tired.webp",
+      "skin": "male/think/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "victory": {
+    "base": {
+     "light": "male/victory/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "male/victory/head__bandana.webp",
+      "baseball_cap": "male/victory/head__baseball_cap.webp",
+      "beanie": "male/victory/head__beanie.webp",
+      "fedora": "male/victory/head__fedora.webp",
+      "gas_mask": "male/victory/head__gas_mask.webp",
+      "hero_mask": "male/victory/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "male/victory/top__business_shirt.webp",
+      "hero_suit_top": "male/victory/top__hero_suit_top.webp",
+      "hoodie": "male/victory/top__hoodie.webp",
+      "leather_jacket": "male/victory/top__leather_jacket.webp",
+      "trench_coat": "male/victory/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "male/victory/bottom__black_trousers.webp",
+      "cargo_pants": "male/victory/bottom__cargo_pants.webp",
+      "hero_suit_legs": "male/victory/bottom__hero_suit_legs.webp",
+      "jeans": "male/victory/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "male/victory/shoes__boots.webp",
+      "combat_boots": "male/victory/shoes__combat_boots.webp",
+      "dress_shoes": "male/victory/shoes__dress_shoes.webp",
+      "hero_boots": "male/victory/shoes__hero_boots.webp",
+      "sneakers": "male/victory/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "male/victory/skin_mask_rgba.webp",
+    "skin_ref": [
+     251,
+     194,
+     152
+    ],
+    "shorts_mask": "male/victory/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "male/victory/face__anger.webp",
+      "skin": "male/victory/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "male/victory/face__joy.webp",
+      "skin": "male/victory/face__joy_skin_rgba.webp"
+     },
+     "npc_bald": {
+      "layer": "male/victory/face__npc_bald.webp",
+      "skin": "male/victory/face__npc_bald_skin_rgba.webp",
+      "erase": "male/victory/face__npc_bald_erase_rgba.webp"
+     },
+     "npc_bearded": {
+      "layer": "male/victory/face__npc_bearded.webp",
+      "skin": "male/victory/face__npc_bearded_skin_rgba.webp",
+      "erase": "male/victory/face__npc_bearded_erase_rgba.webp"
+     },
+     "npc_grandpa": {
+      "layer": "male/victory/face__npc_grandpa.webp",
+      "skin": "male/victory/face__npc_grandpa_skin_rgba.webp",
+      "erase": "male/victory/face__npc_grandpa_erase_rgba.webp"
+     },
+     "npc_nerd": {
+      "layer": "male/victory/face__npc_nerd.webp",
+      "skin": "male/victory/face__npc_nerd_skin_rgba.webp",
+      "erase": "male/victory/face__npc_nerd_erase_rgba.webp"
+     },
+     "npc_old_cop": {
+      "layer": "male/victory/face__npc_old_cop.webp",
+      "skin": "male/victory/face__npc_old_cop_skin_rgba.webp",
+      "erase": "male/victory/face__npc_old_cop_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "male/victory/face__npc_punk.webp",
+      "skin": "male/victory/face__npc_punk_skin_rgba.webp",
+      "erase": "male/victory/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_slick": {
+      "layer": "male/victory/face__npc_slick.webp",
+      "skin": "male/victory/face__npc_slick_skin_rgba.webp",
+      "erase": "male/victory/face__npc_slick_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "male/victory/face__npc_teen.webp",
+      "skin": "male/victory/face__npc_teen_skin_rgba.webp",
+      "erase": "male/victory/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "male/victory/face__sad.webp",
+      "skin": "male/victory/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "male/victory/face__smirk.webp",
+      "skin": "male/victory/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "male/victory/face__surprise.webp",
+      "skin": "male/victory/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "male/victory/face__tired.webp",
+      "skin": "male/victory/face__tired_skin_rgba.webp"
+     }
+    }
+   },
+   "walk": {
+    "base": {
+     "light": "male/walk/base_light.webp"
+    },
+    "layers": {
+     "head": {
+      "bandana": "male/walk/head__bandana.webp",
+      "baseball_cap": "male/walk/head__baseball_cap.webp",
+      "beanie": "male/walk/head__beanie.webp",
+      "fedora": "male/walk/head__fedora.webp",
+      "gas_mask": "male/walk/head__gas_mask.webp",
+      "hero_mask": "male/walk/head__hero_mask.webp"
+     },
+     "top": {
+      "business_shirt": "male/walk/top__business_shirt.webp",
+      "hero_suit_top": "male/walk/top__hero_suit_top.webp",
+      "hoodie": "male/walk/top__hoodie.webp",
+      "leather_jacket": "male/walk/top__leather_jacket.webp",
+      "trench_coat": "male/walk/top__trench_coat.webp"
+     },
+     "bottom": {
+      "black_trousers": "male/walk/bottom__black_trousers.webp",
+      "cargo_pants": "male/walk/bottom__cargo_pants.webp",
+      "hero_suit_legs": "male/walk/bottom__hero_suit_legs.webp",
+      "jeans": "male/walk/bottom__jeans.webp"
+     },
+     "shoes": {
+      "boots": "male/walk/shoes__boots.webp",
+      "combat_boots": "male/walk/shoes__combat_boots.webp",
+      "dress_shoes": "male/walk/shoes__dress_shoes.webp",
+      "hero_boots": "male/walk/shoes__hero_boots.webp",
+      "sneakers": "male/walk/shoes__sneakers.webp"
+     }
+    },
+    "skin_mask": "male/walk/skin_mask_rgba.webp",
+    "skin_ref": [
+     253,
+     198,
+     152
+    ],
+    "shorts_mask": "male/walk/shorts_mask_rgba.webp",
+    "faces": {
+     "anger": {
+      "layer": "male/walk/face__anger.webp",
+      "skin": "male/walk/face__anger_skin_rgba.webp"
+     },
+     "joy": {
+      "layer": "male/walk/face__joy.webp",
+      "skin": "male/walk/face__joy_skin_rgba.webp"
+     },
+     "npc_bald": {
+      "layer": "male/walk/face__npc_bald.webp",
+      "skin": "male/walk/face__npc_bald_skin_rgba.webp",
+      "erase": "male/walk/face__npc_bald_erase_rgba.webp"
+     },
+     "npc_bearded": {
+      "layer": "male/walk/face__npc_bearded.webp",
+      "skin": "male/walk/face__npc_bearded_skin_rgba.webp",
+      "erase": "male/walk/face__npc_bearded_erase_rgba.webp"
+     },
+     "npc_grandpa": {
+      "layer": "male/walk/face__npc_grandpa.webp",
+      "skin": "male/walk/face__npc_grandpa_skin_rgba.webp",
+      "erase": "male/walk/face__npc_grandpa_erase_rgba.webp"
+     },
+     "npc_nerd": {
+      "layer": "male/walk/face__npc_nerd.webp",
+      "skin": "male/walk/face__npc_nerd_skin_rgba.webp",
+      "erase": "male/walk/face__npc_nerd_erase_rgba.webp"
+     },
+     "npc_old_cop": {
+      "layer": "male/walk/face__npc_old_cop.webp",
+      "skin": "male/walk/face__npc_old_cop_skin_rgba.webp",
+      "erase": "male/walk/face__npc_old_cop_erase_rgba.webp"
+     },
+     "npc_punk": {
+      "layer": "male/walk/face__npc_punk.webp",
+      "skin": "male/walk/face__npc_punk_skin_rgba.webp",
+      "erase": "male/walk/face__npc_punk_erase_rgba.webp"
+     },
+     "npc_slick": {
+      "layer": "male/walk/face__npc_slick.webp",
+      "skin": "male/walk/face__npc_slick_skin_rgba.webp",
+      "erase": "male/walk/face__npc_slick_erase_rgba.webp"
+     },
+     "npc_teen": {
+      "layer": "male/walk/face__npc_teen.webp",
+      "skin": "male/walk/face__npc_teen_skin_rgba.webp",
+      "erase": "male/walk/face__npc_teen_erase_rgba.webp"
+     },
+     "sad": {
+      "layer": "male/walk/face__sad.webp",
+      "skin": "male/walk/face__sad_skin_rgba.webp"
+     },
+     "smirk": {
+      "layer": "male/walk/face__smirk.webp",
+      "skin": "male/walk/face__smirk_skin_rgba.webp"
+     },
+     "surprise": {
+      "layer": "male/walk/face__surprise.webp",
+      "skin": "male/walk/face__surprise_skin_rgba.webp"
+     },
+     "tired": {
+      "layer": "male/walk/face__tired.webp",
+      "skin": "male/walk/face__tired_skin_rgba.webp"
+     }
+    }
    }
   }
  },
@@ -150,5 +2247,6 @@
    "bottom": "hero_suit_legs",
    "shoes": "hero_boots"
   }
- }
+ },
+ "face_note": "base -> erase(face) -> face (recolor by face skin mask) -> layer_order"
 }
