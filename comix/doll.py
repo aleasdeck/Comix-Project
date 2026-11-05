@@ -37,6 +37,7 @@ from PIL import Image, ImageDraw, ImageFilter
 from . import imagegen_backend as ig
 from .config import ASSETS, SLOTS, Project
 from .cutout import cutout
+from .fastio import WEBP_METHOD, fresh, pmap
 from .poses import LIMBS, POSES, render_openpose
 
 DOLL = ASSETS / "doll"
@@ -164,12 +165,14 @@ def _ed_alpha(project: Project, img: Image.Image) -> np.ndarray:
     import hashlib
 
     key = hashlib.md5(img.tobytes()).hexdigest()
-    if key not in _ALPHA_CACHE:
+    hit = _ALPHA_CACHE.get(key)  # get, а не проверка+чтение: слои режутся в несколько потоков
+    if hit is None:
         if len(_ALPHA_CACHE) > 64:
             _ALPHA_CACHE.clear()
         cut = project.settings.get("cutout", {})
-        _ALPHA_CACHE[key] = np.asarray(cutout(img, "floodfill", cut.get("tolerance", 28)).getchannel("A")) > 128
-    return _ALPHA_CACHE[key]
+        hit = np.asarray(cutout(img, "floodfill", cut.get("tolerance", 28)).getchannel("A")) > 128
+        _ALPHA_CACHE[key] = hit
+    return hit
 
 
 def _figure_rows(alpha: np.ndarray) -> tuple[int, int]:
@@ -768,40 +771,58 @@ def build(project: Project, genders: list[str], poses: list[str], skins: list[st
     write_manifest(project)
 
 
-def process(project: Project, gender: str, pose: str, skins: list[str], items: dict[str, list[str]], cut: dict):
-    """Сырые картинки -> прозрачные слои (можно перезапускать без генерации)."""
+def process(project: Project, gender: str, pose: str, skins: list[str], items: dict[str, list[str]], cut: dict,
+            force: bool = True):
+    """Сырые картинки -> прозрачные слои (можно перезапускать без генерации).
+    force=False: пересобирается только то, у чего сырая картинка новее готового слоя;
+    если поменялась база, пересобирается вся поза."""
     d = _paths(gender, pose)
-    base_raw = Image.open(d / f"raw_base_{skins[0]}.png").convert("RGB")
-    for k in skins:
-        p = d / f"raw_base_{k}.png"
-        if p.exists():
-            img = Image.open(p).convert("RGB") if k == skins[0] else _align(base_raw, Image.open(p))
-            cutout(img, cut.get("method", "auto"), cut.get("tolerance", 28)).save(d / f"base_{k}.png")
-    base_img = Image.open(d / f"base_{skins[0]}.png")
-    mask, ref = skin_mask(base_img)
-    mask.save(d / "skin_mask.png")
-    underwear_mask(base_img).save(d / "shorts_mask.png")
-    (d / "skin_ref.json").write_text(json.dumps(ref))
+    raw_base = d / f"raw_base_{skins[0]}.png"
+    base_raw = Image.open(raw_base).convert("RGB")
+    base_out = d / f"base_{skins[0]}.png"
+    base_changed = force or not fresh(base_out, raw_base) or not (d / "skin_ref.json").exists()
+    if base_changed:
+        for k in skins:
+            p = d / f"raw_base_{k}.png"
+            if p.exists():
+                img = Image.open(p).convert("RGB") if k == skins[0] else _align(base_raw, Image.open(p))
+                cutout(img, cut.get("method", "auto"), cut.get("tolerance", 28)).save(d / f"base_{k}.png")
+        base_img = Image.open(base_out)
+        mask, ref = skin_mask(base_img)
+        mask.save(d / "skin_mask.png")
+        underwear_mask(base_img).save(d / "shorts_mask.png")
+        (d / "skin_ref.json").write_text(json.dumps(ref))
+    else:
+        base_img = Image.open(base_out)
     base_alpha = np.asarray(base_img.getchannel("A"))
+    todo = []
     for slot in SLOTS:
         for it in items.get(slot, []):
-            p = d / f"raw_{slot}__{it}.png"
-            if p.exists():
-                extract_layer(project, base_raw, base_alpha, Image.open(p), slot, item_id=it).save(d / f"{slot}__{it}.png")
-    process_faces(project, gender, pose, skins[0])
+            p, out = d / f"raw_{slot}__{it}.png", d / f"{slot}__{it}.png"
+            if p.exists() and (base_changed or not fresh(out, p)):
+                todo.append((slot, it, p, out))
+
+    def one(job):
+        slot, it, p, out = job
+        extract_layer(project, base_raw, base_alpha, Image.open(p), slot, item_id=it).save(out)
+
+    pmap(one, todo)
+    process_faces(project, gender, pose, skins[0], force=base_changed)
+    return len(todo)
 
 
-def process_faces(project: Project, gender: str, pose: str, skin: str = "light"):
+def process_faces(project: Project, gender: str, pose: str, skin: str = "light", force: bool = True):
     """Сырые эмоции и лица NPC -> face__<id>.png (+ _skin.png, _erase.png)."""
     d = _paths(gender, pose)
     if not (d / f"base_{skin}.png").exists():
         return
     base_raw = Image.open(d / f"raw_base_{skin}.png").convert("RGB")
     base_alpha = np.asarray(Image.open(d / f"base_{skin}.png").getchannel("A"))
-    for f in sorted(d.glob("raw_face__*.png")):
+    todo = [f for f in sorted(d.glob("raw_face__*.png"))
+            if not f.stem.endswith(("_try0", "_try1")) and (force or not fresh(d / f"{f.stem[4:]}.png", f))]
+
+    def one(f):
         name = f.stem[4:]
-        if name.endswith(("_try0", "_try1")):
-            continue
         kind = "npc" if name.startswith("face__npc_") else "emotion"
         layer, erase, skin_m = extract_face(project, base_raw, base_alpha, Image.open(f), kind)
         layer.save(d / f"{name}.png")
@@ -809,14 +830,18 @@ def process_faces(project: Project, gender: str, pose: str, skin: str = "light")
         if kind == "npc":
             erase.save(d / f"{name}_erase.png")
 
+    pmap(one, todo)
 
-def process_pose(project: Project, gender: str, pose: str, skin: str = "light"):
-    """Пересобрать слои позы из всех сырых картинок, что есть (без генерации)."""
+
+def process_pose(project: Project, gender: str, pose: str, skin: str = "light", force: bool = True) -> int:
+    """Пересобрать слои позы из всех сырых картинок, что есть (без генерации).
+    force=False: только изменившееся (так делает comix night; после правки кода нарезки
+    запусти comix doll reprocess, он пересобирает всё)."""
     d = _paths(gender, pose)
     if not (d / f"raw_base_{skin}.png").exists():
-        return
+        return 0
     items = {slot: [k for k in (project.wardrobe.get(slot) or {}) if k != "none"] for slot in SLOTS}
-    process(project, gender, pose, [skin], items, project.settings.get("cutout", {}))
+    return process(project, gender, pose, [skin], items, project.settings.get("cutout", {}), force=force)
 
 
 def reprocess(project: Project):
@@ -879,11 +904,12 @@ def write_manifest(project: Project):
 
 def _mask_rgba(src: Path) -> str:
     """Маска кладётся в альфу белой картинки: webp её хранит, а страница читает альфу."""
-    m = Image.open(src).convert("L")
-    img = Image.new("RGBA", m.size, (255, 255, 255, 0))
-    img.putalpha(m)
     tmp = src.with_name(src.stem + "_rgba.png")
-    img.save(tmp)
+    if not fresh(tmp, src):
+        m = Image.open(src).convert("L")
+        img = Image.new("RGBA", m.size, (255, 255, 255, 0))
+        img.putalpha(m)
+        img.save(tmp)
     return str(tmp.relative_to(DOLL)).replace("\\", "/")
 
 
@@ -892,15 +918,22 @@ def export(out_dir: Path, scale: float = 0.5, fmt: str = "webp"):
     data = json.loads((DOLL / "manifest.json").read_text(encoding="utf-8"))
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    jobs: list[tuple[Path, Path]] = []
+
     def conv(rel: str) -> str:
-        src = DOLL / rel
         dst_rel = str(Path(rel).with_suffix("." + fmt)).replace("\\", "/")
-        dst = out_dir / dst_rel
+        jobs.append((DOLL / rel, out_dir / dst_rel))
+        return dst_rel
+
+    def write(job: tuple[Path, Path]) -> int:
+        src, dst = job
+        if fresh(dst, src):
+            return 0
         dst.parent.mkdir(parents=True, exist_ok=True)
         img = Image.open(src).convert("RGBA")
         img = img.resize((int(img.width * scale), int(img.height * scale)), Image.LANCZOS)
-        img.save(dst, quality=88, method=6) if fmt == "webp" else img.save(dst)
-        return dst_rel
+        img.save(dst, quality=88, method=WEBP_METHOD) if fmt == "webp" else img.save(dst)
+        return 1
 
     for g in data["genders"].values():
         for entry in g.values():
@@ -914,8 +947,13 @@ def export(out_dir: Path, scale: float = 0.5, fmt: str = "webp"):
             for key in ("skin_mask", "shorts_mask"):
                 if entry.get(key):
                     entry[key] = conv(_mask_rgba(DOLL / entry[key]))
+    n = sum(pmap(write, jobs))
+    keep = {dst.resolve() for _, dst in jobs}
+    for f in out_dir.rglob(f"*.{fmt}"):  # слои, которых больше нет в кукле
+        if f.resolve() not in keep:
+            f.unlink()
     (out_dir / "manifest.json").write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"Экспорт: {out_dir}")
+    print(f"Экспорт: {out_dir} (обновлено {n} из {len(jobs)})")
 
 
 def items_from_sets(project: Project, names: list[str] | None = None) -> dict[str, list[str]]:

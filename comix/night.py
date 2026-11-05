@@ -216,8 +216,8 @@ def run_stage(project: Project, f: dict, stage: str) -> int:
         for g in genders:
             for p in poses:
                 if (doll._paths(g, p) / "raw_base_light.png").exists():
-                    print(f"  нарезка {g}/{p}")
-                    doll.process_pose(project, g, p)
+                    k = doll.process_pose(project, g, p, force=False)
+                    print(f"  нарезка {g}/{p}: слоёв пересобрано {k}")
                     doll.qa_pose(project, g, p)
                     n += 1
         doll.write_manifest(project)

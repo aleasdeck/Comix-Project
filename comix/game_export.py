@@ -18,19 +18,44 @@ from PIL import Image
 from . import doll
 from .config import ASSETS, ROOT, Project, load_yaml, CONFIG
 from .poses import POSES
+from .fastio import WEBP_METHOD, fresh, pmap
 from .sprites import CLOSEUPS, ENEMIES, SPRITES
 
 GAME_ASSETS = ROOT / "game" / "public" / "assets"
 
 
-def _webp(src: Path, dst: Path, max_w: int, max_h: int) -> None:
+def _webp(src: Path, dst: Path, max_w: int, max_h: int) -> int:
+    if fresh(dst, src):
+        return 0
     img = Image.open(src)
     img = img.convert("RGBA" if img.mode in ("RGBA", "LA", "P") else "RGB")
     s = min(1.0, max_w / img.width, max_h / img.height)
     if s < 1:
         img = img.resize((round(img.width * s), round(img.height * s)), Image.LANCZOS)
     dst.parent.mkdir(parents=True, exist_ok=True)
-    img.save(dst, "WEBP", quality=84, method=6)
+    img.save(dst, "WEBP", quality=84, method=WEBP_METHOD)
+    return 1
+
+
+class _Batch:
+    """Картинки группы: сжать только новое (на всех ядрах) и убрать то, чего в источнике больше нет."""
+
+    def __init__(self, out: Path):
+        self.out, self.jobs, self.dirs = out, [], set()
+
+    def add(self, src: Path, rel: str, max_w: int, max_h: int) -> str:
+        self.jobs.append((src, self.out / rel, max_w, max_h))
+        self.dirs.add(rel.split("/", 1)[0])
+        return rel
+
+    def run(self) -> int:
+        n = sum(pmap(lambda j: _webp(*j), self.jobs))
+        keep = {j[1].resolve() for j in self.jobs}
+        for d in self.dirs:
+            for f in (self.out / d).rglob("*.webp"):
+                if f.resolve() not in keep:
+                    f.unlink()
+        return n
 
 
 def _fresh(d: Path) -> Path:
@@ -66,7 +91,7 @@ def export_game(project: Project, out: Path = GAME_ASSETS, world: str = "city") 
     web_doll = ROOT / "web" / "doll"
     src_m, web_m = doll.DOLL / "manifest.json", web_doll / "manifest.json"
     if src_m.exists() and (not web_m.exists() or src_m.stat().st_mtime > web_m.stat().st_mtime):
-        doll.export(_fresh(out / "doll"), 0.5)
+        doll.export(out / "doll", 0.5)
     elif web_m.exists():
         shutil.copytree(web_doll, _fresh(out / "doll"), dirs_exist_ok=True,
                         ignore=shutil.ignore_patterns("*.html"))
@@ -76,9 +101,9 @@ def export_game(project: Project, out: Path = GAME_ASSETS, world: str = "city") 
         counts["кукла, поз"] = sum(len(g) for g in man["doll"]["genders"].values())
 
     # фоны: все локации из config/backgrounds.yaml, цвет нужен заглушке
+    batch = _Batch(out)
     bg_src = ASSETS / "backgrounds"
-    if any(bg_src.glob("*/*.png")):
-        _fresh(out / "backgrounds")
+    has_bg = any(bg_src.glob("*/*.png"))
     n = 0
     for loc, spec in project.backgrounds.items():
         entry = {"color": (spec or {}).get("color"), "variations": {}}
@@ -86,8 +111,8 @@ def export_game(project: Project, out: Path = GAME_ASSETS, world: str = "city") 
             src = bg_src / loc / f"{var}.png"
             rel = f"backgrounds/{loc}/{var}.webp"
             if src.exists():
-                _webp(src, out / rel, 1280, 1280)
-            if (out / rel).exists():
+                batch.add(src, rel, 1280, 1280)
+            if src.exists() or (not has_bg and (out / rel).exists()):
                 entry["variations"][var] = rel
                 n += 1
         man["backgrounds"][loc] = entry
@@ -95,37 +120,31 @@ def export_game(project: Project, out: Path = GAME_ASSETS, world: str = "city") 
 
     # враги, подручные и злодей: assets/enemies/<id>/<поза>.png
     if any(ENEMIES.glob("*/*.png")):
-        _fresh(out / "enemies")
         for d in sorted(p for p in ENEMIES.iterdir() if p.is_dir()):
             poses = {}
             for f in _pngs(d):
-                rel = f"enemies/{d.name}/{f.stem}.webp"
-                _webp(f, out / rel, 640, 768)
-                poses[f.stem] = rel
+                poses[f.stem] = batch.add(f, f"enemies/{d.name}/{f.stem}.webp", 640, 768)
             if poses:
                 man["enemies"][d.name] = {"title": titles.get(d.name), "poses": poses}
     counts["враги"] = len(man["enemies"])
 
     # вещи, сюжетные предметы, наклейки: assets/sprites/<группа>/<id>.png
     if any(SPRITES.glob("*/*.png")):
-        _fresh(out / "sprites")
         for d in sorted(p for p in SPRITES.iterdir() if p.is_dir()):
             group = {}
             for f in _pngs(d):
-                rel = f"sprites/{d.name}/{f.stem}.webp"
-                _webp(f, out / rel, 384, 384)
+                rel = batch.add(f, f"sprites/{d.name}/{f.stem}.webp", 384, 384)
                 group[f.stem] = {"title": titles.get(f.stem), "src": rel}
             if group:
                 man["sprites"][d.name] = group
     counts["вещи"] = sum(len(g) for g in man["sprites"].values())
 
     if any(CLOSEUPS.glob("*.png")):
-        _fresh(out / "closeups")
         for f in _pngs(CLOSEUPS):
-            rel = f"closeups/{f.stem}.webp"
-            _webp(f, out / rel, 1280, 1280)
-            man["closeups"][f.stem] = rel
+            man["closeups"][f.stem] = batch.add(f, f"closeups/{f.stem}.webp", 1280, 1280)
     counts["крупные планы"] = len(man["closeups"])
+
+    counts["пересжато"] = batch.run()
 
     # позы: названия и скелет (по нему игра рисует манекен, если куклы ещё нет)
     for pid, p in POSES.items():

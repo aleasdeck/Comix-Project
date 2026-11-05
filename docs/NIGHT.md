@@ -54,6 +54,8 @@ night.bat                      :: запуск на ночь
   (ничего не удаляется, вернуть можно копированием), потом `night.bat` рисует убранное заново. Например:
   `comix.bat redo --pose male/victory female/victory --item top/hero_suit_top --enemy drone --sprite weapons/crowbar weapons/knuckles stickers/magnet --closeup hack_done`.
   `--pose` убирает базу позы со всеми её слоями, `--item` убирает вещь во всех позах обоих полов.
+* Нарезка и экспорт пересобирают только то, что поменялось (по времени файлов), на всех ядрах процессора.
+  После правки кода нарезки запусти `comix.bat doll reprocess`: он пересобирает все слои заново.
 * Пока ComfyUI дорисовывает очередь после выхода comix (стадия упёрлась в таймаут), `night.bat` не запускай:
   он поставит те же картинки в очередь второй раз.
 * Можно запустить только часть: `comix.bat night --only enemies stickers` или `--skip npc_faces`.
