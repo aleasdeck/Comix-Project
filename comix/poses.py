@@ -1,4 +1,4 @@
-"""Пять универсальных комикс-поз.
+"""Десять универсальных комикс-поз (план поз: 10 поз-действий, эмоции отдельным слоем лица).
 
 Каждая поза задана скелетом OpenPose (18 точек COCO) в нормированных
 координатах кадра (0..1) и текстовым описанием для промпта.
@@ -60,12 +60,48 @@ POSES = {
                         p6=(0.635, 0.355), p7=(0.600, 0.460)),
     },
     "shock": {
-        "title": "Шок / удивление",
-        "prompt": "shocked and surprised, both hands raised up near the head, mouth open, legs slightly apart",
-        "points": _pose(p3=(0.330, 0.160), p4=(0.355, 0.070),
-                        p6=(0.670, 0.160), p7=(0.645, 0.070),
+        "title": "Испуг, отпрянул",
+        "prompt": "recoiling back in fright, leaning back, both hands raised in front of the chest with palms out, legs slightly apart",
+        "points": _pose(p3=(0.355, 0.320), p4=(0.395, 0.215),
+                        p6=(0.645, 0.320), p7=(0.605, 0.215),
+                        p0=(0.505, 0.150), p14=(0.487, 0.135), p15=(0.523, 0.135),
                         p9=(0.425, 0.680), p10=(0.405, 0.865),
                         p12=(0.575, 0.680), p13=(0.595, 0.865)),
+    },
+    "cross": {
+        "title": "Руки скрещены",
+        "prompt": "standing with arms crossed over the chest, confident, facing the viewer",
+        "points": _pose(p3=(0.395, 0.335), p4=(0.570, 0.305),
+                        p6=(0.605, 0.335), p7=(0.430, 0.315)),
+    },
+    "think": {
+        "title": "Думает, рука у подбородка",
+        "prompt": "thinking, one hand raised to the chin, the other arm folded across the stomach supporting the elbow, facing the viewer",
+        "points": _pose(p3=(0.420, 0.335), p4=(0.485, 0.190),
+                        p6=(0.590, 0.350), p7=(0.445, 0.350)),
+    },
+    "run": {
+        "title": "Бежит",
+        "prompt": "running fast toward the viewer, mid-stride, one knee raised high, arms bent and pumping, leaning forward",
+        "points": _pose(p0=(0.495, 0.155), p14=(0.477, 0.140), p15=(0.513, 0.140),
+                        p3=(0.360, 0.320), p4=(0.395, 0.240),
+                        p6=(0.650, 0.335), p7=(0.680, 0.430),
+                        p9=(0.425, 0.630), p10=(0.400, 0.790),
+                        p12=(0.585, 0.690), p13=(0.640, 0.850)),
+    },
+    "fight": {
+        "title": "Боевая стойка, удар",
+        "prompt": "throwing a straight punch to the side with one arm fully extended, the other fist raised guarding the chin, wide fighting stance",
+        "points": _pose(p3=(0.320, 0.250), p4=(0.225, 0.245),
+                        p6=(0.625, 0.320), p7=(0.570, 0.215),
+                        p9=(0.405, 0.680), p10=(0.355, 0.865),
+                        p12=(0.600, 0.680), p13=(0.650, 0.865)),
+    },
+    "victory": {
+        "title": "Победа, кулак вверх",
+        "prompt": "celebrating victory, one fist raised high above the head, the other hand in a fist at the hip, big confident grin",
+        "points": _pose(p3=(0.370, 0.150), p4=(0.385, 0.055),
+                        p6=(0.640, 0.340), p7=(0.590, 0.440)),
     },
 }
 

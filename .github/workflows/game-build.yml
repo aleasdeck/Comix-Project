@@ -1,0 +1,29 @@
+# Сборка браузерной игры на каждый push в ветку игры: проверка, что game/ собирается.
+# Публикацию на Pages делает отдельный pages.yml: он запускается после этой сборки
+# из ветки по умолчанию, которой окружение github-pages разрешает публикацию.
+name: Сборка игры
+
+on:
+  push:
+    branches: [claude/project-thread-r11h4h]
+    paths: ["game/**", ".github/workflows/game-build.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: game
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: game/package-lock.json
+      - run: npm ci
+      - run: npm run build

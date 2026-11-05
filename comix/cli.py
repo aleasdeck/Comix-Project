@@ -155,8 +155,7 @@ def cmd_gen_characters(args, project):
 
 def cmd_gen_backgrounds(args, project):
     locs = args.location or list(project.backgrounds)
-    vars_ = args.variation or list(project.variations)
-    bgs = [(l, v) for l in locs for v in vars_]
+    bgs = [(l, v) for l in locs for v in (args.variation or project.location_variations(l))]
     print(f"фонов: {len(bgs)}")
     done = generate_backgrounds(project, bgs, args.dry_run, args.force)
     _maybe_stop(project, args.dry_run or not done)
@@ -210,6 +209,23 @@ def cmd_doll_reprocess(args, project):
 def cmd_doll_export(args, project):
     from . import doll
     doll.export(Path(args.out), args.scale)
+
+
+def cmd_doll_pick(args, project):
+    from . import doll
+    doll.pick(args.gender, args.pose, args.candidate)
+    print(f"База {args.gender}/{args.pose}: теперь вариант {args.candidate}. Слои старой базы убраны в old/, "
+          f"их перегенерирует следующий запуск comix night.")
+
+
+def cmd_night(args, project):
+    from . import night
+    night.run(project, args.world, args.only, args.skip, args.dry_run)
+
+
+def cmd_export_game(args, project):
+    from .game_export import export_game
+    export_game(project, world=args.world)
 
 
 def cmd_page(args, project):
@@ -280,6 +296,24 @@ def main(argv=None):
     p.add_argument("out")
     p.add_argument("--scale", type=float, default=0.5)
     p.set_defaults(fn=cmd_doll_export)
+
+    p = dl.add_parser("pick", help="выбрать другой вариант базы позы (номер из отчёта ночной генерации)")
+    p.add_argument("--gender", required=True, choices=["male", "female"])
+    p.add_argument("--pose", required=True, choices=list(POSES))
+    p.add_argument("--candidate", required=True, type=int)
+    p.set_defaults(fn=cmd_doll_pick)
+
+    from .night import STAGES
+    p = sub.add_parser("night", help="ночная фабрика: всё для мира по config/factory/<мир>.yaml")
+    p.add_argument("--world", default="city")
+    p.add_argument("--only", nargs="*", choices=STAGES, help="только эти стадии")
+    p.add_argument("--skip", nargs="*", choices=STAGES, help="пропустить стадии")
+    p.add_argument("--dry-run", action="store_true", help="ничего не генерировать, показать план и время")
+    p.set_defaults(fn=cmd_night)
+
+    p = sub.add_parser("export-game", help="картинки и manifest для браузерной игры (game/public/assets)")
+    p.add_argument("--world", default="city")
+    p.set_defaults(fn=cmd_export_game)
 
     sub.add_parser("recut", help="заново вырезать персонажей из *_raw.png").set_defaults(fn=cmd_recut)
 

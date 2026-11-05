@@ -1,0 +1,66 @@
+# Публикация браузерной игры на GitHub Pages.
+# Окружение github-pages по умолчанию пускает публикацию только из ветки по умолчанию,
+# поэтому этот файл работает оттуда: после каждой удачной «Сборки игры» на ветке игры
+# (push, не чужой форк) он собирает ту же версию game/ и выкладывает её.
+# Вручную: Actions -> «Игра на GitHub Pages» -> Run workflow на ветке по умолчанию.
+# Пока репозиторий закрытый, архив сайта не загружается (у закрытых репозиториев мало
+# места под артефакты); на платном плане можно включить переменной PAGES_ENABLED=true.
+name: Игра на GitHub Pages
+
+on:
+  workflow_run:
+    workflows: ["Сборка игры"]
+    types: [completed]
+    branches: [claude/project-thread-r11h4h]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Ветка или коммит игры для публикации
+        default: claude/project-thread-r11h4h
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: game
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || inputs.ref }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: game/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - if: ${{ !github.event.repository.private || vars.PAGES_ENABLED == 'true' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: game/dist
+
+  deploy:
+    needs: build
+    if: ${{ !github.event.repository.private || vars.PAGES_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

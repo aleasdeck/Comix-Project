@@ -1,0 +1,66 @@
+# Вещи героя. Каждая вещь это слой гардероба (id как в config/wardrobe.yaml) и фишки,
+# которые она кладёт в стопку в бою. stats дают бонус к проверкам.
+#
+# Фишки героя (act):
+#   hit N     Удар: N урона врагу
+#   block N   Блок: снимает N урона со следующего удара врага в этом раунде
+#   dodge     Уворот: следующий удар врага в этом раунде мимо
+#   heal N    Лечение: +N здоровья
+#   double    ×2: следующая фишка с уроном в этом каскаде бьёт вдвое
+#   stun      Оглушение: враг пропускает свой ход
+#   ink       +1 чернило
+#   coin N    +N монет
+# Две фишки одного сета подряд в каскаде получают +1 каждая.
+#
+# Характеристики: str Сила, agi Ловкость, wit Смекалка, cha Обаяние.
+
+items:
+  # --- сет «Городской»
+  baseball_cap:   {slot: head,   title: "Кепка",            set: "Городской", chips: [{act: hit, n: 2}], stats: {agi: 1}}
+  hoodie:         {slot: top,    title: "Худи",             set: "Городской", chips: [{act: block, n: 2}, {act: hit, n: 2}]}
+  jeans:          {slot: bottom, title: "Джинсы",           set: "Городской", chips: [{act: hit, n: 3}]}
+  sneakers:       {slot: shoes,  title: "Кеды",             set: "Городской", chips: [{act: dodge}], stats: {agi: 1}}
+  # --- сет «Детектив»
+  fedora:         {slot: head,   title: "Федора",           set: "Детектив",  chips: [{act: stun}], stats: {wit: 1}}
+  trench_coat:    {slot: top,    title: "Тренч",            set: "Детектив",  chips: [{act: block, n: 3}, {act: hit, n: 2}], stats: {wit: 1}}
+  black_trousers: {slot: bottom, title: "Брюки",            set: "Детектив",  chips: [{act: hit, n: 3}], stats: {cha: 1}}
+  dress_shoes:    {slot: shoes,  title: "Туфли",            set: "Детектив",  chips: [{act: double}]}
+  # --- сет «Герой»
+  hero_mask:      {slot: head,   title: "Маска героя",      set: "Герой",     chips: [{act: stun}], stats: {cha: 1}, rarity: rare}
+  hero_suit_top:  {slot: top,    title: "Костюм героя",     set: "Герой",     chips: [{act: hit, n: 4}, {act: block, n: 2}], rarity: rare}
+  hero_suit_legs: {slot: bottom, title: "Трико героя",      set: "Герой",     chips: [{act: hit, n: 3}, {act: dodge}], rarity: rare}
+  hero_boots:     {slot: shoes,  title: "Сапоги героя",     set: "Герой",     chips: [{act: double}, {act: hit, n: 2}], rarity: rare}
+  # --- лут города
+  beanie:         {slot: head,   title: "Шапка",            chips: [{act: heal, n: 2}]}
+  bandana:        {slot: head,   title: "Бандана",          chips: [{act: hit, n: 2}, {act: double}], stats: {str: 1}}
+  gas_mask:       {slot: head,   title: "Противогаз",       chips: [{act: block, n: 4}], stats: {cha: -1}}
+  leather_jacket: {slot: top,    title: "Косуха",           chips: [{act: block, n: 2}, {act: hit, n: 3}], stats: {str: 1}}
+  business_shirt: {slot: top,    title: "Рубашка с галстуком", chips: [{act: coin, n: 2}], stats: {cha: 2}}
+  cargo_pants:    {slot: bottom, title: "Карго",            chips: [{act: heal, n: 2}, {act: hit, n: 2}]}
+  combat_boots:   {slot: shoes,  title: "Берцы",            chips: [{act: hit, n: 3}, {act: block, n: 1}], stats: {str: 1}}
+  boots:          {slot: shoes,  title: "Ботинки",          chips: [{act: dodge}, {act: hit, n: 1}]}
+
+# Битки: вещь «в руке». light/strong: сколько верхних фишек переворачивает удар (от и до).
+# Лёгкий удар бьёт первым, при сильном замахе враг успевает ударить раньше.
+slammers:
+  fist:       {title: "Кулак",        light: [2, 3], strong: [3, 5]}
+  bat:        {title: "Бита",         sprite: weapons/bat,        light: [2, 3], strong: [4, 6], note: "Тяжёлая: сильный удар переворачивает много"}
+  knuckles:   {title: "Кастет",       sprite: weapons/knuckles,   light: [2, 2], strong: [3, 4], hit_bonus: 1, note: "Точная, и каждый «Удар» +1"}
+  crowbar:    {title: "Монтировка",   sprite: weapons/crowbar,    light: [2, 3], strong: [4, 5], bottom: true, note: "Сильный удар достаёт и нижнюю фишку"}
+  stun_baton: {title: "Шокер",        sprite: weapons/stun_baton, light: [2, 3], strong: [3, 5], stun_capture: true, note: "Захват вражьей фишки оглушает врага"}
+  umbrella:   {title: "Зонт-трость",  sprite: weapons/umbrella,   light: [2, 2], strong: [3, 5], light_block: 2, note: "Лёгкий удар даёт Блок 2"}
+  skateboard: {title: "Скейт",        sprite: weapons/skateboard, light: [1, 4], strong: [4, 6], note: "Размашистый: как повезёт"}
+
+# Сюжетные вещи: лежат в карманах и открывают варианты в сценах
+props:
+  lockpicks:   {title: "Отмычки",     sprite: props/lockpicks,   note: "+2 отмычки в «Штифтах»"}
+  keycard:     {title: "Ключ-карта",  sprite: props/keycard}
+  flash_drive: {title: "Флешка",      sprite: props/flash_drive}
+  badge:       {title: "Жетон",       sprite: props/badge,       note: "Открывает разговор с полицией"}
+  cash:        {title: "Пачка денег", sprite: props/cash}
+  prototype:   {title: "Чертёж прототипа", sprite: props/prototype}
+
+# Что может выпасть наградой после боя или в находке (1 из 3)
+loot: [beanie, bandana, gas_mask, leather_jacket, business_shirt, cargo_pants, combat_boots, boots,
+       baseball_cap, hoodie, jeans, sneakers, fedora, trench_coat, black_trousers, dress_shoes,
+       hero_mask, hero_suit_top, hero_suit_legs, hero_boots, bat, knuckles, crowbar, stun_baton, umbrella, skateboard]

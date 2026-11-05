@@ -11,8 +11,11 @@ qwen / qwen-fast (Qwen-Image-2512). ControlNet там нет, поэтому п�
 
 from __future__ import annotations
 
+import dataclasses
+import hashlib
 import importlib
 import json
+import os
 import shutil
 import sys
 import time
@@ -25,7 +28,8 @@ DRY_DIR = ROOT / "build" / "dry_run"
 
 
 def _jobs(settings: dict):
-    path = Path(settings["imagegen"]["path"])
+    # COMIX_IMAGEGEN_PATH подменяет путь из settings.yaml (так тесты подставляют фейковый ImageGen)
+    path = Path(os.environ.get("COMIX_IMAGEGEN_PATH") or settings["imagegen"]["path"])
     if not (path / "imagegen" / "jobs.py").exists():
         sys.exit(f"Не найден ImageGen в {path}. Поправь imagegen.path в config/settings.yaml.")
     if str(path) not in sys.path:
@@ -34,7 +38,7 @@ def _jobs(settings: dict):
 
 
 def run_batch(settings: dict, model: str, kind: str, tasks: list[dict], dry: bool,
-              progress=None) -> dict[str, Path]:
+              progress=None, timeout: int | None = None) -> dict[str, Path]:
     """tasks: [{key, prompt, negative, seed, size}] -> {key: путь к сырому PNG}.
     progress(done, total, state) вызывается, пока ImageGen работает.
 
@@ -67,7 +71,8 @@ def run_batch(settings: dict, model: str, kind: str, tasks: list[dict], dry: boo
     if out_dir.exists():
         for f in out_dir.glob("*.png"):
             f.unlink()
-    timeout = int(settings["imagegen"].get("timeout", 1800))
+    # большая пачка идёт дольше общего таймаута: даём минимум 2 минуты на картинку
+    timeout = int(timeout or max(int(settings["imagegen"].get("timeout", 1800)), 120 * len(items)))
     res = jobs.generate(out_dir=str(out_dir), model=model, items=items)
     deadline = time.time() + timeout
     st = {"files": res["files"], "state": "queued", "counts": {}}
@@ -88,6 +93,38 @@ def run_batch(settings: dict, model: str, kind: str, tasks: list[dict], dry: boo
         else:
             print(f"  не готово: {t['key']} ({f.name})")
     return out
+
+
+def register_edit(settings: dict, refs: list[Path]) -> str:
+    """Пресет «правка klein по опорным картинкам» поверх klein: те же веса, ComfyUI не перезагружается.
+
+    refs: 1–4 картинки. Первая всегда персонаж, остальные дополнительные опоры (например скелет позы).
+    Каждой цепочке ReferenceLatent отдаётся своя картинка, так FLUX.2 klein видит их все.
+    Имя пресета своё для каждого набора картинок, чтобы пачки не мешали друг другу.
+    """
+    _jobs(settings)  # добавляет ImageGen в sys.path
+    presets = importlib.import_module("imagegen.presets")
+    base = presets.PRESETS["klein"]
+    refs = [str(Path(r)) for r in refs]
+    name = "klein-edit-" + hashlib.md5("|".join(refs).encode()).hexdigest()[:8]
+    if name in presets.PRESETS:
+        return name
+
+    def build(p, refs=tuple(refs)):
+        g = presets.klein_graph(p)
+        pos, neg = ["release", 0], ["release", 1]
+        for i, ref in enumerate(refs):
+            g[f"ref{i}"] = {"class_type": "ImageGenLoadImage", "inputs": {"path": ref}}
+            g[f"refenc{i}"] = {"class_type": "VAEEncode", "inputs": {"pixels": [f"ref{i}", 0], "vae": ["vae", 0]}}
+            g[f"pref{i}"] = {"class_type": "ReferenceLatent", "inputs": {"conditioning": pos, "latent": [f"refenc{i}", 0]}}
+            g[f"nref{i}"] = {"class_type": "ReferenceLatent", "inputs": {"conditioning": neg, "latent": [f"refenc{i}", 0]}}
+            pos, neg = [f"pref{i}", 0], [f"nref{i}", 0]
+        g["guider"]["inputs"]["positive"] = pos
+        g["guider"]["inputs"]["negative"] = neg
+        return g
+
+    presets.PRESETS[name] = dataclasses.replace(base, name=name, title=f"klein edit ({len(refs)} ref)", build=build)
+    return name
 
 
 def server_stop(settings: dict, when: str = "idle"):
