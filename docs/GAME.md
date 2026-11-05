@@ -61,16 +61,22 @@ game.bat
 
 ## GitHub Pages
 
-После каждого push в ветку `claude/project-thread-r11h4h`, если менялась папка `game/`, GitHub Actions собирает игру
-(`.github/workflows/pages.yml`). Пока репозиторий закрытый, выполняется только сборка, без публикации:
-архив сайта не загружается, потому что у закрытых репозиториев на бесплатном плане почти нет места под артефакты.
+После каждого push в ветку `claude/project-thread-r11h4h`, если менялась папка `game/`, GitHub Actions проверяет,
+что игра собирается (`.github/workflows/game-build.yml`, «Сборка игры»).
 
-Когда откроешь репозиторий:
+Публикует игру `.github/workflows/pages.yml` («Игра на GitHub Pages»). Окружение `github-pages` по умолчанию
+разрешает публикацию только из ветки по умолчанию, поэтому этот файл работает из неё: GitHub запускает его оттуда
+после каждой удачной «Сборки игры», он собирает ту же версию `game/` и выкладывает её. Для этого файл должен лежать
+в ветке по умолчанию, то есть ветку игры нужно один раз влить в неё. Дальше каждый push в ветку игры публикуется сам.
+
+Один раз в настройках:
 
 1. **Settings → Pages → Build and deployment → Source:** выбрать **GitHub Actions**.
-2. **Settings → Environments → github-pages → Deployment branches:** добавить ветку
-   `claude/project-thread-r11h4h`, если там разрешена только ветка по умолчанию.
-3. **Actions → «Игра на GitHub Pages» → Run workflow** (или любой push в `game/`).
+2. Влить ветку игры в ветку по умолчанию (pull request → Merge).
+3. **Actions → «Игра на GitHub Pages» → Run workflow** на ветке по умолчанию (или любой push в `game/`).
+
+Можно и без слияния: в **Settings → Environments → github-pages → Deployment branches** добавить правило
+`claude/*`, тогда «Игра на GitHub Pages» запускается вручную прямо на ветке игры.
 
 Игра будет по адресу `https://aleasdeck.github.io/Comix-Project/`.
 
