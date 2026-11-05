@@ -78,7 +78,7 @@ enemies:
       stand: "hovering in the air, facing the viewer"
       attack: "diving toward the viewer, firing a blue electric zap from its stun gun"
       hit: "tilted and wobbling in the air after a hit, sparks flying"
-      defeated: "crashed on the ground, broken, sparking and smoking"
+      defeated: "the same drone lying smashed flat on the ground, no longer flying, propellers snapped off, cracked casing, sparking and smoking"
   riot_robot:
     title: "Робот-охранник"
     prompt: "a bulky two-legged riot-control security robot with blue and white armor plates and a riot shield, original design"
@@ -105,7 +105,7 @@ bosses:
 # Битки для боя на фишках (вещь «в руке»)
 weapons:
   bat:        {title: "Бита",         prompt: "a wooden baseball bat with black grip tape"}
-  knuckles:   {title: "Кастет",       prompt: "silver knuckle-duster weapon: one metal bar with four finger rings in a row, flat front view"}
+  knuckles:   {title: "Кастет",       prompt: "steel knuckle duster street weapon: one solid flat metal plate with four round finger holes side by side and a thick curved palm grip under them, heavy and chunky, flat front view"}
   crowbar:    {title: "Монтировка",   prompt: "red steel crowbar: one long straight bar with a curved split claw hook at one end and a flat chisel tip at the other, no hammer head, side view"}
   stun_baton: {title: "Шокер",        prompt: "a black police stun baton with blue electric sparks at the tip"}
   skateboard: {title: "Скейт",        prompt: "a skateboard with a flame graphic on the deck"}

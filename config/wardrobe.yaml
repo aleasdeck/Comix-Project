@@ -20,7 +20,7 @@ top:
   hoodie:          {prompt: "green hoodie", color: "#2e7d32"}
   business_shirt:  {prompt: "light blue button-up shirt with a dark tie", color: "#90caf9"}
   trench_coat:     {prompt: "beige trench coat with long sleeves covering both arms down to the wrists", color: "#c8b38a", long: true}
-  hero_suit_top:   {prompt: "a short dark teal armored superhero jacket with orange stripes that ends at the waist, the legs and trousers stay unchanged, original design, no logo", color: "#00695c"}
+  hero_suit_top:   {prompt: "a short dark teal armored superhero jacket with orange stripes and long sleeves down to the wrists, it ends at the waist, the legs and trousers stay unchanged, original design, no logo", color: "#00695c"}
   tank_top:        {prompt: "black tank top", color: "#263238"}
 
 bottom:
