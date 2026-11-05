@@ -218,6 +218,14 @@ def cmd_doll_pick(args, project):
           f"их перегенерирует следующий запуск comix night.")
 
 
+def cmd_redo(args, project):
+    from .redo import redo
+    r = redo(args.pose or [], args.item or [], args.enemy or [], args.sprite or [], args.closeup or [])
+    for k, n in r["moved"].items():
+        print(f"  {k}: убрано файлов {n}")
+    print(f"Всё лежит в {r['to']}. Теперь запусти comix night: он нарисует убранное заново.")
+
+
 def cmd_night(args, project):
     from . import night
     night.run(project, args.world, args.only, args.skip, args.dry_run)
@@ -310,6 +318,14 @@ def main(argv=None):
     p.add_argument("--skip", nargs="*", choices=STAGES, help="пропустить стадии")
     p.add_argument("--dry-run", action="store_true", help="ничего не генерировать, показать план и время")
     p.set_defaults(fn=cmd_night)
+
+    p = sub.add_parser("redo", help="убрать брак в assets/_redo, чтобы comix night нарисовал его заново")
+    p.add_argument("--pose", nargs="*", metavar="ПОЛ/ПОЗА", help="база позы со всеми слоями, напр. male/victory")
+    p.add_argument("--item", nargs="*", metavar="СЛОТ/ВЕЩЬ", help="вещь во всех позах, напр. top/hero_suit_top")
+    p.add_argument("--enemy", nargs="*", metavar="ID", help="враг во всех позах, напр. drone")
+    p.add_argument("--sprite", nargs="*", metavar="ГРУППА/ID", help="предмет или наклейка, напр. weapons/crowbar")
+    p.add_argument("--closeup", nargs="*", metavar="ID", help="крупный план миниигры, напр. hack_done")
+    p.set_defaults(fn=cmd_redo)
 
     p = sub.add_parser("export-game", help="картинки и manifest для браузерной игры (game/public/assets)")
     p.add_argument("--world", default="city")

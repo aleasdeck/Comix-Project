@@ -328,7 +328,10 @@ def extract_layer(project: Project, base_rgb: Image.Image, base_alpha: np.ndarra
 
 FACE_BANDS = {"emotion": (-0.06, 0.20), "npc": (-0.14, 0.36)}
 # строки фигуры (доля высоты), которые правка слота трогать не должна: для автопроверки
-PROTECTED = {"head": [(0.34, 1.0)], "top": [(0.0, 0.07), (0.93, 1.0)], "bottom": [(0.0, 0.34)],
+# top: длинный верх (тренч, long: true в wardrobe.yaml) может закрыть ноги; top_short: обычный верх
+# не опускается ниже середины бедра, иначе это комбинезон, а не верх.
+PROTECTED = {"head": [(0.34, 1.0)], "top": [(0.0, 0.07), (0.93, 1.0)], "top_short": [(0.0, 0.07), (0.70, 1.0)],
+             "bottom": [(0.0, 0.34)],
              "shoes": [(0.0, 0.74)], "emotion": [(0.26, 1.0)], "npc": [(0.42, 1.0)]}
 SPILL_LIMIT = 0.02  # доля площади фигуры, изменённая вне слота
 
@@ -590,7 +593,7 @@ def _all_layer_jobs(project: Project, gender: str, pose: str, items: dict[str, l
         for it in (items or {}).get(slot, []):
             if it != "none":
                 jobs.append({"key": f"item:{slot}:{it}", "prompt": item_prompt(project, slot, it), "seed": seed,
-                             "raw": d / f"raw_{slot}__{it}.png", "zone": slot})
+                             "raw": d / f"raw_{slot}__{it}.png", "zone": _qa_zone(project, f"{slot}__{it}")})
     for eid, expr in (emotions or {}).items():
         jobs.append({"key": f"face:{eid}", "prompt": emotion_prompt(expr), "seed": seed,
                      "raw": d / f"raw_face__{eid}.png", "zone": "emotion"})
@@ -640,15 +643,26 @@ def qa_pose(project: Project, gender: str, pose: str, skin: str = "light") -> di
         name = f.stem[4:]
         if name.endswith(("_try0", "_try1")):
             continue
-        if name in qa and qa[name].get("file_mtime") == int(f.stat().st_mtime):
+        zone = _qa_zone(project, name)
+        if name in qa and qa[name].get("file_mtime") == int(f.stat().st_mtime) and qa[name].get("zone") == zone:
             continue
-        slot = name.split("__", 1)[0]
-        zone = "npc" if name.startswith("face__npc_") else ("emotion" if slot == "face" else slot)
         spill = edit_spill(project, base_rgb, base_alpha, Image.open(f), zone)
         qa[name] = {**qa.get(name, {}), "spill": round(spill, 4), "ok": spill <= SPILL_LIMIT,
                     "zone": zone, "file_mtime": int(f.stat().st_mtime)}
     qa_path.write_text(json.dumps(qa, ensure_ascii=False, indent=1))
     return qa
+
+
+def _qa_zone(project: Project, name: str) -> str:
+    """Зона автопроверки слоя по имени вида slot__item."""
+    slot, item = name.split("__", 1)
+    if name.startswith("face__npc_"):
+        return "npc"
+    if slot == "face":
+        return "emotion"
+    if slot == "top" and not project.item("top", item).get("long"):
+        return "top_short"
+    return slot
 
 
 def bad_layers(project: Project, gender: str, pose: str, skin: str = "light") -> list[tuple[float, str]]:

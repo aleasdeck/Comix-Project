@@ -99,8 +99,9 @@ POSES = {
     },
     "victory": {
         "title": "Победа, кулак вверх",
-        "prompt": "celebrating victory, one fist raised high above the head, the other hand in a fist at the hip, big confident grin",
-        "points": _pose(p3=(0.370, 0.150), p4=(0.385, 0.055),
+        "prompt": "celebrating victory, one fist punched up high into the air, the other hand in a fist at the hip, big confident grin",
+        # кулак не выше 0.11 кадра: при 0.055 его срезал верхний край (ночь 2026-11-05)
+        "points": _pose(p3=(0.300, 0.190), p4=(0.250, 0.110),
                         p6=(0.640, 0.340), p7=(0.590, 0.440)),
     },
 }

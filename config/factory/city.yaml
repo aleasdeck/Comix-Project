@@ -72,8 +72,13 @@ enemies:
     poses: {defeated: "lying on its side on the ground, knocked out with its tongue out"}
   drone:
     title: "Охранный дрон"
-    prompt: "a hovering quadcopter security drone with a red camera eye and a small stun gun underneath"
-    poses: {defeated: "crashed on the ground, broken, sparking and smoking"}
+    prompt: "a small flying quadcopter security drone machine: a round white robot body with four propeller arms, a red camera eye and a small stun gun underneath, no person, no human body, no arms, no legs"
+    frame: "the whole drone visible with empty space around it, centered"
+    poses:
+      stand: "hovering in the air, facing the viewer"
+      attack: "diving toward the viewer, firing a blue electric zap from its stun gun"
+      hit: "tilted and wobbling in the air after a hit, sparks flying"
+      defeated: "crashed on the ground, broken, sparking and smoking"
   riot_robot:
     title: "Робот-охранник"
     prompt: "a bulky two-legged riot-control security robot with blue and white armor plates and a riot shield, original design"
@@ -100,8 +105,8 @@ bosses:
 # Битки для боя на фишках (вещь «в руке»)
 weapons:
   bat:        {title: "Бита",         prompt: "a wooden baseball bat with black grip tape"}
-  knuckles:   {title: "Кастет",       prompt: "a pair of silver brass knuckles"}
-  crowbar:    {title: "Монтировка",   prompt: "a red steel crowbar"}
+  knuckles:   {title: "Кастет",       prompt: "silver knuckle-duster weapon: one metal bar with four finger rings in a row, flat front view"}
+  crowbar:    {title: "Монтировка",   prompt: "red steel crowbar: one long straight bar with a curved split claw hook at one end and a flat chisel tip at the other, no hammer head, side view"}
   stun_baton: {title: "Шокер",        prompt: "a black police stun baton with blue electric sparks at the tip"}
   skateboard: {title: "Скейт",        prompt: "a skateboard with a flame graphic on the deck"}
   umbrella:   {title: "Зонт-трость",  prompt: "a closed black umbrella with a curved wooden handle"}
@@ -151,7 +156,7 @@ stickers:
   robot:       {title: "Робот",        prompt: "a retro tin toy robot head"}
   alien:       {title: "Пришелец",     prompt: "a green alien head with big black eyes"}
   shuriken:    {title: "Сюрикен",      prompt: "a steel ninja throwing star"}
-  magnet:      {title: "Магнит",       prompt: "a red horseshoe magnet"}
+  magnet:      {title: "Магнит",       prompt: "a single red U-shaped horseshoe magnet in one solid piece, silver tips on both ends"}
   hourglass:   {title: "Песочные часы", prompt: "an hourglass with golden sand"}
   key:         {title: "Ключ",         prompt: "an old golden key"}
   bomb:        {title: "Бомба",        prompt: "a round black cartoon bomb with a lit fuse"}
@@ -176,7 +181,7 @@ closeups:
   safe_try:      "extreme close-up of a black-gloved hand turning the dial of an office wall safe"
   safe_done:     "close-up of an open office safe with documents and bundles of cash inside"
   hack_try:      "close-up of black-gloved hands typing on a keyboard in front of a monitor glowing with green code"
-  hack_done:     "close-up of a computer monitor showing a big green unlocked padlock icon"
+  hack_done:     "close-up of a plain unbranded flat computer monitor with a thin black frame, showing a big green unlocked padlock icon, no logos or brand marks anywhere"
   bomb_try:      "extreme close-up of black-gloved hands holding wire cutters over a homemade bomb with red, blue and yellow wires and a digital timer"
   bomb_done:     "close-up of a defused bomb with cut wires and a frozen digital timer"
   bag_try:       "close-up of a black-gloved hand carefully reaching into an open handbag in a crowded subway car"

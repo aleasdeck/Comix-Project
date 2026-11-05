@@ -49,9 +49,10 @@ def _cut(project: Project, img: Image.Image) -> Image.Image:
 
 # --- враги и боссы -----------------------------------------------------------------
 
-def creature_base_prompt(project: Project, desc: str, stand: str) -> str:
+def creature_base_prompt(project: Project, desc: str, stand: str, frame: str | None = None) -> str:
+    """frame: своя подпись кадра для не-человека (дрон), иначе «с головы до ног» тянет к людям."""
     return ", ".join([f"full body shot of {desc}", stand,
-                      "whole figure visible from head to toes with empty space around it, centered",
+                      frame or "whole figure visible from head to toes with empty space around it, centered",
                       GREY_BG, _style(project)])
 
 
@@ -82,7 +83,8 @@ def creatures(project: Project, group: dict, poses: dict, dry: bool = False) -> 
     if todo and not dry:
         tasks = [{"key": cid, "size": size, "seed": _seed(cid),
                   "prompt": creature_base_prompt(project, group[cid]["prompt"],
-                                                 (group[cid].get("poses") or {}).get(first, poses[first])),
+                                                 (group[cid].get("poses") or {}).get(first, poses[first]),
+                                                 group[cid].get("frame")),
                   "negative": "blurry, deformed, extra limbs, text, watermark, background scenery, cropped"}
                  for cid in todo]
         raw = ig.run_batch(s, model, "enemies_base", tasks, dry=False, progress=_progress("enemies_base"))
@@ -140,7 +142,7 @@ def sprites(project: Project, group_name: str, group: dict, sticker: bool = Fals
     s = project.settings
     tasks = [{"key": sid, "size": "1024x1024", "seed": _seed(f"{group_name}/{sid}"),
               "prompt": sticker_prompt(group[sid]["prompt"]) if sticker else object_prompt(project, group[sid]["prompt"]),
-              "negative": "text, letters, watermark, blurry, photo, multiple objects, hands, person"}
+              "negative": "text, letters, logo, brand logo, watermark, blurry, photo, multiple objects, hands, person"}
              for sid in todo]
     raw = ig.run_batch(s, s["imagegen"].get("character_model", "klein"), f"sprites_{group_name}", tasks,
                        dry=False, progress=_progress(group_name))
@@ -168,7 +170,7 @@ def closeups(project: Project, group: dict) -> int:
     style = s["style"]["background"].replace(", no people, empty scene", "")
     tasks = [{"key": cid, "size": s["imagegen"].get("background_size", "wide"), "seed": _seed(f"closeup/{cid}"),
               "prompt": f"{group[cid]}, comic book panel, {style}",
-              "negative": "text, letters, watermark, blurry, bare skin hands, deformed hands"} for cid in todo]
+              "negative": "text, letters, logo, brand logo, watermark, blurry, bare skin hands, deformed hands"} for cid in todo]
     raw = ig.run_batch(s, s["imagegen"].get("background_model", "qwen"), "closeups", tasks, dry=False,
                        progress=_progress("closeups"))
     print()

@@ -50,6 +50,12 @@ night.bat                      :: запуск на ночь
   `comix.bat doll pick --gender male --pose run --candidate 1`, потом `night.bat`.
   Слои старой базы уберутся в `old\` и перегенерируются на новой.
 * Чтобы картинки появились в игре на GitHub Pages: `git add game/public/assets`, commit и push.
+* Перерисовать брак после правки промпта или скелета: `comix.bat redo` убирает нужное в `assets\_redo\<время>\`
+  (ничего не удаляется, вернуть можно копированием), потом `night.bat` рисует убранное заново. Например:
+  `comix.bat redo --pose male/victory female/victory --item top/hero_suit_top --enemy drone --sprite weapons/crowbar weapons/knuckles stickers/magnet --closeup hack_done`.
+  `--pose` убирает базу позы со всеми её слоями, `--item` убирает вещь во всех позах обоих полов.
+* Пока ComfyUI дорисовывает очередь после выхода comix (стадия упёрлась в таймаут), `night.bat` не запускай:
+  он поставит те же картинки в очередь второй раз.
 * Можно запустить только часть: `comix.bat night --only enemies stickers` или `--skip npc_faces`.
 
 ## Модели

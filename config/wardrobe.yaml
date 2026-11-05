@@ -2,6 +2,7 @@
 # prompt: что уходит в промпт генератора.
 # color: цвет для черновой (placeholder) отрисовки, когда картинки ещё не сгенерированы.
 # Слот можно оставить пустым значением none.
+# long: true у верха: вещь законно закрывает ноги (плащ), автопроверка не считает это браком.
 
 head:
   none:          {prompt: "", color: null}
@@ -18,8 +19,8 @@ top:
   leather_jacket:  {prompt: "black leather biker jacket over a grey t-shirt", color: "#212121"}
   hoodie:          {prompt: "green hoodie", color: "#2e7d32"}
   business_shirt:  {prompt: "light blue button-up shirt with a dark tie", color: "#90caf9"}
-  trench_coat:     {prompt: "beige trench coat", color: "#c8b38a"}
-  hero_suit_top:   {prompt: "dark teal armored bodysuit top with orange stripes, original design, no logo", color: "#00695c"}
+  trench_coat:     {prompt: "beige trench coat with long sleeves covering both arms down to the wrists", color: "#c8b38a", long: true}
+  hero_suit_top:   {prompt: "a short dark teal armored superhero jacket with orange stripes that ends at the waist, the legs and trousers stay unchanged, original design, no logo", color: "#00695c"}
   tank_top:        {prompt: "black tank top", color: "#263238"}
 
 bottom:
