@@ -1150,12 +1150,12 @@
      0.235
     ],
     "3": [
-     0.37,
-     0.15
+     0.3,
+     0.19
     ],
     "4": [
-     0.385,
-     0.055
+     0.25,
+     0.11
     ],
     "5": [
      0.595,
@@ -1243,8 +1243,8 @@
     "leather_jacket": "black leather biker jacket over a grey t-shirt",
     "hoodie": "green hoodie",
     "business_shirt": "light blue button-up shirt with a dark tie",
-    "trench_coat": "beige trench coat",
-    "hero_suit_top": "dark teal armored bodysuit top with orange stripes, original design, no logo",
+    "trench_coat": "beige trench coat with long sleeves covering both arms down to the wrists",
+    "hero_suit_top": "a short dark teal armored superhero jacket with orange stripes that ends at the waist, the legs and trousers stay unchanged, original design, no logo",
     "tank_top": "black tank top"
    },
    "bottom": {
@@ -2178,7 +2178,7 @@
      },
      "skin_mask": "doll/female/victory/skin_mask_rgba.webp",
      "skin_ref": [
-      248,
+      249,
       203,
       164
      ],
@@ -3260,9 +3260,9 @@
      },
      "skin_mask": "doll/male/victory/skin_mask_rgba.webp",
      "skin_ref": [
-      251,
-      194,
-      152
+      249,
+      195,
+      153
      ],
      "shorts_mask": "doll/male/victory/shorts_mask_rgba.webp",
      "faces": {
