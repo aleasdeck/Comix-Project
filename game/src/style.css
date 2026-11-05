@@ -17,13 +17,19 @@
 
 * { box-sizing: border-box; }
 
+html { height: 100%; }
+/* Всё на одном экране: шапка, книга и панель выбора, без прокрутки страницы. */
 body {
   margin: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   background: var(--bg);
   color: var(--text);
   font: 15px/1.45 Rubik, system-ui, sans-serif;
 }
-body.has-ov { overflow: hidden; }
 
 button {
   font: inherit;
@@ -48,86 +54,114 @@ button.go { background: var(--accent); font-weight: 700; }
 .top {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 20px;
+  gap: 8px 16px;
   align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
+  padding: 8px 16px;
   border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  position: relative;
+  z-index: 6;
 }
-.brand b { font: 22px "Russo One", Rubik, sans-serif; color: var(--accent); letter-spacing: .5px; }
-.brand span { display: block; color: var(--muted); font-size: 13px; }
+.brand { margin-right: auto; }
+.brand b { font: 21px "Russo One", Rubik, sans-serif; color: var(--accent); letter-spacing: .5px; }
+.brand span { display: block; color: var(--muted); font-size: 12.5px; }
 .tools { display: flex; flex-wrap: wrap; gap: 8px; }
+.menu-btn { display: none; font-size: 20px; line-height: 1; padding: 6px 11px; }
 .seg { display: inline-flex; }
 .seg button { border-radius: 0; box-shadow: none; }
 .seg button:first-child { border-radius: 8px 0 0 8px; }
 .seg button:last-child { border-radius: 0 8px 8px 0; border-left: 0; }
 .seg button[aria-pressed="true"] { background: var(--accent); }
 
-.layout {
-  display: grid;
-  grid-template-columns: minmax(0, 780px) 360px;
-  gap: 24px;
-  justify-content: center;
-  padding: 18px 16px 24px;
+/* фишка героя в шапке: открывает карточку */
+.hero-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 3px 14px 3px 3px;
+  border-radius: 999px;
+  background: var(--bg3); color: var(--text);
+  border-color: var(--accent);
+  box-shadow: 2px 2px 0 var(--ink);
+  font-weight: 500;
 }
-#pages { display: grid; gap: 22px; min-width: 0; align-content: start; }
-.page {
-  display: block;
-  width: 100%;
-  height: auto;
+.hero-chip[hidden] { display: none; }
+.hero-chip:hover:not([disabled]) { background: #43434f; }
+.chip-pic { width: 38px; height: 38px; border-radius: 50%; overflow: hidden; background: var(--paper); flex: none; }
+.chip-pic canvas { display: block; width: 100%; height: 100%; }
+.chip-txt { display: flex; gap: 10px; white-space: nowrap; }
+.chip-txt .hp { color: #ff9a8f; }
+.hero-chip.bump { animation: bump .45s ease-out; }
+@keyframes bump { 40% { transform: scale(1.12); box-shadow: 0 0 0 4px var(--accent); } }
+
+.layout {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 12px 16px;
+  min-height: 0;
+}
+
+/* --- книга --------------------------------------------------------------------------------- */
+
+/* ширину книги задаёт высота экрана (--book-w ставит book.ts), панель выбора стоит вплотную */
+.book { flex: 0 1 var(--book-w, 700px); min-width: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 6px; }
+.book-frame { min-height: 0; min-width: 0; display: grid; place-items: center; }
+#pages { position: relative; touch-action: pan-y pinch-zoom; user-select: none; -webkit-user-select: none; }
+#pages > .leaf {
+  position: absolute; inset: 0;
+  display: none;
   border-radius: 3px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
+  transform-origin: left center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
+#pages > .leaf.cur { display: block; }
+#pages > .leaf.turning { z-index: 2; box-shadow: 0 10px 40px rgba(0, 0, 0, .6); }
+.page { display: block; width: 100%; height: 100%; border-radius: 3px; }
+.pager { display: flex; justify-content: center; align-items: center; gap: 14px; }
+.pager button { min-width: 48px; padding: 2px 14px 5px; font-size: 24px; line-height: 1; }
+#pageNo { min-width: 70px; text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
 
-/* --- боковая панель ------------------------------------------------------------------------ */
+/* --- панель выбора ------------------------------------------------------------------------- */
 
-.side { position: sticky; top: 16px; align-self: start; display: grid; gap: 16px; max-height: calc(100vh - 32px); overflow: auto; }
-.hero-card {
-  display: grid;
-  grid-template-columns: 96px 1fr;
-  gap: 12px;
-  background: var(--bg2);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 12px;
-  font-size: 13px;
-}
-.hero-card:empty { display: none; }
-.hero-card canvas { width: 96px; height: auto; background: var(--bg3); border-radius: 8px; }
-.hero-name { font-size: 16px; display: block; }
-.meters { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
-.m { background: var(--bg3); border-radius: 999px; padding: 1px 9px; font-weight: 500; }
-.m.hp { color: #ff9a8f; }
-.stats { display: flex; flex-wrap: wrap; gap: 2px 10px; color: var(--muted); }
-.stats b { color: var(--text); }
-.label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .6px; margin-top: 6px; }
-.pogs { display: flex; flex-wrap: wrap; gap: 4px; }
-.mini-pog { background: #2f4a3a; color: #d8f3df; border-radius: 999px; padding: 0 7px; font-size: 12px; }
-.stk { display: grid; gap: 1px; }
-
+.side { flex: 0 0 clamp(300px, 30vw, 420px); min-height: 0; display: flex; flex-direction: column; gap: 8px; }
 .choose {
+  flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column;
   background: var(--bg2);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 12px;
 }
-.choose h2 { margin: 0 0 4px; font: 20px "Russo One", Rubik, sans-serif; }
-.tip { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
+.choose-head { flex: none; display: flex; align-items: center; gap: 8px; margin: 0 0 4px; }
+.choose h2 { flex: 1 1 auto; margin: 0; font: 20px "Russo One", Rubik, sans-serif; }
+.sheet-btn { display: none; flex: none; font-size: 18px; line-height: 1; padding: 4px 10px; }
+.tip { flex: none; color: var(--muted); font-size: 13px; margin: 0 0 10px; }
 .choose:not(:has(.opt, .sopt)) .desk { display: none; }
-#choices { display: grid; gap: 12px; }
+/* варианты делят высоту панели: эскизы сжимаются, чтобы всё влезло без прокрутки */
+#choices { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 10px; overflow: auto; }
+#choices > * { flex: none; }
+#choices > .opt { flex: 0 1 auto; min-height: 0; overflow: hidden; }
 .opt {
-  display: grid;
+  display: flex; flex-direction: column;
   gap: 4px;
-  align-content: start;
   text-align: left;
   padding: 8px;
   border-width: 3px;
 }
-.opt canvas { width: 100%; height: auto; border: 2px solid var(--ink); border-radius: 4px; background: #f4efe2; }
+.opt > * { flex: none; }
+/* эскиз сжимается по высоте, ширина следует за ней по пропорциям кадра */
+.opt canvas {
+  flex: 0 1 auto; min-height: 44px;
+  align-self: center;
+  width: auto; height: auto; max-width: 100%;
+  object-fit: contain;
+  border: 2px solid var(--ink); border-radius: 4px; background: #f4efe2;
+}
 .opt b { font-size: 16px; }
 .opt span { color: #55535e; font-size: 13px; }
 .opt .tag {
-  justify-self: start; background: var(--ink); color: var(--accent); border-radius: 4px;
+  align-self: flex-start; background: var(--ink); color: var(--accent); border-radius: 4px;
   padding: 0 7px; font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
 }
 .opt .more { color: #2f5d8a; font-weight: 500; }
@@ -141,9 +175,39 @@ button.go { background: var(--accent); font-weight: 700; }
 .stars { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 3px; color: var(--muted); }
 .stars .ok { color: var(--accent); }
 
-footer { padding: 4px 16px 28px; color: var(--muted); font-size: 13px; max-width: 1160px; margin: 0 auto; }
-footer code { color: var(--text); }
-#missing { color: #e7c873; }
+#missing { flex: none; margin: 0; color: #e7c873; font-size: 12.5px; }
+
+/* --- карточка героя в окне ----------------------------------------------------------------- */
+
+.hero-dlg {
+  width: min(600px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  padding: 14px 16px 16px;
+  color: var(--text);
+  background: var(--bg2);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .6), 6px 6px 0 var(--ink);
+}
+.hero-dlg[open] { animation: pop .18s ease-out; }
+.hero-dlg::backdrop { background: rgba(10, 10, 14, .7); }
+@keyframes pop { from { opacity: 0; transform: translateY(10px) scale(.97); } }
+.dlg-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.dlg-head h2 { margin: 0; font: 22px "Russo One", Rubik, sans-serif; }
+.dlg-head button { font-size: 18px; line-height: 1; padding: 6px 10px; }
+.hero-card { display: grid; grid-template-columns: 170px 1fr; gap: 16px; font-size: 14px; }
+.hero-card:empty::before { content: "Герой появится, когда начнётся выпуск."; color: var(--muted); }
+.hero-card canvas { width: 100%; height: auto; background: var(--bg3); border-radius: 10px; }
+.hero-name { font-size: 18px; display: block; }
+.meters { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.m { background: var(--bg3); border-radius: 999px; padding: 1px 10px; font-weight: 500; }
+.m.hp { color: #ff9a8f; }
+.stats { display: flex; flex-wrap: wrap; gap: 2px 12px; color: var(--muted); }
+.stats b { color: var(--text); }
+.label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .6px; margin-top: 8px; }
+.pogs { display: flex; flex-wrap: wrap; gap: 4px; }
+.mini-pog { background: #2f4a3a; color: #d8f3df; border-radius: 999px; padding: 0 7px; font-size: 12px; }
+.stk { display: grid; gap: 1px; }
 
 /* --- окна поверх страницы ------------------------------------------------------------------ */
 
@@ -333,21 +397,79 @@ canvas.flow { width: 100%; max-width: 352px; height: auto; image-rendering: pixe
 }
 .cover-wrap[data-tier="5"] .holo { opacity: .7; }
 
-@media (max-width: 1080px) {
-  .layout { grid-template-columns: minmax(0, 780px); }
-  .side { position: static; max-height: none; overflow: visible; }
+/* --- узкий или вертикальный экран: книга сверху, выбор снизу --------------------------------- */
+
+@media (max-width: 760px), (max-aspect-ratio: 1/1) {
+  .layout { flex-direction: column; gap: 8px; padding: 8px; }
+  .book { flex: 1 1 0; min-height: 0; gap: 4px; }
+  .pager button { min-width: 44px; padding: 0 12px 3px; font-size: 22px; }
+  .side { flex: 0 0 clamp(170px, 34dvh, 360px); }
+  .choose { padding: 8px 10px; }
+  .choose h2 { font-size: 17px; }
   .desk { display: none; }
-  .choose.open {
-    position: fixed;
-    left: 0; right: 0; bottom: 0;
-    z-index: 5;
-    border-radius: 14px 14px 0 0;
-    max-height: 48vh;
-    overflow: auto;
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, .5);
+  .scene-text { font-size: 14px; margin-bottom: 8px; }
+  #choices:has(.opt) { flex-direction: row; gap: 8px; }
+  #choices > .opt { flex: 1 1 0; min-width: 0; padding: 5px; gap: 3px; }
+  .opt b { font-size: 14px; line-height: 1.2; }
+  .opt span { font-size: 12px; line-height: 1.25; }
+  .opt span:not(.tag) { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+}
+
+/* телефон: шапка в одну строку, книга во всю ширину, выбор выезжает снизу шторкой */
+@media (max-width: 760px) {
+  .top { flex-wrap: nowrap; padding: 6px 10px; gap: 8px; }
+  .brand { flex: 1 1 auto; min-width: 0; }
+  .brand b { display: block; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .brand span { display: none; }
+  .menu-btn { display: inline-block; flex: none; }
+  .tools {
+    display: none;
+    position: absolute; right: 10px; top: calc(100% + 6px);
+    flex-direction: column; align-items: stretch;
+    padding: 10px;
+    background: var(--bg2); border: 2px solid var(--ink); border-radius: 12px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, .6);
   }
-  .choose.open #choices:has(.opt) { grid-auto-flow: column; grid-auto-columns: minmax(200px, 46%); overflow-x: auto; }
-  body:has(.choose.open) .layout { padding-bottom: 48vh; }
+  .tools.open { display: flex; }
+  .hero-chip { flex: none; gap: 6px; padding-right: 10px; }
+  .chip-pic { width: 30px; height: 30px; }
+  .chip-txt { gap: 6px; font-size: 13.5px; }
+  .hero-card { grid-template-columns: 110px 1fr; gap: 12px; font-size: 13px; }
+
+  .layout { padding: 6px 8px 8px; }
+  /* листалка над страницей: снизу её закрывала бы шторка выбора */
+  .book { grid-template-rows: auto minmax(0, 1fr); }
+  .pager { order: -1; }
+  .book-frame { align-items: start; }
+  .side {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 8;
+    max-height: 58dvh;
+    transform: translateY(110%);
+    transition: transform .25s ease-out;
+  }
+  .side:has(.choose.open) { transform: none; }
+  .side #missing { display: none; }
+  .choose {
+    border-radius: 14px 14px 0 0; border-bottom: 0;
+    padding: 8px 10px calc(10px + env(safe-area-inset-bottom));
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, .55);
+  }
+  .sheet-btn { display: inline-block; }
+  .choose.min #choices, .choose.min .tip { display: none; }
+  .choose.min .sheet-btn { transform: rotate(180deg); }
+  #choices:has(.opt) { min-height: 0; }
+}
+
+/* низкий экран: окно боя ужимается, чтобы влезть без прокрутки */
+@media (max-height: 780px) and (min-width: 641px) {
+  .ov { padding: 8px; }
+  .ov-box { max-height: calc(100dvh - 16px); }
+  .battle { gap: 8px; padding: 10px 12px; }
+  .b-pic { width: 76px; height: 76px; }
+  .b-table { height: clamp(160px, 26vh, 300px); }
+  .pog { width: 46px; height: 46px; }
+  .stack { gap: 8px 6px; padding-bottom: 6px; }
+  .feed { min-height: 44px; }
 }
 
 @media (max-width: 640px) {

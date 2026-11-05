@@ -1,6 +1,7 @@
 // Страницы выпуска: кадры появляются по одному, следующий пустой кадр показывает эскиз
 // варианта, выбранный прорисовывается тушью и цветом.
 
+import type { Book } from "./book";
 import { type Look, lookKey } from "./doll";
 import {
   type Art, type Cast, type Panel, type Rect,
@@ -26,6 +27,8 @@ export class Comic {
   private gen = 0;
   private queued = 0;
   private queuedAll = false;
+  /** Книга листает страницы; без неё страницы просто лежат в корне. */
+  book?: Book;
 
   constructor(private root: HTMLElement, private cast: (l: Look) => Cast) {}
 
@@ -74,8 +77,8 @@ export class Comic {
     const page: Page = { layout: PAGE_SEQ[this.pages.length % PAGE_SEQ.length], panels: [], canvas };
     this.pages.push(page);
     this.root.append(canvas);
-    if (this.pages.length > 1) setTimeout(() => canvas.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
     this.paint(page);
+    void this.book?.toLast();
     return page;
   }
 
@@ -192,6 +195,8 @@ export class Comic {
     this.preview = null; this.slotHint = "";
     const r = this.slot();
     const page = this.last();
+    await this.book?.toLast();   // кадр рисуется на глазах: сначала долистать до последней страницы
+    if (gen !== this.gen) return;
     const pl: Placed = { id, panel, look, t: 0 };
     page.panels.push(pl);
     await this.ensure(id, panel, look, r);
@@ -213,6 +218,7 @@ export class Comic {
   fork(sketches: Sketch[], box: HTMLElement, title: HTMLElement, heading = "Что дальше?"): Promise<number> {
     const gen = this.gen;
     const r = this.slot();
+    void this.book?.toLast();
     const fid = `f${this.seq++}`;
     this.setHint("Выбери следующий кадр");
     title.textContent = heading;

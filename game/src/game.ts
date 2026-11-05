@@ -3,6 +3,7 @@
 
 import type { GameManifest } from "./assets";
 import { fight, preloadTable } from "./battle";
+import type { Book } from "./book";
 import { Comic, type Sketch } from "./comic";
 import {
   type Beat, type Encounter, type OptionDef, type Outcome, type Shot,
@@ -38,7 +39,33 @@ function sample<T>(a: T[], n: number): T[] {
   return out;
 }
 
-export interface UI { pages: HTMLElement; hero: HTMLElement; choose: HTMLElement; title: HTMLElement; box: HTMLElement }
+export interface UI {
+  pages: HTMLElement; hero: HTMLElement; choose: HTMLElement; title: HTMLElement; box: HTMLElement;
+  book: Book;
+  /** Кнопка героя в шапке: портрет и здоровье, чернила, монеты; открывает карточку. */
+  chip: HTMLButtonElement;
+  heroDlg: HTMLDialogElement;
+}
+
+/** Голова куклы для кнопки в шапке: квадрат по верху непрозрачной фигуры. */
+function headCrop(doll: HTMLCanvasElement, size = 76): HTMLCanvasElement {
+  const sw = 48, sh = Math.max(1, Math.round((doll.height / doll.width) * sw));
+  const probe = h("canvas", { width: String(sw), height: String(sh) });
+  const px = probe.getContext("2d", { willReadFrequently: true })!;
+  px.drawImage(doll, 0, 0, sw, sh);
+  const a = px.getImageData(0, 0, sw, sh).data;
+  let top = -1, bottom = 0;
+  for (let y = 0; y < sh; y++) for (let x = 0; x < sw; x++) if (a[(y * sw + x) * 4 + 3] > 40) { if (top < 0) top = y; bottom = y; }
+  const out = h("canvas", { width: String(size), height: String(size) });
+  if (top < 0) return out;
+  const k = doll.height / sh, fig = (bottom - top + 1) * k, side = fig * 0.2;
+  // середина головы по ширине: средний x непрозрачного в верхней полосе фигуры
+  let sx = 0, n = 0;
+  for (let y = top; y < Math.min(sh, top + Math.ceil(side / k)); y++) for (let x = 0; x < sw; x++) if (a[(y * sw + x) * 4 + 3] > 40) { sx += x; n++; }
+  const cx = n ? ((sx / n) + 0.5) * (doll.width / sw) : doll.width / 2;
+  out.getContext("2d")!.drawImage(doll, cx - side / 2, top * k - side * 0.06, side, side, 0, 0, size, size);
+  return out;
+}
 
 export class Game {
   run?: Run;
@@ -48,9 +75,11 @@ export class Game {
   private gen = 0;
   private boss?: string;
   private cover: HTMLCanvasElement | null = null;
+  private chipKey = "";
 
   constructor(private gm: GameManifest, private ui: UI) {
     this.comic = new Comic(ui.pages, (l) => this.cast(l));
+    this.comic.book = ui.book;
   }
 
   // --- текст и облик ------------------------------------------------------------------------
@@ -106,6 +135,10 @@ export class Game {
     document.body.classList.remove("has-ov");
     this.comic.reset();
     this.cover = null; this.over = false; this.boss = undefined;
+    if (this.ui.heroDlg.open) this.ui.heroDlg.close();
+    this.ui.chip.hidden = true;
+    this.ui.hero.replaceChildren();
+    this.chipKey = "";
     this.ui.box.replaceChildren();
     this.ui.title.textContent = "Новый выпуск";
     this.ui.choose.classList.remove("open");
@@ -485,16 +518,20 @@ export class Game {
       h("ul", { class: "stars" }, ...info.stars.map((s) => h("li", { class: s.ok ? "ok" : "" }, `${s.ok ? "★" : "☆"} ${s.text}`))),
       h("div", { class: "row" },
         h("button", { onclick: () => void this.saveComic() }, "Скачать выпуск"),
-        h("button", { class: "ghost", onclick: () => wrap.scrollIntoView({ behavior: "smooth", block: "start" }) }, "К обложке"),
+        h("button", { class: "ghost", onclick: () => void this.ui.book.go(0) }, "К обложке"),
         h("button", { class: "ghost", onclick: () => void this.start() }, "Новый выпуск")),
     );
     this.ui.choose.classList.add("open");
-    setTimeout(() => wrap.scrollIntoView({ behavior: "smooth", block: "start" }), 400);
+    // последний кадр успевает прочитаться, потом книга закрывается на обложку
+    setTimeout(() => { if (g === this.gen) void this.ui.book.go(0); }, 1200);
   }
 
+  /** Скачать лист, открытый в книге: страницу или обложку. */
   savePage() {
-    const p = this.comic.last();
-    if (p) download(this.comic.exportPage(p), `comix-page-${this.comic.pages.length}.png`);
+    const cur = this.ui.book.current();
+    if (this.cover && cur?.contains(this.cover)) return download(this.cover, "comix-oblozhka.png");
+    const p = this.comic.pages.find((pg) => pg.canvas === cur) || this.comic.last();
+    if (p) download(this.comic.exportPage(p), `comix-page-${this.comic.pages.indexOf(p) + 1}.png`);
   }
 
   async saveComic() {
@@ -509,7 +546,7 @@ export class Game {
     download(cv, "comix-vypusk.png");
   }
 
-  // --- боковая карточка героя ---------------------------------------------------------------
+  // --- карточка героя: окно по кнопке в шапке ------------------------------------------------
 
   async side() {
     const r = this.run;
@@ -525,6 +562,7 @@ export class Game {
       ...Object.entries(r.stickers.items).map(([it, id]) => `${STICKER_ICON[id]} ${C.stickers[id].title} (${C.items[it]?.title.toLowerCase()})`),
       ...r.stickers.cover.map((id) => `${STICKER_ICON[id]} ${C.stickers[id].title} (обложка)`),
     ];
+    this.chip(doll);
     this.ui.hero.replaceChildren(
       cv,
       h("div", { class: "hero-info" },
@@ -547,6 +585,21 @@ export class Game {
         stk.length ? h("div", { class: "stk" }, ...stk.map((t) => h("span", {}, t))) : null,
       ),
     );
+  }
+
+  /** Кнопка героя в шапке. Когда здоровье, чернила или монеты меняются, она подпрыгивает. */
+  private chip(doll: HTMLCanvasElement) {
+    const r = this.run!, b = this.ui.chip;
+    b.querySelector(".chip-pic")!.replaceChildren(headCrop(doll));
+    b.querySelector(".chip-txt")!.replaceChildren(
+      h("span", { class: "hp" }, `❤ ${r.hp}/${r.max}`), h("span", {}, `✒ ${r.ink}`), h("span", {}, `¤ ${r.coins}`));
+    b.setAttribute("aria-label", `Карточка героя: здоровье ${r.hp} из ${r.max}, чернила ${r.ink}, монеты ${r.coins}`);
+    const key = `${r.hp}/${r.max}/${r.ink}/${r.coins}`;
+    if (!b.hidden && this.chipKey && key !== this.chipKey) {
+      b.classList.remove("bump"); void b.offsetWidth; b.classList.add("bump");
+    }
+    this.chipKey = key;
+    b.hidden = false;
   }
 
   // --- стартовый экран ----------------------------------------------------------------------

@@ -13,9 +13,14 @@
   <header class="top">
     <div class="brand">
       <b>Комикс-рогалик</b>
-      <span>выпуск №1 «Город» · вертикальный срез</span>
+      <span>выпуск №1 «Город»</span>
     </div>
-    <nav class="tools" aria-label="Управление">
+    <button id="heroBtn" class="hero-chip" hidden aria-haspopup="dialog" title="Карточка героя">
+      <span class="chip-pic"></span>
+      <span class="chip-txt"></span>
+    </button>
+    <button id="menuBtn" class="ghost menu-btn" aria-expanded="false" aria-controls="tools" aria-label="Меню">☰</button>
+    <nav id="tools" class="tools" aria-label="Управление">
       <button id="restart">Новый выпуск</button>
       <button id="savePage">Скачать страницу</button>
       <button id="saveComic">Скачать выпуск</button>
@@ -23,21 +28,34 @@
   </header>
 
   <main class="layout">
-    <section id="pages" aria-label="Комикс"></section>
+    <section class="book" aria-label="Комикс">
+      <div class="book-frame"><div id="pages"></div></div>
+      <nav class="pager" aria-label="Страницы">
+        <button id="prevPage" class="ghost" aria-label="Предыдущая страница">‹</button>
+        <span id="pageNo" aria-live="polite"></span>
+        <button id="nextPage" class="ghost" aria-label="Следующая страница">›</button>
+      </nav>
+    </section>
     <aside class="side">
-      <div id="hero" class="hero-card"></div>
       <div id="choose" class="choose">
-        <h2 id="chooseTitle">…</h2>
+        <div class="choose-head">
+          <h2 id="chooseTitle">…</h2>
+          <button id="sheetBtn" class="ghost sheet-btn" aria-expanded="true" aria-controls="choices" aria-label="Свернуть выбор, чтобы видеть страницу">▾</button>
+        </div>
         <p class="tip desk">Наведи на вариант, чтобы примерить его кадр на страницу.</p>
         <div id="choices"></div>
       </div>
+      <p id="missing" hidden></p>
     </aside>
   </main>
 
-  <footer>
-    <p id="missing" hidden></p>
-    <p>Картинки делает ночная генерация. После неё <code>comix.bat export-game</code> и push обновят эту страницу.</p>
-  </footer>
+  <dialog id="heroDlg" class="hero-dlg" aria-labelledby="heroDlgTitle">
+    <div class="dlg-head">
+      <h2 id="heroDlgTitle">Герой</h2>
+      <button id="heroClose" class="ghost" aria-label="Закрыть">✕</button>
+    </div>
+    <div id="hero" class="hero-card"></div>
+  </dialog>
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
