@@ -26,9 +26,10 @@ def _move(src: Path, dst_root: Path) -> int:
 
 
 def redo(poses: list[str] = (), items: list[str] = (), enemies: list[str] = (), sprites: list[str] = (),
-         closeups: list[str] = ()) -> dict:
-    """poses: male/victory; items: top/hero_suit_top (во всех позах обоих полов);
-    enemies: drone; sprites: weapons/crowbar; closeups: hack_done."""
+         closeups: list[str] = (), within: list[str] = ()) -> dict:
+    """poses: male/victory; items: top/hero_suit_top (во всех позах обоих полов, или только в within:
+    male/talk ...); enemies: drone (все позы) или drone/defeated (одна поза);
+    sprites: weapons/crowbar; closeups: hack_done."""
     root = ASSETS / "_redo" / time.strftime("%Y%m%d-%H%M%S")
     moved = {}
     for gp in poses:
@@ -38,7 +39,9 @@ def redo(poses: list[str] = (), items: list[str] = (), enemies: list[str] = (), 
         slot, item = si.split("/")
         n = 0
         for d in sorted(DOLL.glob("*/*")):
-            if not d.is_dir() or d.name.startswith("_"):
+            if not d.is_dir() or d.name.startswith("_") or d.parent.name.startswith("_"):
+                continue
+            if within and f"{d.parent.name}/{d.name}" not in within:
                 continue
             for f in list(d.glob(f"raw_{slot}__{item}.png")) + list(d.glob(f"raw_{slot}__{item}_try*.png")) \
                     + list(d.glob(f"{slot}__{item}.png")) + list(d.glob(f"{slot}__{item}_*.png")):
@@ -51,7 +54,11 @@ def redo(poses: list[str] = (), items: list[str] = (), enemies: list[str] = (), 
                     qa_path.write_text(json.dumps(qa, ensure_ascii=False, indent=1))
         moved[f"item {si}"] = n
     for e in enemies:
-        moved[f"enemy {e}"] = _move(ENEMIES / e, root)
+        if "/" in e:  # одна поза; база (первая поза) остаётся опорой для перерисовки
+            cid, pose = e.split("/")
+            moved[f"enemy {e}"] = _move(ENEMIES / cid / f"{pose}.png", root) + _move(ENEMIES / cid / f"raw_{pose}.png", root)
+        else:
+            moved[f"enemy {e}"] = _move(ENEMIES / e, root)
     for gs in sprites:
         group, sid = gs.split("/")
         moved[f"sprite {gs}"] = _move(SPRITES / group / f"{sid}.png", root) + _move(SPRITES / group / f"raw_{sid}.png", root)

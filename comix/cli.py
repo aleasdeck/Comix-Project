@@ -220,7 +220,7 @@ def cmd_doll_pick(args, project):
 
 def cmd_redo(args, project):
     from .redo import redo
-    r = redo(args.pose or [], args.item or [], args.enemy or [], args.sprite or [], args.closeup or [])
+    r = redo(args.pose or [], args.item or [], args.enemy or [], args.sprite or [], args.closeup or [], args.within or [])
     for k, n in r["moved"].items():
         print(f"  {k}: убрано файлов {n}")
     print(f"Всё лежит в {r['to']}. Теперь запусти comix night: он нарисует убранное заново.")
@@ -322,7 +322,8 @@ def main(argv=None):
     p = sub.add_parser("redo", help="убрать брак в assets/_redo, чтобы comix night нарисовал его заново")
     p.add_argument("--pose", nargs="*", metavar="ПОЛ/ПОЗА", help="база позы со всеми слоями, напр. male/victory")
     p.add_argument("--item", nargs="*", metavar="СЛОТ/ВЕЩЬ", help="вещь во всех позах, напр. top/hero_suit_top")
-    p.add_argument("--enemy", nargs="*", metavar="ID", help="враг во всех позах, напр. drone")
+    p.add_argument("--within", nargs="*", metavar="ПОЛ/ПОЗА", help="--item только в этих позах, напр. male/talk")
+    p.add_argument("--enemy", nargs="*", metavar="ID", help="враг во всех позах (drone) или одна поза (drone/defeated)")
     p.add_argument("--sprite", nargs="*", metavar="ГРУППА/ID", help="предмет или наклейка, напр. weapons/crowbar")
     p.add_argument("--closeup", nargs="*", metavar="ID", help="крупный план миниигры, напр. hack_done")
     p.set_defaults(fn=cmd_redo)
